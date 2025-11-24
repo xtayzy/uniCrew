@@ -1,0 +1,292 @@
+.chipLabel {
+  pointer-events: none;
+}
+.wrapper {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 12px;
+  min-height: calc(100vh - 200px);
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+.form {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  max-width: 600px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+  color: #374151;
+  position: relative;
+  z-index: 0;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.hint {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+.buttonSecondary {
+  background: #f8fafc;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.buttonSecondary:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #059669;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 48px;
+  transition: all 0.2s ease;
+}
+
+.chipContainer:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef2ff;
+  position: relative;
+  z-index: 1;
+  color: #3730a3;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  user-select: none;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.chip:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.chipRemove {
+  background: transparent;
+  border: none;
+  color: #111827;
+  cursor: pointer;
+  padding: 0;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: 4px;
+  line-height: 14px;
+  font-size: 12px;
+  pointer-events: auto;
+  outline: none;
+  box-sizing: content-box;
+  position: static; /* в потоке, чтобы hit-area = 14x14 */
+}
+
+
+.chipRemove:hover {
+  background: #e5e7eb;
+}
+
+.inputInline {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  outline: none;
+  font: inherit;
+  padding: 8px;
+  font-size: 16px;
+  background: transparent;
+}
+
+.selectedRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+  pointer-events: none; /* отключаем события у строки чипов */
+}
+
+.suggestions {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-top: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: white;
+  z-index: 50;
+  position: relative;
+}
+
+.suggestionItem {
+  padding: 12px 16px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #374151;
+}
+
+.suggestionItem:hover {
+  background: #f8fafc;
+  color: #111827;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 0 16px;
+  }
+  
+  .heading {
+    font-size: 2rem;
+  }
+  
+  .form {
+    padding: 24px;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .button,
+  .buttonSecondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading {
+    font-size: 1.75rem;
+  }
+  
+  .form {
+    padding: 20px;
+  }
+}
+
+

@@ -1,0 +1,211 @@
+.about_page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    font-family: "Inter", sans-serif;
+    line-height: 1.7;
+    color: #374151;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 24px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.about_header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    position: relative;
+    overflow: hidden;
+}
+
+.about_header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+}
+
+.about_header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.about_header p {
+    font-size: 1.3rem;
+    color: #64748b;
+    font-weight: 500;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.about_section {
+    margin-bottom: 48px;
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.about_section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.about_section:hover::before {
+    transform: scaleX(1);
+}
+
+.about_section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.about_section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.about_section h2::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+}
+
+.about_section p {
+    margin: 12px 0;
+    font-size: 1.1rem;
+    color: #475569;
+    line-height: 1.8;
+}
+
+.about_section ul,
+.about_section ol {
+    margin-top: 16px;
+    padding-left: 24px;
+}
+
+.about_section ul li,
+.about_section ol li {
+    margin: 12px 0;
+    font-size: 1.1rem;
+    color: #475569;
+    line-height: 1.8;
+    position: relative;
+}
+
+.about_section ul li::marker {
+    color: #1e3a8a;
+}
+
+.about_section ol li::marker {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+/* Специальные стили для списков */
+.about_section ul li::before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 12px;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .about_page {
+        margin: 20px;
+        padding: 40px 20px;
+        border-radius: 16px;
+    }
+    
+    .about_header {
+        padding: 30px 20px;
+        margin-bottom: 40px;
+    }
+    
+    .about_header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .about_header p {
+        font-size: 1.1rem;
+    }
+    
+    .about_section {
+        padding: 24px 20px;
+        margin-bottom: 32px;
+    }
+    
+    .about_section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .about_section p,
+    .about_section ul li,
+    .about_section ol li {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .about_page {
+        margin: 16px;
+        padding: 30px 16px;
+    }
+    
+    .about_header {
+        padding: 24px 16px;
+    }
+    
+    .about_header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .about_section {
+        padding: 20px 16px;
+    }
+    
+    .about_section h2 {
+        font-size: 1.3rem;
+    }
+}

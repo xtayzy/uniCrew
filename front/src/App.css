@@ -1,0 +1,105 @@
+/* App Layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Предотвращает переполнение */
+}
+
+/* Ensure footer stays at bottom */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Loading states */
+.loading-container {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-loading {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Предотвращение layout shift */
+.content-wrapper {
+    min-height: 400px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.content-wrapper.loading {
+    opacity: 0.7;
+}
+
+/* Улучшенная стабильность layout */
+.app-container {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Плавные переходы для всех страниц */
+.page-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.page-exit {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.page-exit-active {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+/* Предотвращение скачков при загрузке */
+.skeleton-container {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Улучшенная стабильность footer */
+.footer {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    flex-shrink: 0;
+}

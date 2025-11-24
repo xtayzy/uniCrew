@@ -1,0 +1,385 @@
+/* Общие стили для всего приложения */
+
+/* Переменные CSS */
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-color: #6b7280;
+  --success-color: #10b981;
+  --success-hover: #059669;
+  --warning-color: #f59e0b;
+  --warning-hover: #d97706;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --background-white: #ffffff;
+  --background-gray: #f8fafc;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-full: 20px;
+}
+
+/* Общие стили для страниц */
+.page_container {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 12px;
+  min-height: calc(100vh - 200px);
+}
+
+.page_header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.page_title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.page_subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Общие стили для карточек */
+.card {
+  background: var(--background-white);
+  border-radius: var(--border-radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card_small {
+  padding: 20px;
+}
+
+.card_large {
+  padding: 32px;
+}
+
+/* Общие стили для кнопок */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+  min-width: 120px;
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn_primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn_primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn_secondary {
+  background: var(--background-gray);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.btn_secondary:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn_success {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn_success:hover:not(:disabled) {
+  background: var(--success-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn_warning {
+  background: var(--warning-color);
+  color: white;
+}
+
+.btn_warning:hover:not(:disabled) {
+  background: var(--warning-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.btn_danger {
+  background: var(--danger-color);
+  color: white;
+}
+
+.btn_danger:hover:not(:disabled) {
+  background: var(--danger-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn_small {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.btn_large {
+  padding: 16px 32px;
+  font-size: 18px;
+  min-width: 160px;
+}
+
+/* Общие стили для форм */
+.form_group {
+  margin-bottom: 24px;
+}
+
+.form_label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.form_input,
+.form_textarea,
+.form_select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  color: var(--text-secondary);
+}
+
+.form_input:focus,
+.form_textarea:focus,
+.form_select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form_textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form_error {
+  color: var(--danger-color);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  margin: 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.form_success {
+  color: var(--success-color);
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  margin: 12px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Общие стили для тегов */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 6px 12px;
+  border-radius: var(--border-radius-full);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.tag_quality {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.tag_quality:hover {
+  background: #dcfce7;
+}
+
+/* Общие стили для пустых состояний */
+.empty_state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--background-white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.empty_state h3 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.empty_state p {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* Общие стили для сеток */
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid_2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid_3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid_4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Общие стили для разделителей */
+.section_divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 24px 0;
+}
+
+.section_divider_thick {
+  height: 2px;
+  background: var(--border-color);
+  margin: 32px 0;
+}
+
+/* Общие стили для анимаций */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate_fade_in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate_slide_in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate_pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .page_container {
+    padding: 0 16px;
+  }
+  
+  .page_title {
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .grid_2,
+  .grid_3,
+  .grid_4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page_title {
+    font-size: 1.75rem;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

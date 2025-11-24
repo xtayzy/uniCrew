@@ -1,0 +1,546 @@
+.teams_page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 200px);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.toolbar h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.toolbar_btns { display: flex; gap: 8px; }
+
+.create_button {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+}
+
+.create_button:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.teams_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.team_card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.team_card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.team_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.members_list {
+  margin: 12px 0;
+}
+
+.members_list ul {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+}
+
+.members_list li {
+  margin: 4px 0;
+  color: #374151;
+}
+
+.no_members {
+  color: #6b7280;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.tag {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1e3a8a;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.1);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag_quality {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  color: #0369a1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid #7dd3fc;
+  box-shadow: 0 1px 3px rgba(3, 105, 161, 0.1);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag_more {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.created_at {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.join_button {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 12px;
+  width: 100%;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+}
+
+.join_button:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.team_actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.invite_btn {
+  background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  flex: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(3, 105, 161, 0.2);
+}
+
+.invite_btn:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(3, 105, 161, 0.3);
+}
+
+.requests_btn {
+  background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  flex: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.2);
+}
+
+.requests_btn:hover {
+  background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(100, 116, 139, 0.3);
+}
+
+.requests_section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.requests_section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.request_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.request_info {
+  flex: 1;
+}
+
+.request_info strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.request_message {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.request_actions {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
+
+.approve_btn {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.2);
+}
+
+.approve_btn:hover {
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+}
+
+.reject_btn {
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(220, 38, 38, 0.2);
+}
+
+.reject_btn:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+}
+
+.team_title_link {
+  cursor: pointer;
+  color: #111827;
+  transition: color 0.2s;
+}
+
+.team_title_link:hover {
+  color: #1e3a8a;
+}
+
+.creator_link {
+  color: #1e3a8a;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.creator_link:hover {
+  color: #1e40af;
+}
+
+.filterBox {
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  padding: 4px 6px; /* компактнее */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.inputRow {
+  display: flex;
+  gap: 8px; /* чтобы не впритык к кнопке */
+  width: 100%;
+}
+
+.addBtn {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px; /* компактнее */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
+}
+
+.addBtn:hover {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+}
+
+.suggestWrap { position: relative; width: 100%; }
+
+.suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  max-height: 220px;
+  overflow: auto;
+  width: 100%;
+  background: #fff;
+  z-index: 50;
+}
+
+.suggestionItem {
+  padding: 8px 10px;
+  background: white;
+  cursor: pointer;
+}
+
+.suggestionItem:hover {
+  background: #f3f4f6;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1e3a8a;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.1);
+}
+
+.filterChipRemove {
+  background: transparent;
+  border: none;
+  color: #111827;
+  cursor: pointer;
+}
+
+.inputInline {
+  flex: 1;
+  min-width: 140px;
+  border: none;
+  outline: none;
+  font: inherit;
+  padding: 4px 6px; /* ниже высота инпута */
+}
+
+/* Дублирующиеся стили удалены - используются стили выше */
+
+/* Заголовок */
+.team_card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1f2937;
+}
+
+/* Описание */
+.team_card p {
+    font-size: 14px;
+    color: #555;
+    margin: 4px 0;
+}
+
+/* Теги */
+.team_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.tag {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e3a8a;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 1px 3px rgba(30, 58, 138, 0.1);
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag_quality {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    color: #0369a1;
+    border: 1px solid #7dd3fc;
+    box-shadow: 0 1px 3px rgba(3, 105, 161, 0.1);
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag_more {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Список участников */
+.team_card ul {
+    margin-top: 8px;
+    padding-left: 18px;
+    font-size: 13px;
+    color: #444;
+}
+
+.team_card ul li {
+    margin: 2px 0;
+}
+
+/* Дата */
+.team_card .created-at {
+    font-size: 12px;
+    color: #888;
+    margin-top: 12px;
+    display: block;
+}
+
+/* Фильтры */
+.filters { display: grid; gap: 8px; margin-bottom: 0; }
+.filterRow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.filterRow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Loading states */
+.loading_section {
+    min-height: 400px;
+    padding: 0;
+}
+
+.loading_section .skeletonContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .teams_grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .teams_page {
+        padding: 16px;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    
+    .toolbar_btns {
+        justify-content: center;
+    }
+    
+    .teams_grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .filters {
+        gap: 12px;
+    }
+    
+    .filterRow3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .filterRow2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .teams_page {
+        padding: 12px;
+    }
+    
+    .team_card {
+        padding: 16px;
+    }
+}

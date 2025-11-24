@@ -1,0 +1,198 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.fullScreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.errorCard {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 48px 40px;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+    text-align: center;
+}
+
+.closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #6b7280;
+}
+
+.closeButton:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #374151;
+    transform: translateY(-1px);
+}
+
+.errorIcon {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.errorIcon svg {
+    color: #ef4444;
+    stroke-width: 1.5;
+}
+
+.errorTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+}
+
+.errorCode {
+    display: inline-block;
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid #fecaca;
+}
+
+.errorMessage {
+    font-size: 16px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    padding: 0 20px;
+}
+
+.errorActions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.retryButton,
+.homeButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
+    justify-content: center;
+}
+
+.retryButton {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+}
+
+.retryButton:hover {
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.retryButton:active {
+    transform: translateY(0);
+}
+
+.homeButton {
+    background: #f8fafc;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.homeButton:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container,
+    .fullScreen {
+        padding: 20px 16px;
+    }
+    
+    .errorCard {
+        padding: 32px 24px;
+        border-radius: 12px;
+    }
+    
+    .errorTitle {
+        font-size: 22px;
+    }
+    
+    .errorMessage {
+        font-size: 15px;
+        padding: 0 10px;
+    }
+    
+    .errorActions {
+        flex-direction: column;
+    }
+    
+    .retryButton,
+    .homeButton {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .errorIcon svg {
+        width: 48px;
+        height: 48px;
+    }
+}

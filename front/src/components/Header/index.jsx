@@ -1,0 +1,99 @@
+import { Link } from "react-router-dom";
+import styles from "./style.module.css";
+import { useAuth } from "../../hooks/useAuth";
+import { Bell, Mail, Send, User, LogOut, Home, Users, Info, FileText } from "lucide-react";
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../../context/AuthContext";
+
+function Header() {
+    const { isAuth, logout } = useAuth();
+    const { tokens } = useContext(AuthContext);
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    const handleLogout = () => {
+        logout();
+    };
+
+    useEffect(() => {
+        if (isAuth && tokens?.access) {
+            fetchUnreadCount();
+            // Обновляем счетчик каждые 30 секунд
+            const interval = setInterval(fetchUnreadCount, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [isAuth, tokens]);
+
+    const fetchUnreadCount = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/users/notifications/', {
+                headers: {
+                    'Authorization': `Bearer ${tokens.access}`
+                }
+            });
+            const unread = response.data.filter(notif => !notif.is_read).length;
+            setUnreadCount(unread);
+        } catch (error) {
+            console.error('Ошибка загрузки уведомлений:', error);
+        }
+    };
+
+    return (
+        <header className={styles.header}>
+            <div className={styles.header_container}>
+                <Link to="/" className={styles.logo}>
+                    <span className={styles.logo_text}>UniCrew</span>
+                </Link>
+
+                {/* Навигация */}
+                <nav className={styles.nav}>
+                    <Link to="/teams" className={styles.nav_link}>
+                        <Users className={styles.nav_icon} size={18}/>
+                        <span>Команды</span>
+                    </Link>
+                    <Link to="/users" className={styles.nav_link}>
+                        <User className={styles.nav_icon} size={18}/>
+                        <span>Пользователи</span>
+                    </Link>
+                    <Link to="/about" className={styles.nav_link}>
+                        <Info className={styles.nav_icon} size={18}/>
+                        <span>О сайте</span>
+                    </Link>
+                    <div className={styles.nav_divider}></div>
+                    <Link to="/my-requests" className={styles.nav_link}>
+                        <FileText className={styles.nav_icon} size={18}/>
+                        <span>Мои заявки</span>
+                    </Link>
+                </nav>
+
+                {/* Правая часть */}
+                <div className={styles.header_right}>
+                    {isAuth ? (
+                        <>
+                            <Link to="/notifications" className={styles.notification_link} title="Уведомления">
+                                <Bell className={styles.icon} size={20}/>
+                                {unreadCount > 0 && (
+                                    <span className={styles.notification_badge}>{unreadCount}</span>
+                                )}
+                            </Link>
+                            <Link to="/profile" className={styles.profile_link}>
+                                <User className={styles.profile_icon} size={20}/>
+                                <span className={styles.profile_text}>Профиль</span>
+                            </Link>
+                            <button onClick={handleLogout} className={styles.logout_btn} title="Выйти">
+                                <LogOut size={16}/>
+                            </button>
+                        </>
+                    ) : (
+                        <Link to="/login" className={styles.login_btn}>
+                            <User className={styles.btn_icon} size={18}/>
+                            <span>Войти</span>
+                        </Link>
+                    )}
+                </div>
+            </div>
+        </header>
+    );
+}
+
+export default Header;

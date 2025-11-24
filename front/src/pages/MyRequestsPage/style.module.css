@@ -1,0 +1,238 @@
+.container {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 12px;
+    min-height: calc(100vh - 200px);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    color: #111827;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.header p {
+    color: #6b7280;
+    font-size: 1.1rem;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #64748b;
+}
+
+.empty_state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.empty_icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.empty_state h3 {
+    color: #111827;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.empty_state p {
+    color: #6b7280;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.browse_teams_btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.browse_teams_btn:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.requests_list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.request_card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.request_card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+}
+
+.request_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.team_title {
+    color: #111827;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.team_title:hover {
+    color: #3b82f6;
+}
+
+.status {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.request_body {
+    margin-bottom: 20px;
+}
+
+.message {
+    margin-bottom: 16px;
+}
+
+.message strong {
+    color: #374151;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.message p {
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+}
+
+.request_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.request_actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.view_team_btn {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.view_team_btn:hover {
+    background: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.cancel_btn {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cancel_btn:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .request_header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .request_actions {
+        flex-direction: column;
+    }
+    
+    .view_team_btn,
+    .cancel_btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,126 @@
+.register_step2 {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register_step2 h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    text-align: center;
+    color: #111827;
+}
+
+.register_step2 form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register_step2 input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.register_step2 input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.register_step2 button {
+    padding: 14px;
+    background-color: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.register_step2 button:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.register_step2 button:active {
+    transform: translateY(0);
+}
+
+.register_step2 p {
+    font-size: 14px;
+    margin-top: 16px;
+    text-align: center;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.register_step2 .error {
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+.register_step2 .success {
+    color: #059669;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .register_step2 {
+        margin: 40px auto;
+        padding: 32px 24px;
+        max-width: 90%;
+    }
+    
+    .register_step2 h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .register_step2 input {
+        padding: 12px 14px;
+        font-size: 16px;
+    }
+    
+    .register_step2 button {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register_step2 {
+        margin: 20px auto;
+        padding: 24px 20px;
+    }
+    
+    .register_step2 h2 {
+        font-size: 22px;
+    }
+}

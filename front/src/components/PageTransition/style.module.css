@@ -1,0 +1,54 @@
+.pageContainer {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.pageContainer.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.content {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contentVisible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.defaultLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+/* Предотвращение layout shift */
+.pageContainer::before {
+    content: '';
+    display: none; /* Убираем пустое пространство */
+    pointer-events: none;
+}
+
+/* Анимация для skeleton loaders */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pageContainer .skeletonContainer {
+    animation: fadeInUp 0.5s ease-out;
+}
