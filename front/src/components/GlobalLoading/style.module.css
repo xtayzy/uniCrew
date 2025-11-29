@@ -1,10 +1,16 @@
+.globalLoadingPlaceholder {
+    min-height: calc(100vh - 200px);
+    background: #ffffff;
+    width: 100%;
+}
+
 .globalLoadingOverlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: transparent;
+    background: #ffffff;
     z-index: 9999;
     display: flex;
     align-items: center;

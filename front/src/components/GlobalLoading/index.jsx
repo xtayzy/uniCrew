@@ -27,9 +27,12 @@ export const GlobalLoadingProvider = ({ children }) => {
         <GlobalLoadingContext.Provider value={value}>
             {children}
             {isLoading && (
-                <div className={styles.globalLoadingOverlay}>
-                    <LoadingSpinner size="large" text={loadingText} />
-                </div>
+                <>
+                    <div className={styles.globalLoadingPlaceholder}></div>
+                    <div className={styles.globalLoadingOverlay}>
+                        <LoadingSpinner size="large" text={loadingText} />
+                    </div>
+                </>
             )}
         </GlobalLoadingContext.Provider>
     );
