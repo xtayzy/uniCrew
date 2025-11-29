@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { GlobalLoadingProvider } from "./components/GlobalLoading";
+import { GlobalLoadingProvider, useGlobalLoading } from "./components/GlobalLoading";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GuestRoute from "./routes/GuestRoute";
@@ -24,16 +24,16 @@ import TeamPrivatePage from "./pages/TeamPrivatePage/index.jsx";
 import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 
-function App() {
+function AppContent() {
+    const { isLoading } = useGlobalLoading();
+    
     return (
-        <ErrorBoundary>
-            <AuthProvider>
-                <GlobalLoadingProvider>
-                    <Router>
-                        <div className="app-container">
-                            <Header />
-                            <main className="main-content" style={{ position: 'relative' }}>
-                            <Routes>
+        <Router>
+            <div className="app-container">
+                <Header />
+                <main className="main-content">
+                    {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
+                    <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/teams" element={<TeamsPage/>} />
                     <Route
@@ -148,11 +148,20 @@ function App() {
                         }
                     />
 
-                            </Routes>
-                            </main>
-                            <Footer />
-                        </div>
-                    </Router>
+                    </Routes>
+                </main>
+                <Footer />
+            </div>
+        </Router>
+    );
+}
+
+function App() {
+    return (
+        <ErrorBoundary>
+            <AuthProvider>
+                <GlobalLoadingProvider>
+                    <AppContent />
                 </GlobalLoadingProvider>
             </AuthProvider>
         </ErrorBoundary>

@@ -1,13 +1,3 @@
-.globalLoadingPlaceholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    min-height: calc(100vh - 200px);
-    background: #ffffff;
-    z-index: 1;
-}
 
 .globalLoadingOverlay {
     position: fixed;
