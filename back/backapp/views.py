@@ -516,25 +516,34 @@ class TeamViewSet(viewsets.ModelViewSet):
                 return Response({"detail": "Токен не предоставлен."}, status=400)
             
             try:
+                print(f"Поиск команды по токену: {token}")
                 team = Team.objects.select_related('creator', 'category').prefetch_related(
-                    'required_skills', 'required_qualities', 'memberships__user'
+                    'required_skills', 'required_qualities', 'memberships', 'memberships__user'
                 ).get(invite_token=token)
+                print(f"Команда найдена: {team.id} - {team.title}")
             except Team.DoesNotExist:
+                print(f"Команда с токеном {token} не найдена")
                 return Response({"detail": "Приглашение не найдено или недействительно."}, status=404)
             except Exception as e:
                 import traceback
-                print(f"Ошибка при получении команды по токену: {e}")
+                error_msg = f"Ошибка при получении команды по токену: {e}"
+                print(error_msg)
                 print(traceback.format_exc())
-                return Response({"detail": f"Ошибка сервера: {str(e)}"}, status=500)
+                return Response({"detail": error_msg}, status=500)
             
             try:
+                print("Начало сериализации команды...")
                 serializer = TeamSerializer(team, context={"request": request})
-                return Response(serializer.data)
+                print("Сериализация успешна, получение данных...")
+                data = serializer.data
+                print(f"Данные получены, ключи: {list(data.keys())}")
+                return Response(data)
             except Exception as e:
                 import traceback
-                print(f"Ошибка при сериализации команды: {e}")
+                error_msg = f"Ошибка при сериализации команды: {e}"
+                print(error_msg)
                 print(traceback.format_exc())
-                return Response({"detail": f"Ошибка сериализации: {str(e)}"}, status=500)
+                return Response({"detail": error_msg}, status=500)
         
         elif request.method == "POST":
             # Вступить в команду по пригласительному токену
