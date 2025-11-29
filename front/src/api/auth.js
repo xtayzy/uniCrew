@@ -9,7 +9,16 @@ export async function login(username, password) {
         });
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.detail || `Ошибка входа`);
+        // Переводим ошибки на русский
+        let errorMessage = error.response?.data?.detail || "Ошибка входа";
+        if (errorMessage.includes("No active account") || errorMessage.includes("Unable to log in")) {
+            errorMessage = "Неверный логин или пароль";
+        } else if (errorMessage.includes("password")) {
+            errorMessage = "Неверный пароль";
+        } else if (errorMessage.includes("username")) {
+            errorMessage = "Неверный логин";
+        }
+        throw new Error(errorMessage);
     }
 }
 

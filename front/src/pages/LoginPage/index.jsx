@@ -27,16 +27,7 @@ function LogInPage() {
             navigate("/");
         } catch (err) {
             console.error("Login error:", err);
-            // Переводим ошибки на русский
-            let errorMessage = err.message || "Неверный логин или пароль";
-            if (errorMessage.includes("No active account") || errorMessage.includes("Unable to log in")) {
-                errorMessage = "Неверный логин или пароль";
-            } else if (errorMessage.includes("password")) {
-                errorMessage = "Неверный пароль";
-            } else if (errorMessage.includes("username")) {
-                errorMessage = "Неверный логин";
-            }
-            setError(errorMessage);
+            setError(err.message || "Неверный логин или пароль");
         } finally {
             setIsLoading(false);
         }
