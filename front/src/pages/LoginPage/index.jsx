@@ -36,6 +36,7 @@ function LogInPage() {
     return (
         <div className={styles.main_block}>
             <h2>Вход</h2>
+            {error && <p className={styles.error_message}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -84,8 +85,6 @@ function LogInPage() {
                     ) : "Войти"}
                 </button>
             </form>
-
-            {error && <p style={{color: "red"}}>{error}</p>}
 
             <hr style={{margin: "20px 0"}}/>
             <p style={{ marginTop: "12px" }}>

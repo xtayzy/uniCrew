@@ -44,6 +44,7 @@ function RegisterStep1Page() {
     return (
         <div className={styles.register_step1}>
             <h2>Регистрация — Шаг 1</h2>
+            {error && <p className={styles.error_message}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -109,7 +110,6 @@ function RegisterStep1Page() {
                     {loading ? "Отправка..." : "Продолжить"}
                 </button>
             </form>
-            {error && <p style={{color: "red"}}>{error}</p>}
             <p style={{ marginTop: "12px" }}>
                 Уже есть аккаунт? <Link to="/login">Войти</Link>
             </p>
