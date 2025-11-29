@@ -568,10 +568,6 @@ class TeamViewSet(viewsets.ModelViewSet):
             )
             
             return Response({"detail": "Вы присоединились к команде.", "team_id": team.id}, status=200)
-        """Вступить в команду по пригласительному токену"""
-        token = request.data.get("token")
-        if not token:
-            return Response({"detail": "Токен не предоставлен."}, status=400)
         
         if not request.user.is_authenticated:
             return Response({"detail": "Требуется авторизация."}, status=401)

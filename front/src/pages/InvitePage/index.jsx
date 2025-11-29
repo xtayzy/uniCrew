@@ -22,7 +22,7 @@ function InvitePage() {
         const fetchTeam = async () => {
             try {
                 setError(null);
-                const response = await axios.get(`${API_URL}teams/invite/?token=${token}`);
+                const response = await axios.get(`${API_URL}teams/invite/?token=${encodeURIComponent(token)}`);
                 setTeam(response.data);
             } catch (err) {
                 console.error("Ошибка загрузки команды:", err);
@@ -48,7 +48,7 @@ function InvitePage() {
         setActionLoading(true);
         setActionResult(null);
         try {
-            const response = await axios.post(`${API_URL}teams/invite/`, { token });
+            const response = await axios.post(`${API_URL}teams/invite/`, { token: token });
             setActionResult({ type: "success", message: response.data.detail || "Вы присоединились к команде!" });
             setTimeout(() => {
                 if (response.data.team_id) {
