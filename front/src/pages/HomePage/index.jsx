@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./style.module.css";
 import { useAuth } from "../../hooks/useAuth";
+import SEOHead from "../../components/SEOHead";
 
 function HomePage() {
     const { isAuth } = useAuth();
@@ -19,7 +20,13 @@ function HomePage() {
     };
 
     return (
-        <div className={styles.home}>
+        <>
+            <SEOHead 
+                title="UniCrew — Платформа для поиска команды студенческих проектов"
+                description="Найди свою идеальную команду для учебных проектов, дипломных работ, хакатонов и стартапов. UniCrew помогает студентам находить единомышленников с нужными навыками."
+                keywords="студенческие проекты, команда, хакатон, дипломная работа, стартап, поиск команды, студенты, проекты"
+            />
+            <div className={styles.home}>
             {/* Hero Section */}
             <section className={styles.hero}>
                 <h1 className={styles.hero_title}>
@@ -140,6 +147,7 @@ function HomePage() {
                 </div>
             </section>
         </div>
+        </>
     );
 }
 

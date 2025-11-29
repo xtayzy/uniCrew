@@ -9,6 +9,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
+import SEOHead from "../../components/SEOHead";
 
 const TeamsPage = () => {
     const [teams, setTeams] = useState([]);
@@ -161,9 +162,15 @@ const TeamsPage = () => {
     }
 
     return (
-        <div className={styles.teams_page}>
-            <div className={styles.toolbar}>
-                <h1>Команды</h1>
+        <>
+            <SEOHead 
+                title="Команды — UniCrew"
+                description="Найдите команду для вашего проекта. Просматривайте доступные команды, фильтруйте по навыкам и категориям проектов."
+                keywords="команды, проекты, студенты, поиск команды, хакатон, дипломная работа"
+            />
+            <div className={styles.teams_page}>
+                <div className={styles.toolbar}>
+                    <h1>Команды</h1>
                 {isAuth ? (
                     <div className={styles.toolbar_btns}>
                         <button className={styles.create_button} onClick={() => navigate('/my-teams')}>
@@ -343,6 +350,7 @@ const TeamsPage = () => {
                 onSuccess={handleJoinSuccess}
             />
         </div>
+        </>
     );
 };
 
