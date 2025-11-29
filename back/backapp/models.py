@@ -137,13 +137,27 @@ class Team(models.Model):
     def generate_invite_token(self):
         """Генерирует уникальный токен для пригласительной ссылки"""
         if not self.invite_token:
-            self.invite_token = secrets.token_urlsafe(32)
-            self.save()
+            # Генерируем уникальный токен
+            max_attempts = 10
+            for _ in range(max_attempts):
+                token = secrets.token_urlsafe(32)
+                if not Team.objects.filter(invite_token=token).exists():
+                    self.invite_token = token
+                    self.save(update_fields=['invite_token'])
+                    break
+            else:
+                raise ValueError("Не удалось сгенерировать уникальный токен")
         return self.invite_token
     
     def save(self, *args, **kwargs):
         if not self.invite_token:
-            self.invite_token = secrets.token_urlsafe(32)
+            # Генерируем уникальный токен при создании
+            max_attempts = 10
+            for _ in range(max_attempts):
+                token = secrets.token_urlsafe(32)
+                if not Team.objects.filter(invite_token=token).exists():
+                    self.invite_token = token
+                    break
         super().save(*args, **kwargs)
 
 
