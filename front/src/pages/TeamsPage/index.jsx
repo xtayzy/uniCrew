@@ -31,6 +31,7 @@ const TeamsPage = () => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchTeams = async () => {
             try {
                 setError(null);
@@ -42,52 +43,71 @@ const TeamsPage = () => {
                 if (query.required_qualities) params.set("required_qualities", query.required_qualities);
                 const queryString = params.toString() ? '?' + params.toString() : '';
                 const url = `${API_URL}teams/${queryString}`;
-                const response = await axios.get(url);
+                const response = await axios.get(url, { signal: controller.signal, timeout: 30000 });
                 setTeams(response.data);
             } catch (error) {
-                  console.error('Ошибка загрузки команд:', error);
-                setError(error);
+                if (error.name !== 'AbortError' && error.code !== 'ECONNABORTED') {
+                    console.error('Ошибка загрузки команд:', error);
+                    setError(error);
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         fetchTeams();
-    }, [query]);
+        return () => controller.abort();
+    }, [query.title, query.category_id, query.status, query.required_skills, query.required_qualities]);
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchCategories = async () => {
             try {
-                const res = await axios.get(`${API_URL}project-categories/`);
+                const res = await axios.get(`${API_URL}project-categories/`, { signal: controller.signal, timeout: 10000 });
                 setCategories(res.data || []);
             } catch (e) {
-                console.error(e);
+                if (e.name !== 'AbortError') {
+                    console.error(e);
+                }
             }
         };
         fetchCategories();
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
+        const controller = new AbortController();
         const fetchMeta = async () => {
             try {
                 const [skRes, qRes] = await Promise.all([
-                    axios.get(`${API_URL}skills/`),
-                    axios.get(`${API_URL}personal-qualities/`),
+                    axios.get(`${API_URL}skills/`, { signal: controller.signal, timeout: 10000 }),
+                    axios.get(`${API_URL}personal-qualities/`, { signal: controller.signal, timeout: 10000 }),
                 ]);
                 setSkillsAll((skRes.data || []).map(s => s.name));
                 setQualitiesAll((qRes.data || []).map(q => q.name));
             } catch (e) {
-                console.error(e);
+                if (e.name !== 'AbortError') {
+                    console.error(e);
+                }
             }
         };
         fetchMeta();
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
-        setQuery(q => ({ ...q, required_skills: selectedSkills.join(",") }));
+        // Debounce для предотвращения слишком частых обновлений
+        const timeoutId = setTimeout(() => {
+            setQuery(q => ({ ...q, required_skills: selectedSkills.join(",") }));
+        }, 300);
+        return () => clearTimeout(timeoutId);
     }, [selectedSkills]);
     useEffect(() => {
-        setQuery(q => ({ ...q, required_qualities: selectedQualities.join(",") }));
+        // Debounce для предотвращения слишком частых обновлений
+        const timeoutId = setTimeout(() => {
+            setQuery(q => ({ ...q, required_qualities: selectedQualities.join(",") }));
+        }, 300);
+        return () => clearTimeout(timeoutId);
     }, [selectedQualities]);
 
     const addSkill = (name) => {

@@ -16,10 +16,15 @@ function UsersPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [query, setQuery] = useState({ username: "", faculty: "", school: "", course: "", education: "", skills: "", personal_qualities: "" });
+    const [isRequesting, setIsRequesting] = useState(false);
 
     useEffect(() => {
+        if (isRequesting) return; // Защита от повторных запросов
+        
         setLoading(true);
         setError(null);
+        setIsRequesting(true);
+        
         const params = new URLSearchParams();
         if (query.username) params.set("username", query.username);
         if (query.faculty) params.set("faculty", query.faculty);
@@ -30,18 +35,35 @@ function UsersPage() {
         if (query.personal_qualities) params.set("personal_qualities", query.personal_qualities);
         const url = `${API_URL}users/${params.toString() ? `?${params.toString()}` : ""}`;
         const headers = access ? { Authorization: `Bearer ${access}` } : {};
-        axios.get(url, { headers })
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 секунд таймаут
+        
+        axios.get(url, { headers, signal: controller.signal, timeout: 30000 })
             .then(res => {
+                clearTimeout(timeoutId);
                 setUsers(res.data);
                 setError(null);
                 setLoading(false);
+                setIsRequesting(false);
             })
             .catch(err => {
-                console.error("Ошибка загрузки пользователей:", err);
+                clearTimeout(timeoutId);
+                if (err.name === 'AbortError' || err.code === 'ECONNABORTED') {
+                    console.error("Запрос отменен или превышено время ожидания");
+                } else {
+                    console.error("Ошибка загрузки пользователей:", err);
+                }
                 setError(err);
                 setLoading(false);
+                setIsRequesting(false);
             });
-    }, [access, query]);
+            
+        return () => {
+            clearTimeout(timeoutId);
+            controller.abort();
+        };
+    }, [access, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
 
     if (error) {
         return (
@@ -51,6 +73,7 @@ function UsersPage() {
                     title="Ошибка загрузки пользователей"
                     onRetry={() => {
                         setError(null);
+                        setIsRequesting(false);
                         setLoading(true);
                     }}
                     fullScreen={false}
@@ -189,17 +212,27 @@ function SkillsQualitiesPicker({ onChange }) {
     const [qualSug, setQualSug] = useState([]);
 
     useEffect(() => {
+        const controller = new AbortController();
         Promise.all([
-            axios.get(`${API_URL}skills/`),
-            axios.get(`${API_URL}personal-qualities/`)
+            axios.get(`${API_URL}skills/`, { signal: controller.signal, timeout: 10000 }),
+            axios.get(`${API_URL}personal-qualities/`, { signal: controller.signal, timeout: 10000 })
         ]).then(([sk, q]) => {
             setSkillsAll((sk.data || []).map(s => s.name));
             setQualitiesAll((q.data || []).map(x => x.name));
-        }).catch(() => {});
+        }).catch((err) => {
+            if (err.name !== 'AbortError') {
+                console.error("Ошибка загрузки навыков/качеств:", err);
+            }
+        });
+        return () => controller.abort();
     }, []);
 
     useEffect(() => {
-        onChange(skillsSel.join(','), qualsSel.join(','));
+        // Debounce для предотвращения слишком частых обновлений
+        const timeoutId = setTimeout(() => {
+            onChange(skillsSel.join(','), qualsSel.join(','));
+        }, 300);
+        return () => clearTimeout(timeoutId);
     }, [skillsSel, qualsSel, onChange]);
 
     const addSkill = (name) => {
