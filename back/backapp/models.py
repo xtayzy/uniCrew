@@ -129,9 +129,22 @@ class Team(models.Model):
 
     whatsapp_link = models.URLField(blank=True, null=True, help_text="Ссылка на группу WhatsApp")
     telegram_link = models.URLField(blank=True, null=True, help_text="Ссылка на группу Telegram")
+    invite_token = models.CharField(max_length=64, unique=True, blank=True, null=True, help_text="Уникальный токен для пригласительной ссылки")
 
     def __str__(self):
         return f"{self.title}"
+    
+    def generate_invite_token(self):
+        """Генерирует уникальный токен для пригласительной ссылки"""
+        if not self.invite_token:
+            self.invite_token = secrets.token_urlsafe(32)
+            self.save()
+        return self.invite_token
+    
+    def save(self, *args, **kwargs):
+        if not self.invite_token:
+            self.invite_token = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):

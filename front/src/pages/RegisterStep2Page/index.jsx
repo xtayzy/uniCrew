@@ -16,7 +16,14 @@ function RegisterStep2Page() {
         e.preventDefault();
         try {
             await registerStep2(email, code);
-            navigate("/login");
+            // Проверяем, есть ли pending invite token
+            const pendingInvite = localStorage.getItem("pending_invite_token");
+            if (pendingInvite) {
+                // Сохраняем для использования после входа
+                navigate("/login", { state: { inviteToken: pendingInvite } });
+            } else {
+                navigate("/login");
+            }
         } catch (err) {
             setError(err.response?.data?.message || "Ошибка подтверждения");
         }

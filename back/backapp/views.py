@@ -494,6 +494,122 @@ class TeamViewSet(viewsets.ModelViewSet):
         members = team.memberships.select_related('user', 'team', 'team__creator').filter(status="PENDING")
         serializer = TeamJoinRequestSerializer(members, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=["get"], permission_classes=[permissions.IsAuthenticated])
+    def invite_link(self, request, pk=None):
+        """Получить пригласительную ссылку для команды"""
+        team = self.get_object()
+        if team.creator != request.user:
+            return Response({"detail": "Только создатель может получить пригласительную ссылку."}, status=403)
+        
+        token = team.generate_invite_token()
+        invite_url = f"{request.scheme}://{request.get_host()}/invite/{token}"
+        return Response({"invite_token": token, "invite_url": invite_url})
+    
+    @action(detail=False, methods=["get", "post"], permission_classes=[AllowAny], url_path="invite")
+    def invite_handler(self, request):
+        """Обработка пригласительных ссылок"""
+        if request.method == "GET":
+            # Получить информацию о команде по пригласительному токену
+            token = request.query_params.get("token")
+            if not token:
+                return Response({"detail": "Токен не предоставлен."}, status=400)
+            
+            try:
+                team = Team.objects.select_related('creator', 'category').prefetch_related(
+                    'required_skills', 'required_qualities', 'memberships__user'
+                ).get(invite_token=token)
+            except Team.DoesNotExist:
+                return Response({"detail": "Приглашение не найдено или недействительно."}, status=404)
+            
+            serializer = TeamSerializer(team, context={"request": request})
+            return Response(serializer.data)
+        
+        elif request.method == "POST":
+            # Вступить в команду по пригласительному токену
+            token = request.data.get("token")
+            if not token:
+                return Response({"detail": "Токен не предоставлен."}, status=400)
+            
+            if not request.user.is_authenticated:
+                return Response({"detail": "Требуется авторизация."}, status=401)
+            
+            try:
+                team = Team.objects.get(invite_token=token)
+            except Team.DoesNotExist:
+                return Response({"detail": "Приглашение не найдено или недействительно."}, status=404)
+            
+            if team.creator == request.user:
+                return Response({"detail": "Создатель уже в команде."}, status=400)
+            
+            membership, created = TeamMember.objects.get_or_create(team=team, user=request.user)
+            
+            if not created:
+                if membership.status == "APPROVED":
+                    return Response({"detail": "Вы уже в команде."}, status=400)
+                elif membership.status == "PENDING":
+                    # Если была заявка, меняем на приглашение
+                    membership.status = "INVITED"
+                elif membership.status == "INVITED":
+                    return Response({"detail": "Вы уже приняли приглашение."}, status=400)
+                elif membership.status == "REJECTED":
+                    membership.status = "INVITED"
+            else:
+                membership.status = "INVITED"
+            
+            membership.save()
+            
+            Notification.objects.create(
+                user=team.creator,
+                notification_type="TEAM_INVITATION_ACCEPTED",
+                team=team,
+                team_member=membership,
+                message=f"Пользователь {request.user.username} принял приглашение в команду '{team.title}'"
+            )
+            
+            return Response({"detail": "Вы присоединились к команде.", "team_id": team.id}, status=200)
+        """Вступить в команду по пригласительному токену"""
+        token = request.data.get("token")
+        if not token:
+            return Response({"detail": "Токен не предоставлен."}, status=400)
+        
+        if not request.user.is_authenticated:
+            return Response({"detail": "Требуется авторизация."}, status=401)
+        
+        try:
+            team = Team.objects.get(invite_token=token)
+        except Team.DoesNotExist:
+            return Response({"detail": "Приглашение не найдено или недействительно."}, status=404)
+        
+        if team.creator == request.user:
+            return Response({"detail": "Создатель уже в команде."}, status=400)
+        
+        membership, created = TeamMember.objects.get_or_create(team=team, user=request.user)
+        
+        if not created:
+            if membership.status == "APPROVED":
+                return Response({"detail": "Вы уже в команде."}, status=400)
+            elif membership.status == "PENDING":
+                # Если была заявка, меняем на приглашение
+                membership.status = "INVITED"
+            elif membership.status == "INVITED":
+                return Response({"detail": "Вы уже приняли приглашение."}, status=400)
+            elif membership.status == "REJECTED":
+                membership.status = "INVITED"
+        else:
+            membership.status = "INVITED"
+        
+        membership.save()
+        
+        Notification.objects.create(
+            user=team.creator,
+            notification_type="TEAM_INVITATION_ACCEPTED",
+            team=team,
+            team_member=membership,
+            message=f"Пользователь {request.user.username} принял приглашение в команду '{team.title}'"
+        )
+        
+        return Response({"detail": "Вы присоединились к команде.", "team_id": team.id}, status=200)
 
     @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated])
     def approve(self, request, pk=None):

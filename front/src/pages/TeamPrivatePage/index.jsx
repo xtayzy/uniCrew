@@ -26,6 +26,8 @@ const TeamPrivatePage = () => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isManageMembersModalOpen, setIsManageMembersModalOpen] = useState(false);
+    const [inviteLink, setInviteLink] = useState(null);
+    const [inviteLinkLoading, setInviteLinkLoading] = useState(false);
 
     // Загрузка данных команды и пользователя
     useEffect(() => {
@@ -114,6 +116,43 @@ const TeamPrivatePage = () => {
 
     const handleCloseManageMembersModal = () => {
         setIsManageMembersModalOpen(false);
+    };
+
+    const fetchInviteLink = async () => {
+        if (!isAuth || !tokens || !team) return;
+        
+        const memberStatus = checkMemberStatus();
+        if (!memberStatus?.isCreator) return;
+        
+        setInviteLinkLoading(true);
+        try {
+            const response = await axios.get(`${API_URL}teams/${teamId}/invite_link/`, {
+                headers: {
+                    'Authorization': `Bearer ${tokens.access}`
+                }
+            });
+            setInviteLink(response.data.invite_url);
+        } catch (error) {
+            console.error('Ошибка получения пригласительной ссылки:', error);
+        } finally {
+            setInviteLinkLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (team && isAuth && tokens) {
+            fetchInviteLink();
+        }
+    }, [team, isAuth, tokens, teamId]);
+
+    const copyInviteLink = () => {
+        if (inviteLink) {
+            navigator.clipboard.writeText(inviteLink).then(() => {
+                alert("Ссылка скопирована в буфер обмена!");
+            }).catch(() => {
+                alert("Не удалось скопировать ссылку");
+            });
+        }
     };
 
     const handleTeamUpdate = async (updatedData) => {

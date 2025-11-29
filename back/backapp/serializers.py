@@ -447,6 +447,7 @@ class TeamSerializer(serializers.ModelSerializer):
             "required_qualities",
             "members",
             "whatsapp_link",
+            "invite_token",
             "telegram_link",
         ]
 
