@@ -521,9 +521,20 @@ class TeamViewSet(viewsets.ModelViewSet):
                 ).get(invite_token=token)
             except Team.DoesNotExist:
                 return Response({"detail": "Приглашение не найдено или недействительно."}, status=404)
+            except Exception as e:
+                import traceback
+                print(f"Ошибка при получении команды по токену: {e}")
+                print(traceback.format_exc())
+                return Response({"detail": f"Ошибка сервера: {str(e)}"}, status=500)
             
-            serializer = TeamSerializer(team, context={"request": request})
-            return Response(serializer.data)
+            try:
+                serializer = TeamSerializer(team, context={"request": request})
+                return Response(serializer.data)
+            except Exception as e:
+                import traceback
+                print(f"Ошибка при сериализации команды: {e}")
+                print(traceback.format_exc())
+                return Response({"detail": f"Ошибка сериализации: {str(e)}"}, status=500)
         
         elif request.method == "POST":
             # Вступить в команду по пригласительному токену
