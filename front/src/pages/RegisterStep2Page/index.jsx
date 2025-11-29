@@ -15,7 +15,7 @@ function RegisterStep2Page() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await registerStep2(email, code);
+            await registerStep2(email, code);
             navigate("/login");
         } catch (err) {
             setError(err.response?.data?.message || "Ошибка подтверждения");

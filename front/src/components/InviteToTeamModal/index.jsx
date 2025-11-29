@@ -1,34 +1,29 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
+import { useAuth } from "../../hooks/useAuth";
 
 const InviteToTeamModal = ({ user, isOpen, onClose, onSuccess }) => {
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchUserTeams();
-        }
-    }, [isOpen]);
-
-    const fetchUserTeams = async () => {
+    const fetchUserTeams = useCallback(async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/profile/', {
+            const response = await axios.get(`${API_URL}profile/`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             const username = response.data.username;
-            const teamsResponse = await axios.get(`http://127.0.0.1:8000/api/teams/?creator_name=${encodeURIComponent(username)}`, {
+            const teamsResponse = await axios.get(`${API_URL}teams/?creator_name=${encodeURIComponent(username)}`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             // Фильтруем команды, где пользователь уже является участником
@@ -40,7 +35,13 @@ const InviteToTeamModal = ({ user, isOpen, onClose, onSuccess }) => {
         } catch (error) {
             console.error('Ошибка загрузки команд:', error);
         }
-    };
+    }, [tokens, user.username]);
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchUserTeams();
+        }
+    }, [isOpen, fetchUserTeams]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,7 +52,7 @@ const InviteToTeamModal = ({ user, isOpen, onClose, onSuccess }) => {
 
         setLoading(true);
         try {
-            await axios.post(`http://127.0.0.1:8000/api/teams/${selectedTeam.id}/invite/`, {
+            await axios.post(`${API_URL}teams/${selectedTeam.id}/invite/`, {
                 user_id: user.id,
                 message: message.trim()
             }, {

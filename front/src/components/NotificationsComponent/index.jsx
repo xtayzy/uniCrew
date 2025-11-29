@@ -1,34 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
-import ErrorDisplay from '../ErrorDisplay';
-import LoadingSpinner from '../LoadingSpinner';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
+import ErrorDisplay from "../ErrorDisplay";
+import LoadingSpinner from "../LoadingSpinner";
+import { useAuth } from "../../hooks/useAuth";
 
 const NotificationsComponent = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchNotifications();
-        
-        // Обновляем уведомления каждые 10 секунд
-        const interval = setInterval(fetchNotifications, 10000);
-        
-        return () => clearInterval(interval);
-    }, []);
-
-    const fetchNotifications = async () => {
+    const fetchNotifications = useCallback(async () => {
         try {
             setError(null);
-            const response = await axios.get('http://127.0.0.1:8000/api/users/notifications/', {
+            const response = await axios.get(`${API_URL}users/notifications/`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             console.log('Получены уведомления:', response.data);
             setNotifications(response.data);
@@ -38,16 +30,25 @@ const NotificationsComponent = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [tokens]);
+
+    useEffect(() => {
+        fetchNotifications();
+        
+        // Обновляем уведомления каждые 10 секунд
+        const interval = setInterval(fetchNotifications, 10000);
+        
+        return () => clearInterval(interval);
+    }, [fetchNotifications]);
 
     const markAsRead = async (notificationId) => {
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/mark_notification_read/', {
-                notification_id: notificationId
+            await axios.post(`${API_URL}users/mark_notification_read/`, {
+                notification_id: notificationId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             setNotifications(prev => 
@@ -64,10 +65,10 @@ const NotificationsComponent = () => {
 
     const markAllAsRead = async () => {
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/mark_all_notifications_read/', {}, {
+            await axios.post(`${API_URL}users/mark_all_notifications_read/`, {}, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             setNotifications(prev => 
@@ -82,14 +83,14 @@ const NotificationsComponent = () => {
         try {
             console.log('Принимаем приглашение:', { teamMemberId });
             console.log('Токен доступа:', tokens?.access ? 'Есть' : 'Нет');
-            console.log('URL:', 'http://127.0.0.1:8000/api/users/accept_invitation/');
+            console.log('URL:', `${API_URL}users/accept_invitation/`);
             
-            const response = await axios.post('http://127.0.0.1:8000/api/users/accept_invitation/', {
-                member_id: teamMemberId
+            const response = await axios.post(`${API_URL}users/accept_invitation/`, {
+                member_id: teamMemberId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             console.log('Приглашение принято:', response.data);
@@ -109,12 +110,12 @@ const NotificationsComponent = () => {
         try {
             console.log('Отклоняем приглашение:', { teamMemberId });
             console.log('Токен доступа:', tokens?.access ? 'Есть' : 'Нет');
-            const response = await axios.post('http://127.0.0.1:8000/api/users/reject_invitation/', {
-                member_id: teamMemberId
+            const response = await axios.post(`${API_URL}users/reject_invitation/`, {
+                member_id: teamMemberId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             console.log('Приглашение отклонено:', response.data);
@@ -132,13 +133,13 @@ const NotificationsComponent = () => {
 
     const handleApproveRequest = async (teamId, memberId) => {
         try {
-            console.log('Принимаем заявку:', { teamId, memberId });
-            const response = await axios.post(`http://127.0.0.1:8000/api/teams/${teamId}/approve/`, {
-                member_id: memberId
+            console.log("Принимаем заявку:", { teamId, memberId });
+            const response = await axios.post(`${API_URL}teams/${teamId}/approve/`, {
+                member_id: memberId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             console.log('Заявка принята:', response.data);
@@ -156,13 +157,13 @@ const NotificationsComponent = () => {
 
     const handleRejectRequest = async (teamId, memberId) => {
         try {
-            console.log('Отклоняем заявку:', { teamId, memberId });
-            const response = await axios.post(`http://127.0.0.1:8000/api/teams/${teamId}/reject/`, {
-                member_id: memberId
+            console.log("Отклоняем заявку:", { teamId, memberId });
+            const response = await axios.post(`${API_URL}teams/${teamId}/reject/`, {
+                member_id: memberId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             console.log('Заявка отклонена:', response.data);
@@ -189,12 +190,12 @@ const NotificationsComponent = () => {
 
         try {
             console.log('Удаляем уведомление:', { notificationId });
-            await axios.post('http://127.0.0.1:8000/api/users/delete_notification/', {
-                notification_id: notificationId
+            await axios.post(`${API_URL}users/delete_notification/`, {
+                notification_id: notificationId,
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             // Обновляем список уведомлений

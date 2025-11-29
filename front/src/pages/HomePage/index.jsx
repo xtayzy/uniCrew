@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import styles from './style.module.css'
+import { useNavigate } from "react-router-dom";
+import styles from "./style.module.css";
+import { useAuth } from "../../hooks/useAuth";
 
 function HomePage() {
-    const { isAuth } = useContext(AuthContext);
+    const { isAuth } = useAuth();
     const navigate = useNavigate();
 
     const handleFindTeam = () => {

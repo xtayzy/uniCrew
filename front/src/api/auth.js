@@ -3,19 +3,19 @@ import { API_URL } from "../config.js";
 
 export async function login(username, password) {
     try {
-        const response = await axios.post(`${API_URL}login/`, { 
+        const response = await axios.post("${API_URL}login/", { 
             username, 
             password 
         });
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.detail || "Ошибка входа");
+        throw new Error(error.response?.data?.detail || `Ошибка входа`);
     }
 }
 
 export async function refreshToken(refreshToken) {
     try {
-        const response = await axios.post(`${API_URL}token/refresh/`, {
+        const response = await axios.post("${API_URL}token/refresh/", {
             refresh: refreshToken
         });
         return response.data;
@@ -32,10 +32,10 @@ export async function logout() {
 
 export async function forgotCredentials(email) {
     try {
-        const response = await axios.post(`${API_URL}password-reset/`, { email });
+        const response = await axios.post("${API_URL}password-reset/", { email });
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.response?.data?.detail || "Ошибка отправки письма");
+        throw new Error(error.response?.data?.message || error.response?.data?.detail || `Ошибка отправки письма`);
     }
 }
 

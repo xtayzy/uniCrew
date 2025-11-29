@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import axios from 'axios';
 import styles from './style.module.css';
+import { API_URL } from '@/config';
 
 const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -42,9 +43,9 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
     const fetchData = async () => {
         try {
             const [categoriesRes, skillsRes, qualitiesRes] = await Promise.all([
-                axios.get('http://127.0.0.1:8000/api/project-categories/'),
-                axios.get('http://127.0.0.1:8000/api/skills/'),
-                axios.get('http://127.0.0.1:8000/api/personal-qualities/')
+                axios.get(`${API_URL}project-categories/`),
+                axios.get(`${API_URL}skills/`),
+                axios.get(`${API_URL}personal-qualities/`)
             ]);
             
             setCategories(categoriesRes.data);
@@ -189,7 +190,7 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                                             const newSkills = e.target.checked
                                                 ? [...formData.required_skills, skill.name]
                                                 : formData.required_skills.filter(s => s !== skill.name);
-                                            handleArrayChange('required_skills', newSkills);
+                                            handleArrayChange("required_skills", newSkills);
                                         }}
                                     />
                                     <span>{skill.name}</span>
@@ -210,7 +211,7 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                                             const newQualities = e.target.checked
                                                 ? [...formData.required_qualities, quality.name]
                                                 : formData.required_qualities.filter(q => q !== quality.name);
-                                            handleArrayChange('required_qualities', newQualities);
+                                            handleArrayChange("required_qualities", newQualities);
                                         }}
                                     />
                                     <span>{quality.name}</span>
@@ -224,7 +225,7 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                             Отмена
                         </button>
                         <button type="submit" disabled={loading} className={styles.submit_btn}>
-                            {loading ? 'Сохранение...' : 'Сохранить'}
+                            {loading ? "Сохранение..." : "Сохранить"}
                         </button>
                     </div>
                 </form>

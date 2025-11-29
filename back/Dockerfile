@@ -1,39 +1,25 @@
-# Используем официальный Python образ
-FROM python:3.11-slim
+FROM python:3.11-slim AS base
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100
 
-# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем requirements.txt
-COPY requirements.txt .
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Python зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+COPY back/requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip && pip install -r /tmp/requirements.txt
 
-# Копируем весь проект
-COPY . .
+COPY back /app
 
-# Создаем директории для логов и media
-RUN mkdir -p logs media/avatars staticfiles
-
-# Создаем пользователя для безопасности
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-
-# Собираем статические файлы (будет переопределено при запуске)
-# Делаем это до переключения на appuser, так как может потребоваться запись
-RUN python manage.py collectstatic --noinput || true
-
+RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Открываем порт
+RUN chmod +x /app/entrypoint.sh
+
 EXPOSE 8000
 
-# Команда запуска (будет переопределена в docker-compose)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "unicrewback.wsgi:application"]
-
+ENTRYPOINT ["/app/entrypoint.sh"]

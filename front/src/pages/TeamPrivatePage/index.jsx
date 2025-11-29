@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
-import JoinTeamModal from '../../components/JoinTeamModal';
-import EditTeamModal from '../../components/EditTeamModal';
-import ManageMembersModal from '../../components/ManageMembersModal';
-import TaskTracker from '../../components/TaskTracker';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ErrorDisplay from '../../components/ErrorDisplay';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import styles from "./style.module.css";
+import JoinTeamModal from "../../components/JoinTeamModal";
+import EditTeamModal from "../../components/EditTeamModal";
+import ManageMembersModal from "../../components/ManageMembersModal";
+import TaskTracker from "../../components/TaskTracker";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
+import { API_URL } from "../../config.js";
+import { useAuth } from "../../hooks/useAuth";
 
 const TeamPrivatePage = () => {
     const { teamId } = useParams();
     const navigate = useNavigate();
-    const { isAuth, tokens } = useContext(AuthContext);
+    const { isAuth, tokens } = useAuth();
     const [team, setTeam] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [forceUpdate, setForceUpdate] = useState(0);
@@ -25,23 +26,20 @@ const TeamPrivatePage = () => {
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isManageMembersModalOpen, setIsManageMembersModalOpen] = useState(false);
-    const fetchCompletedRef = useRef(false);
-    const teamLoadedRef = useRef(false);
-    const userLoadedRef = useRef(false);
 
     // Загрузка данных команды и пользователя
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Загружаем команду
-                const teamResponse = await axios.get(`http://127.0.0.1:8000/api/teams/${teamId}/`);
+                const teamResponse = await axios.get(`${API_URL}teams/${teamId}/`);
                 setTeam(teamResponse.data);
                 setLoading(false);
 
                 // Загружаем пользователя
                 if (isAuth && tokens) {
                     const decodedToken = jwtDecode(tokens.access);
-                    const userResponse = await axios.get(`http://127.0.0.1:8000/api/users/${decodedToken.user_id}/`, {
+                    const userResponse = await axios.get(`${API_URL}users/${decodedToken.user_id}/`, {
                         headers: {
                             'Authorization': `Bearer ${tokens.access}`
                         }
@@ -121,7 +119,7 @@ const TeamPrivatePage = () => {
     const handleTeamUpdate = async (updatedData) => {
         try {
             const response = await axios.put(
-                `http://127.0.0.1:8000/api/teams/${teamId}/update_team/`,
+                `${API_URL}teams/${teamId}/update_team/`,
                 updatedData,
                 {
                     headers: {
@@ -138,7 +136,7 @@ const TeamPrivatePage = () => {
             if (isAuth && tokens) {
                 try {
                     const decodedToken = jwtDecode(tokens.access);
-                    const userResponse = await axios.get(`http://127.0.0.1:8000/api/users/${decodedToken.user_id}/`, {
+                    const userResponse = await axios.get(`${API_URL}users/${decodedToken.user_id}/`, {
                         headers: {
                             'Authorization': `Bearer ${tokens.access}`
                         }
@@ -276,7 +274,7 @@ const TeamPrivatePage = () => {
                     <button onClick={() => navigate('/login')} className={styles.back_btn}>
                         Войти в систему
                     </button>
-                    <button onClick={() => navigate(`/teams/${teamId}`)} className={styles.public_btn}>
+                    <button onClick={() => navigate('/teams/${teamId}')} className={styles.public_btn}>
                         Публичная страница
                     </button>
                 </div>
@@ -585,7 +583,7 @@ const TeamPrivatePage = () => {
                     // Перезагружаем данные команды
                     const fetchTeam = async () => {
                         try {
-                            const response = await axios.get(`http://127.0.0.1:8000/api/teams/${teamId}/`);
+                            const response = await axios.get(`${API_URL}teams/${teamId}/`);
                             setTeam(response.data);
                             // Принудительно обновляем компонент
                             setForceUpdate(prev => prev + 1);

@@ -1,16 +1,15 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext.jsx";
-import styles from './style.module.css'
+import { API_URL } from "../../config.js";
+import styles from "./style.module.css";
 import LoadingSkeleton from "../../components/LoadingSkeleton";
 import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
-
-const API_URL = "http://127.0.0.1:8000/api/";
+import { useAuth } from "../../hooks/useAuth";
 
 function UsersPage() {
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const navigate = useNavigate();
     const access = tokens?.access;
     const [users, setUsers] = useState([]);
@@ -151,7 +150,7 @@ function SchoolFacultyPicker({ value, onChange, access }) {
         axios.get(`${API_URL}schools/`, { headers })
             .then(res => setSchools(res.data || []))
             .catch(() => setSchools([]));
-    }, []);
+    }, [access]);
 
     useEffect(() => {
         if (!value.school) { setFaculties([]); return; }
@@ -159,7 +158,7 @@ function SchoolFacultyPicker({ value, onChange, access }) {
         axios.get(`${API_URL}faculties/?school=${value.school}`, { headers })
             .then(res => setFaculties(res.data || []))
             .catch(() => setFaculties([]));
-    }, [value.school]);
+    }, [value.school, access]);
 
     return (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -201,7 +200,7 @@ function SkillsQualitiesPicker({ onChange }) {
 
     useEffect(() => {
         onChange(skillsSel.join(','), qualsSel.join(','));
-    }, [skillsSel, qualsSel]);
+    }, [skillsSel, qualsSel, onChange]);
 
     const addSkill = (name) => {
         const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());

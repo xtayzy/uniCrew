@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
-import JoinTeamModal from '../../components/JoinTeamModal';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ErrorDisplay from '../../components/ErrorDisplay';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
+import JoinTeamModal from "../../components/JoinTeamModal";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
+import { useAuth } from "../../hooks/useAuth";
 
 const TeamPublicPage = () => {
     const { teamId } = useParams();
     const navigate = useNavigate();
-    const { isAuth, tokens } = useContext(AuthContext);
+    const { isAuth, tokens } = useAuth();
     const [team, setTeam] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,11 +23,11 @@ const TeamPublicPage = () => {
     useEffect(() => {
         const fetchTeam = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/teams/${teamId}/`);
+                const response = await axios.get(`${API_URL}teams/${teamId}/`);
                 setTeam(response.data);
             } catch (error) {
                 console.error('Ошибка загрузки команды:', error);
-                setError('Команда не найдена');
+                setError(`Команда не найдена`);
             } finally {
                 setLoading(false);
             }
@@ -36,7 +37,7 @@ const TeamPublicPage = () => {
             if (isAuth && tokens) {
                 try {
                     const decodedToken = jwtDecode(tokens.access);
-                    const response = await axios.get(`http://127.0.0.1:8000/api/users/${decodedToken.user_id}/`, {
+                    const response = await axios.get(`${API_URL}users/${decodedToken.user_id}/`, {
                         headers: {
                             'Authorization': `Bearer ${tokens.access}`
                         }

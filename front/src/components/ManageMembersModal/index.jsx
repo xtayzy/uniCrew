@@ -1,43 +1,49 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import styles from "./style.module.css";
+import { API_URL } from "@/config";
+import { useAuth } from "../../hooks/useAuth";
 
 const ManageMembersModal = ({ team, isOpen, onClose, onUpdate }) => {
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState(null);
+
+    const fetchMembers = useCallback(async () => {
+        if (!team?.id) return;
+        setLoading(true);
+        try {
+            const response = await axios.get(`${API_URL}teams/${team.id}/members/`, {
+                headers: {
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
+            });
+            setMembers(response.data);
+        } catch (error) {
+            console.error("Ошибка загрузки участников:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, [team?.id, tokens]);
 
     useEffect(() => {
         if (isOpen && team) {
             fetchMembers();
         }
-    }, [isOpen, team]);
-
-    const fetchMembers = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/teams/${team.id}/members/`);
-            setMembers(response.data);
-        } catch (error) {
-            console.error('Ошибка загрузки участников:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [isOpen, team, fetchMembers]);
 
     const handleStatusChange = async (memberId, newStatus) => {
         setActionLoading(memberId);
         try {
             await axios.put(
-                `http://127.0.0.1:8000/api/teams/${team.id}/update_member_status/${memberId}/`,
+                `${API_URL}teams/${team.id}/update_member_status/${memberId}/`,
                 { status: newStatus },
                 {
                     headers: {
-                        'Authorization': `Bearer ${tokens.access}`,
-                        'Content-Type': 'application/json'
-                    }
+                        Authorization: `Bearer ${tokens?.access}`,
+                        "Content-Type": "application/json",
+                    },
                 }
             );
             
@@ -49,8 +55,8 @@ const ManageMembersModal = ({ team, isOpen, onClose, onUpdate }) => {
             // Уведомляем родительский компонент об обновлении
             onUpdate();
         } catch (error) {
-            console.error('Ошибка изменения статуса:', error);
-            alert('Ошибка при изменении статуса участника');
+            console.error("Ошибка изменения статуса:", error);
+            alert("Ошибка при изменении статуса участника");
         } finally {
             setActionLoading(null);
         }
@@ -66,16 +72,16 @@ const ManageMembersModal = ({ team, isOpen, onClose, onUpdate }) => {
             // Найдем member по ID чтобы получить user_id
             const member = members.find(m => m.id === memberId);
             if (!member) {
-                alert('Участник не найден');
+                alert("Участник не найден");
                 return;
             }
 
             await axios.delete(
-                `http://127.0.0.1:8000/api/teams/${team.id}/remove-member/${member.user_id}/`,
+                `${API_URL}teams/${team.id}/remove-member/${member.user_id}/`,
                 {
                     headers: {
-                        'Authorization': `Bearer ${tokens.access}`
-                    }
+                        Authorization: `Bearer ${tokens?.access}`,
+                    },
                 }
             );
             

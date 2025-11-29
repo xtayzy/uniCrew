@@ -1,24 +1,20 @@
-import {useEffect, useState, useContext} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {AuthContext} from "../../context/AuthContext.jsx";
-import { changePassword } from "../../api/auth.js";
-import styles from './style.module.css'
-import {PencilLine} from "lucide-react"
+import styles from "./style.module.css";
+import { PencilLine } from "lucide-react";
 import EditSkillsModalComponent from "../../components/EditSkillsModalComponent/index.jsx";
 import EditProfileModalComponent from "../../components/EditProfileModalComponent/index.jsx";
 import LoadingSpinner from "../../components/LoadingSpinner/index.jsx";
 import ErrorDisplay from "../../components/ErrorDisplay/index.jsx";
+import { API_URL } from "@/config";
+import { useAuth } from "../../hooks/useAuth";
 
 
-const API_URL = "http://127.0.0.1:8000/api/";
 
 function ProfilePage() {
-    const {tokens} = useContext(AuthContext);
+    const { tokens, logout } = useAuth();
     const access = tokens?.access;
     const [profile, setProfile] = useState(null);
-    const [editMode, setEditMode] = useState(false);
-    const [formData, setFormData] = useState({});
-    const { logout } = useContext(AuthContext);
     const [showModal, setShowModal] = useState(false);
     const [showLeftModal, setShowLeftModal] = useState(false);
     const [error, setError] = useState(null);
@@ -36,7 +32,6 @@ function ProfilePage() {
         })
             .then(res => {
                 setProfile(res.data);
-                setFormData(res.data);
                 setError(null);
             })
             .catch(err => {
@@ -62,19 +57,6 @@ function ProfilePage() {
     }
 
     if (!profile) return <LoadingSpinner fullScreen={true} text="Загрузка профиля..." />;
-
-    const handleSave = () => {
-        axios.put(`${API_URL}profile/`, formData, {
-            headers: {Authorization: `Bearer ${access}`}
-        })
-            .then(res => {
-                setProfile(res.data);
-                setEditMode(false);
-            })
-            .catch(err => console.error("Ошибка обновления профиля:", err));
-    };
-
-    
 
     console.log(profile);
 

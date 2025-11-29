@@ -1,29 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ErrorDisplay from '../../components/ErrorDisplay';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
+import { useAuth } from "../../hooks/useAuth";
 
 const MyRequestsPage = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchRequests();
-    }, []);
-
-    const fetchRequests = async () => {
+    const fetchRequests = useCallback(async () => {
         try {
             setError(null);
-            const response = await axios.get('http://127.0.0.1:8000/api/users/my_requests/', {
+            const response = await axios.get(`${API_URL}users/my_requests/`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             setRequests(response.data);
         } catch (error) {
@@ -32,7 +29,11 @@ const MyRequestsPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [tokens]);
+
+    useEffect(() => {
+        fetchRequests();
+    }, [fetchRequests]);
 
     const handleCancelRequest = async (memberId) => {
         if (!window.confirm('Вы уверены, что хотите отменить заявку?')) {
@@ -40,12 +41,12 @@ const MyRequestsPage = () => {
         }
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/cancel_request/', {
+            await axios.post(`${API_URL}users/cancel_request/`, {
                 member_id: memberId
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             
             // Обновляем список заявок

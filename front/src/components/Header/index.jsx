@@ -1,19 +1,32 @@
 import { Link } from "react-router-dom";
 import styles from "./style.module.css";
 import { useAuth } from "../../hooks/useAuth";
-import { Bell, Mail, Send, User, LogOut, Home, Users, Info, FileText } from "lucide-react";
-import { useState, useEffect, useContext } from "react";
+import { Bell, User, LogOut, Users, Info, FileText } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { AuthContext } from "../../context/AuthContext";
+import { API_URL } from "@/config";
 
 function Header() {
-    const { isAuth, logout } = useAuth();
-    const { tokens } = useContext(AuthContext);
+    const { isAuth, logout, tokens } = useAuth();
     const [unreadCount, setUnreadCount] = useState(0);
 
     const handleLogout = () => {
         logout();
     };
+
+    const fetchUnreadCount = useCallback(async () => {
+        try {
+            const response = await axios.get(`${API_URL}users/notifications/`, {
+                headers: {
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
+            });
+            const unread = response.data.filter(notif => !notif.is_read).length;
+            setUnreadCount(unread);
+        } catch (error) {
+            console.error('Ошибка загрузки уведомлений:', error);
+        }
+    }, [tokens]);
 
     useEffect(() => {
         if (isAuth && tokens?.access) {
@@ -22,21 +35,7 @@ function Header() {
             const interval = setInterval(fetchUnreadCount, 30000);
             return () => clearInterval(interval);
         }
-    }, [isAuth, tokens]);
-
-    const fetchUnreadCount = async () => {
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/users/notifications/', {
-                headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
-            });
-            const unread = response.data.filter(notif => !notif.is_read).length;
-            setUnreadCount(unread);
-        } catch (error) {
-            console.error('Ошибка загрузки уведомлений:', error);
-        }
-    };
+    }, [isAuth, tokens, fetchUnreadCount]);
 
     return (
         <header className={styles.header}>

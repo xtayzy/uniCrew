@@ -1,16 +1,15 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { API_URL } from "../../config.js";
 import styles from "./style.module.css";
 import LoadingSpinner from "../LoadingSpinner/index.jsx";
 import ErrorDisplay from "../ErrorDisplay/index.jsx";
-
-const API_URL = "http://127.0.0.1:8000/api/";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function CreateTeamComponent() {
     const navigate = useNavigate();
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -138,7 +137,7 @@ export default function CreateTeamComponent() {
                 Object.keys(data).forEach((key) => {
                     const val = data[key];
                     if (Array.isArray(val)) {
-                        fieldErrors.push(`${key}: ${val.join(", ")}`);
+                        fieldErrors.push(`${key}: ${val.join(', ')}`);
                     } else if (typeof val === 'string') {
                         fieldErrors.push(`${key}: ${val}`);
                     }

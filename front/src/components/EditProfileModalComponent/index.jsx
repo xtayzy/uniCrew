@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import ChangePasswordModalComponent from "../ChangePasswordModalComponent/index.jsx";
 import axios from "axios";
 import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
 
-const API_URL = "http://127.0.0.1:8000/api/";
 
 export default function EditProfileModalComponent({ profile, access, onClose, onSave }) {
     const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ export default function EditProfileModalComponent({ profile, access, onClose, on
         { value: "BACHELOR", label: "Бакалавриат" },
         { value: "MASTER", label: "Магистратура" },
         { value: "PHD", label: "Докторантура" },
-        { value: "OTHER", label: "Другое" },
+          { value: "OTHER", label: "Другое" },
     ]);
 
     useEffect(() => {

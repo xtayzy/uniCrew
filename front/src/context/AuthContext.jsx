@@ -1,15 +1,20 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-
-const API_URL = "http://127.0.0.1:8000/api/";
-
-export const AuthContext = createContext();
+import { API_URL } from "../config.js";
+import { AuthContext } from "./AuthContextObject";
 
 export const AuthProvider = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false);
     const [tokens, setTokens] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
+
+    const logout = useCallback(() => {
+        localStorage.removeItem("tokens");
+        setTokens(null);
+        setIsAuth(false);
+        setIsRefreshing(false);
+    }, []);
 
     // Функция для обновления токенов
     const refreshTokens = useCallback(async () => {
@@ -30,13 +35,13 @@ export const AuthProvider = ({ children }) => {
             setTokens(newTokens);
             setIsRefreshing(false);
             return true;
-        } catch (error) {
+        } catch {
             console.warn("❌ Refresh token expired — logout()");
             logout();
             setIsRefreshing(false);
             return false;
         }
-    }, [tokens, isRefreshing]);
+    }, [tokens, isRefreshing, logout]);
 
     // При запуске — читаем токены из localStorage
     useEffect(() => {
@@ -71,13 +76,6 @@ export const AuthProvider = ({ children }) => {
         setTokens(newTokens);
         setIsAuth(true);
     };
-
-    const logout = useCallback(() => {
-        localStorage.removeItem("tokens");
-        setTokens(null);
-        setIsAuth(false);
-        setIsRefreshing(false);
-    }, []);
 
     // Настройка axios interceptor для автоматического добавления токенов и обработки ошибок
     useEffect(() => {

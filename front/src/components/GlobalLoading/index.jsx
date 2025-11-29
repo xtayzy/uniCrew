@@ -1,22 +1,13 @@
-import { createContext, useContext, useState } from 'react';
-import LoadingSpinner from '../LoadingSpinner';
-import styles from './style.module.css';
-
-const GlobalLoadingContext = createContext();
-
-export const useGlobalLoading = () => {
-    const context = useContext(GlobalLoadingContext);
-    if (!context) {
-        throw new Error('useGlobalLoading must be used within a GlobalLoadingProvider');
-    }
-    return context;
-};
+import { useState } from "react";
+import LoadingSpinner from "../LoadingSpinner";
+import styles from "./style.module.css";
+import { GlobalLoadingContext } from "./context";
 
 export const GlobalLoadingProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [loadingText, setLoadingText] = useState('Загрузка...');
+    const [loadingText, setLoadingText] = useState("Загрузка...");
 
-    const showLoading = (text = 'Загрузка...') => {
+    const showLoading = (text = "Загрузка...") => {
         setLoadingText(text);
         setIsLoading(true);
     };

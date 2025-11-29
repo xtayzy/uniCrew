@@ -58,7 +58,7 @@ apiClient.interceptors.response.use(
         const errorMessage = error.response?.data?.detail || 
                             error.response?.data?.message ||
                             error.message ||
-                            'Произошла ошибка при выполнении запроса';
+                            "Произошла ошибка при выполнении запроса";
         
         // Создаем улучшенный объект ошибки
         const enhancedError = {

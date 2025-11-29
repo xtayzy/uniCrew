@@ -1,22 +1,21 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import styles from "../TeamsPage/style.module.css";
 import InviteUserModal from "../../components/InviteUserModal";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
+import { API_URL } from "../../config.js";
+import { useAuth } from "../../hooks/useAuth";
 
-const API_URL = "http://127.0.0.1:8000/api/";
 
 export default function MyTeamsPage() {
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const navigate = useNavigate();
     const [ownerTeams, setOwnerTeams] = useState([]);
     const [memberTeams, setMemberTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [username, setUsername] = useState("");
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [teamRequests, setTeamRequests] = useState({});
@@ -35,7 +34,6 @@ export default function MyTeamsPage() {
                 // 1) Узнаём username текущего пользователя
                 const me = await axios.get(`${API_URL}profile/`, { headers });
                 const uname = me?.data?.username;
-                setUsername(uname || "");
 
                 // 2) Загружаем команды, где он создатель (серверный фильтр)
                 const [ownersRes, allRes] = await Promise.all([
@@ -52,7 +50,6 @@ export default function MyTeamsPage() {
                 setOwnerTeams(owners);
                 setMemberTeams(members);
             } catch (e) {
-                // eslint-disable-next-line no-console
                 console.error(e);
                 setError(e);
             } finally {
@@ -67,7 +64,7 @@ export default function MyTeamsPage() {
             const response = await axios.get(`${API_URL}teams/${teamId}/requests/`, { headers });
             setTeamRequests(prev => ({ ...prev, [teamId]: response.data }));
         } catch (error) {
-            console.error('Ошибка загрузки заявок:', error);
+              console.error('Ошибка загрузки заявок:', error);
         }
     };
 
@@ -191,7 +188,7 @@ export default function MyTeamsPage() {
                                                     <strong>{request.user}</strong>
                                                     {request.message && (
                                                         <p className={styles.request_message}>
-                                                            "{request.message}"
+                                                            {request.message}
                                                         </p>
                                                     )}
                                                 </div>

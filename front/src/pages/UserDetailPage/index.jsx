@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
-import InviteToTeamModal from '../../components/InviteToTeamModal';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ErrorDisplay from '../../components/ErrorDisplay';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import styles from "./style.module.css";
+import { API_URL } from "@/config";
+import InviteToTeamModal from "../../components/InviteToTeamModal";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import ErrorDisplay from "../../components/ErrorDisplay";
+import { useAuth } from "../../hooks/useAuth";
 
 const UserDetailPage = () => {
     const { username } = useParams();
     const navigate = useNavigate();
-    const { isAuth, tokens } = useContext(AuthContext);
+    const { isAuth } = useAuth();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +20,7 @@ const UserDetailPage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/api/users/?username=${username}`);
+                const response = await axios.get(`${API_URL}users/?username=${username}`);
                 if (response.data && response.data.length > 0) {
                     setUser(response.data[0]);
                     setError(null);

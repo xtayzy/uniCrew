@@ -1,11 +1,11 @@
-import {useContext, useState} from "react";
+import { useState } from "react";
 import {useNavigate} from "react-router-dom";
 import { Link } from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext.jsx";
 import styles from './style.module.css'
 import {login} from "../../api/auth.js";
 import LoadingSpinner from "../../components/LoadingSpinner/index.jsx";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 function LogInPage() {
     const [username, setUsername] = useState("");
@@ -14,7 +14,7 @@ function LogInPage() {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { login_context } = useContext(AuthContext);
+    const { login_context } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();

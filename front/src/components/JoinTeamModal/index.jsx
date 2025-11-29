@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
+import { useState } from "react";
+import axios from "axios";
+import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
+import { useAuth } from "../../hooks/useAuth";
 
 const JoinTeamModal = ({ team, isOpen, onClose, onSuccess }) => {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const { tokens } = React.useContext(AuthContext);
+    const { tokens } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +18,7 @@ const JoinTeamModal = ({ team, isOpen, onClose, onSuccess }) => {
 
         setLoading(true);
         try {
-            await axios.post(`http://127.0.0.1:8000/api/teams/${team.id}/join/`, {
+            await axios.post(`${API_URL}teams/${team.id}/join/`, {
                 message: message.trim()
             }, {
                 headers: {

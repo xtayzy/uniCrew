@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "./config.js";
+import { API_URL } from "../config.js";
 
 
 export async function registerStep1(username, email, password1, password2){

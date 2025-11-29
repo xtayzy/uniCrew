@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./style.module.css";
+import { API_URL } from "../../config.js";
 
-const API_URL = "http://127.0.0.1:8000/api/";
 
 export default function EditSkillsModalComponent({ profile, access, onClose, onSave }) {
     const [formData, setFormData] = useState({

@@ -1,20 +1,21 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import styles from './style.module.css'
+import styles from "./style.module.css";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { API_URL } from "../../config.js";
 import JoinTeamModal from "../../components/JoinTeamModal";
 import LoadingSkeleton from "../../components/LoadingSkeleton";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
+import { useAuth } from "../../hooks/useAuth";
 
 const TeamsPage = () => {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { isAuth, tokens } = useContext(AuthContext);
+    const { isAuth } = useAuth();
 
     const [query, setQuery] = useState({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
     const [categories, setCategories] = useState([]);
@@ -39,11 +40,12 @@ const TeamsPage = () => {
                 if (query.status) params.set("status", query.status);
                 if (query.required_skills) params.set("required_skills", query.required_skills);
                 if (query.required_qualities) params.set("required_qualities", query.required_qualities);
-                const url = `http://127.0.0.1:8000/api/teams/${params.toString() ? `?${params.toString()}` : ""}`;
+                const queryString = params.toString() ? '?' + params.toString() : '';
+                const url = `${API_URL}teams/${queryString}`;
                 const response = await axios.get(url);
                 setTeams(response.data);
             } catch (error) {
-                console.error("Ошибка загрузки команд:", error);
+                  console.error('Ошибка загрузки команд:', error);
                 setError(error);
             } finally {
                 setLoading(false);
@@ -56,7 +58,7 @@ const TeamsPage = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/project-categories/");
+                const res = await axios.get(`${API_URL}project-categories/`);
                 setCategories(res.data || []);
             } catch (e) {
                 console.error(e);
@@ -69,8 +71,8 @@ const TeamsPage = () => {
         const fetchMeta = async () => {
             try {
                 const [skRes, qRes] = await Promise.all([
-                    axios.get("http://127.0.0.1:8000/api/skills/"),
-                    axios.get("http://127.0.0.1:8000/api/personal-qualities/"),
+                    axios.get(`${API_URL}skills/`),
+                    axios.get(`${API_URL}personal-qualities/`),
                 ]);
                 setSkillsAll((skRes.data || []).map(s => s.name));
                 setQualitiesAll((qRes.data || []).map(q => q.name));

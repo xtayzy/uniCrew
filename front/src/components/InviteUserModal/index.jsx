@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import styles from './style.module.css';
-import { AuthContext } from '../../context/AuthContext';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import styles from "./style.module.css";
+import { API_URL } from "@/config";
+import { useAuth } from "../../hooks/useAuth";
 
 const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
     const [users, setUsers] = useState([]);
@@ -10,13 +11,26 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const { tokens } = React.useContext(AuthContext);
+    const { tokens } = useAuth();
+
+    const fetchUsers = useCallback(async () => {
+        try {
+            const response = await axios.get(`${API_URL}users/`, {
+                headers: {
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
+            });
+            setUsers(response.data);
+        } catch (error) {
+            console.error("Ошибка загрузки пользователей:", error);
+        }
+    }, [tokens]);
 
     useEffect(() => {
         if (isOpen) {
             fetchUsers();
         }
-    }, [isOpen]);
+    }, [isOpen, fetchUsers]);
 
     useEffect(() => {
         if (searchQuery.trim()) {
@@ -31,48 +45,35 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
         }
     }, [searchQuery, users]);
 
-    const fetchUsers = async () => {
-        try {
-            const response = await axios.get('http://127.0.0.1:8000/api/users/', {
-                headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
-            });
-            setUsers(response.data);
-        } catch (error) {
-            console.error('Ошибка загрузки пользователей:', error);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!selectedUser) {
-            alert('Пожалуйста, выберите пользователя');
+            alert("Пожалуйста, выберите пользователя");
             return;
         }
 
         setLoading(true);
         try {
-            await axios.post(`http://127.0.0.1:8000/api/teams/${team.id}/invite/`, {
+            await axios.post(`${API_URL}teams/${team.id}/invite/`, {
                 user_id: selectedUser.id,
                 message: message.trim()
             }, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
+                    Authorization: `Bearer ${tokens?.access}`,
                 }
             });
             
             onSuccess(`Приглашение отправлено пользователю ${selectedUser.username}!`);
-            setMessage('');
+            setMessage("");
             setSelectedUser(null);
-            setSearchQuery('');
+            setSearchQuery("");
             onClose();
         } catch (error) {
-            console.error('Ошибка при отправке приглашения:', error);
+            console.error("Ошибка при отправке приглашения:", error);
             if (error.response?.data?.detail) {
                 alert(error.response.data.detail);
             } else {
-                alert('Произошла ошибка при отправке приглашения');
+                alert("Произошла ошибка при отправке приглашения");
             }
         } finally {
             setLoading(false);
@@ -143,7 +144,7 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
                                     className={styles.clear_selection}
                                     onClick={() => {
                                         setSelectedUser(null);
-                                        setSearchQuery('');
+                                        setSearchQuery("");
                                     }}
                                 >
                                     ×
@@ -180,7 +181,7 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
                             className={styles.submit_btn}
                             disabled={loading || !selectedUser}
                         >
-                            {loading ? 'Отправка...' : 'Отправить приглашение'}
+                            {loading ? "Отправка..." : "Отправить приглашение"}
                         </button>
                     </div>
                 </form>

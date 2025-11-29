@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { AuthContext } from '../../context/AuthContext';
-import styles from './style.module.css';
-import LoadingSpinner from '../LoadingSpinner';
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import styles from "./style.module.css";
+import LoadingSpinner from "../LoadingSpinner";
+import { API_URL } from "../../config.js";
+import { useAuth } from "../../hooks/useAuth";
 
 const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
-    const { tokens } = useContext(AuthContext);
+    const { tokens } = useAuth();
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -21,21 +22,13 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
         due_date: ''
     });
 
-    useEffect(() => {
-        if (team && currentUser) {
-            fetchTasks();
-            if (isTeamCreator) {
-                fetchTeamMembers();
-            }
-        }
-    }, [team, currentUser, isTeamCreator]);
-
-    const fetchTasks = async () => {
+    const fetchTasks = useCallback(async () => {
+        if (!team?.id) return;
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/teams/${team.id}/tasks/`, {
+            const response = await axios.get(`${API_URL}teams/${team.id}/tasks/`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             setTasks(response.data);
         } catch (error) {
@@ -43,20 +36,30 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [team?.id, tokens]);
 
-    const fetchTeamMembers = async () => {
+    const fetchTeamMembers = useCallback(async () => {
+        if (!team?.id) return;
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/teams/${team.id}/members/`, {
+            const response = await axios.get(`${API_URL}teams/${team.id}/members/`, {
                 headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                }
+                    Authorization: `Bearer ${tokens?.access}`,
+                },
             });
             setTeamMembers(response.data.filter(member => member.status === 'APPROVED'));
         } catch (error) {
             console.error('Ошибка загрузки участников:', error);
         }
-    };
+    }, [team?.id, tokens]);
+
+    useEffect(() => {
+        if (team && currentUser) {
+            fetchTasks();
+            if (isTeamCreator) {
+                fetchTeamMembers();
+            }
+        }
+    }, [team, currentUser, isTeamCreator, fetchTasks, fetchTeamMembers]);
 
     const handleCreateTask = async (e) => {
         e.preventDefault();
@@ -69,7 +72,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                 due_date: formData.due_date || null
             };
             
-            await axios.post(`http://127.0.0.1:8000/api/teams/${team.id}/tasks/`, taskData, {
+            await axios.post(`${API_URL}teams/${team.id}/tasks/`, taskData, {
                 headers: {
                     'Authorization': `Bearer ${tokens.access}`,
                     'Content-Type': 'application/json'
@@ -103,7 +106,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                 due_date: formData.due_date || null
             };
             
-            await axios.put(`http://127.0.0.1:8000/api/teams/${team.id}/tasks/${editingTask.id}/`, taskData, {
+            await axios.put(`${API_URL}teams/${team.id}/tasks/${editingTask.id}/`, taskData, {
                 headers: {
                     'Authorization': `Bearer ${tokens.access}`,
                     'Content-Type': 'application/json'
@@ -131,7 +134,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
             return;
         }
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/teams/${team.id}/tasks/${taskId}/`, {
+            await axios.delete(`${API_URL}teams/${team.id}/tasks/${taskId}/`, {
                 headers: {
                     'Authorization': `Bearer ${tokens.access}`
                 }
@@ -146,7 +149,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
 
     const handleStatusChange = async (taskId, newStatus) => {
         try {
-            await axios.patch(`http://127.0.0.1:8000/api/teams/${team.id}/tasks/${taskId}/`, 
+            await axios.patch(`${API_URL}teams/${team.id}/tasks/${taskId}/`, 
                 { status: newStatus }, 
                 {
                     headers: {
@@ -419,7 +422,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                                     Отмена
                                 </button>
                                 <button type="submit" className={styles.submit_btn}>
-                                    {editingTask ? 'Сохранить' : 'Создать'}
+                                    {editingTask ? "Сохранить" : "Создать"}
                                 </button>
                             </div>
                         </form>

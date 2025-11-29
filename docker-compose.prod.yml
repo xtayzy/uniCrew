@@ -1,81 +1,31 @@
-version: '3.8'
-
-# Production docker-compose конфигурация
-# Использование: docker-compose -f docker-compose.prod.yml up -d
-
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: unicrew_db
-    environment:
-      POSTGRES_DB: ${DB_NAME:-unicrew_db}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - unicrew_network
-    restart: unless-stopped
-
   backend:
-    build:
-      context: ./back
-      dockerfile: Dockerfile
-    container_name: unicrew_backend
-    entrypoint: >
-      sh -c "python manage.py migrate --settings=unicrewback.settings_production &&
-             python manage.py collectstatic --noinput --settings=unicrewback.settings_production &&
-             exec gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 unicrewback.wsgi:application --settings=unicrewback.settings_production"
-    environment:
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG:-False}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - DB_NAME=${DB_NAME:-unicrew_db}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - DB_HOST=db
-      - DB_PORT=5432
-      - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
-      - EMAIL_PORT=${EMAIL_PORT:-587}
-      - EMAIL_USE_TLS=${EMAIL_USE_TLS:-True}
-      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
-      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-${EMAIL_HOST_USER}}
-      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
-      - SECURE_SSL_REDIRECT=${SECURE_SSL_REDIRECT:-True}
-    volumes:
-      - ./back/media:/app/media
-      - ./back/staticfiles:/app/staticfiles
-      - ./back/logs:/app/logs
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - unicrew_network
-    restart: unless-stopped
+    ports: []
+    expose:
+      - "8000"
 
   frontend:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
-      args:
-        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000/api/}
-    container_name: unicrew_frontend
-    depends_on:
-      - backend
-    networks:
-      - unicrew_network
+    ports: []
+    expose:
+      - "80"
+
+  caddy:
+    image: caddy:2-alpine
     restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
 
 volumes:
-  postgres_data:
-
-networks:
-  unicrew_network:
-    driver: bridge
+  caddy_data:
+  caddy_config:
 
