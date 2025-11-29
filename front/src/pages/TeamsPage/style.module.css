@@ -45,6 +45,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-top: 30px;
+  align-items: start; /* Карточки выравниваются по верху, не растягиваются */
 }
 
 .team_card {
@@ -57,7 +58,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 0; /* Позволяет карточке сжиматься */
 }
 
 .team_card:hover {
@@ -73,8 +74,9 @@
 }
 
 .members_list {
-  margin: 12px 0;
+  margin: 8px 0;
   flex: 1; /* Растягивается, чтобы прижать кнопку вниз */
+  min-height: 0; /* Позволяет flex-элементу сжиматься */
 }
 
 .members_list ul {
