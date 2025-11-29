@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoadingSpinner from "../LoadingSpinner";
 import styles from "./style.module.css";
 import { GlobalLoadingContext } from "./context";
@@ -23,24 +23,16 @@ export const GlobalLoadingProvider = ({ children }) => {
         hideLoading
     };
 
-    useEffect(() => {
-        if (isLoading) {
-            document.body.classList.add('loading-active');
-        } else {
-            document.body.classList.remove('loading-active');
-        }
-        return () => {
-            document.body.classList.remove('loading-active');
-        };
-    }, [isLoading]);
-
     return (
         <GlobalLoadingContext.Provider value={value}>
             {children}
             {isLoading && (
-                <div className={styles.globalLoadingOverlay}>
-                    <LoadingSpinner size="large" text={loadingText} />
-                </div>
+                <>
+                    <div className={styles.globalLoadingPlaceholder}></div>
+                    <div className={styles.globalLoadingOverlay}>
+                        <LoadingSpinner size="large" text={loadingText} />
+                    </div>
+                </>
             )}
         </GlobalLoadingContext.Provider>
     );

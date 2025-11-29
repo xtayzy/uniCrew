@@ -1,3 +1,14 @@
+.globalLoadingPlaceholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: calc(100vh - 200px);
+    background: #ffffff;
+    z-index: 1;
+}
+
 .globalLoadingOverlay {
     position: fixed;
     top: 0;
@@ -10,15 +21,6 @@
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease-out;
-}
-
-/* Предотвращение поднятия footer при загрузке */
-body.loading-active .main-content {
-    min-height: calc(100vh - 200px);
-}
-
-body.loading-active .app-container {
-    min-height: 100vh;
 }
 
 @keyframes fadeIn {

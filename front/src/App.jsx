@@ -32,7 +32,7 @@ function App() {
                     <Router>
                         <div className="app-container">
                             <Header />
-                            <main className="main-content">
+                            <main className="main-content" style={{ position: 'relative' }}>
                             <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/teams" element={<TeamsPage/>} />
