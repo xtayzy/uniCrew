@@ -23,7 +23,6 @@ import TeamPublicPage from "./pages/TeamPublicPage/index.jsx";
 import TeamPrivatePage from "./pages/TeamPrivatePage/index.jsx";
 import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
-import InvitePage from "./pages/InvitePage/index.jsx";
 
 function App() {
     return (
@@ -149,10 +148,6 @@ function App() {
                         }
                     />
 
-                    <Route
-                        path="/invite/:token"
-                        element={<InvitePage />}
-                    />
                             </Routes>
                             </main>
                             <Footer />

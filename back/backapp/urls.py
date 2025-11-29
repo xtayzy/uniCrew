@@ -29,7 +29,6 @@ urlpatterns = [
     path("password-reset/", PasswordResetView.as_view(), name="password_reset"),
     path("change-password/", ChangePasswordView.as_view(), name="change_password"),
     path('profile/', UserProfileUpdateView.as_view(), name="user-profile"),
-    path("teams/invite/", TeamViewSet.as_view({"get": "by_invite_token", "post": "join_by_invite_token"}), name="team-invite"),
 ] + router.urls
 
 

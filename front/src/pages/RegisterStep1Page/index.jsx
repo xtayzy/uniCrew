@@ -1,5 +1,5 @@
-import {useState, useEffect} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import { Link } from "react-router-dom";
 import {registerStep1} from "../../api/register.js";
 import styles from './style.module.css'
@@ -15,14 +15,6 @@ function RegisterStep1Page() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const inviteToken = searchParams.get("invite");
-
-    useEffect(() => {
-        if (inviteToken) {
-            localStorage.setItem("pending_invite_token", inviteToken);
-        }
-    }, [inviteToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +26,7 @@ function RegisterStep1Page() {
             registerStep1(username, email, password1, password2)
                 .then(() => {
                     // Переход происходит сразу после успешного запроса
-                    navigate("/register-step2", {state: {email, inviteToken}});
+                    navigate("/register-step2", {state: {email}});
                 })
                 .catch((err) => {
                     console.error("Ошибка:", err.response ? err.response.data : err.message);

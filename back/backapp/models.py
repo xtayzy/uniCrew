@@ -130,36 +130,9 @@ class Team(models.Model):
 
     whatsapp_link = models.URLField(blank=True, null=True, help_text="Ссылка на группу WhatsApp")
     telegram_link = models.URLField(blank=True, null=True, help_text="Ссылка на группу Telegram")
-    invite_token = models.CharField(max_length=64, unique=True, blank=True, null=True, help_text="Уникальный токен для пригласительной ссылки")
 
     def __str__(self):
         return f"{self.title}"
-    
-    def generate_invite_token(self):
-        """Генерирует уникальный токен для пригласительной ссылки"""
-        if not self.invite_token:
-            # Генерируем уникальный токен
-            max_attempts = 10
-            for _ in range(max_attempts):
-                token = secrets.token_urlsafe(32)
-                if not Team.objects.filter(invite_token=token).exists():
-                    self.invite_token = token
-                    self.save(update_fields=['invite_token'])
-                    break
-            else:
-                raise ValueError("Не удалось сгенерировать уникальный токен")
-        return self.invite_token
-    
-    def save(self, *args, **kwargs):
-        if not self.invite_token:
-            # Генерируем уникальный токен при создании
-            max_attempts = 10
-            for _ in range(max_attempts):
-                token = secrets.token_urlsafe(32)
-                if not Team.objects.filter(invite_token=token).exists():
-                    self.invite_token = token
-                    break
-        super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):

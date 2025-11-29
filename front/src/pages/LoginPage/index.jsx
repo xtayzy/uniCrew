@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { useState } from "react";
+import {useNavigate} from "react-router-dom";
 import { Link } from "react-router-dom";
 import styles from './style.module.css'
 import {login} from "../../api/auth.js";
 import LoadingSpinner from "../../components/LoadingSpinner/index.jsx";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import axios from "axios";
-import { API_URL } from "../../config.js";
 
 function LogInPage() {
     const [username, setUsername] = useState("");
@@ -17,14 +15,6 @@ function LogInPage() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login_context } = useAuth();
-    const [searchParams] = useSearchParams();
-    const inviteToken = searchParams.get("invite");
-
-    useEffect(() => {
-        if (inviteToken) {
-            localStorage.setItem("pending_invite_token", inviteToken);
-        }
-    }, [inviteToken]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,27 +24,6 @@ function LogInPage() {
         try {
             const { access, refresh } = await login(username, password);
             login_context(access, refresh);
-            
-            // Проверяем, есть ли pending invite token
-            const pendingInvite = localStorage.getItem("pending_invite_token");
-            if (pendingInvite) {
-                try {
-                    const response = await axios.post(`${API_URL}teams/invite/`, { token: pendingInvite }, {
-                        headers: { Authorization: `Bearer ${access}` }
-                    });
-                    localStorage.removeItem("pending_invite_token");
-                    if (response.data.team_id) {
-                        navigate(`/teams/${response.data.team_id}`);
-                    } else {
-                        navigate("/my-teams");
-                    }
-                    return;
-                } catch (inviteErr) {
-                    console.error("Ошибка при вступлении по приглашению:", inviteErr);
-                    // Продолжаем обычный переход, если ошибка
-                }
-            }
-            
             navigate("/");
         } catch (err) {
             console.error("Login error:", err);
