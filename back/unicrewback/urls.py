@@ -22,6 +22,8 @@ from drf_yasg import openapi
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
+from django.urls import re_path
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -43,5 +45,11 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
-# Обслуживание media файлов (работает и в production через Caddy)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Обслуживание media файлов
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # В production обслуживаем media файлы через view
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]
