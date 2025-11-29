@@ -1,7 +1,9 @@
 import { useState } from "react";
 import LoadingSpinner from "../LoadingSpinner";
 import styles from "./style.module.css";
-import { GlobalLoadingContext } from "./context";
+import { GlobalLoadingContext, useGlobalLoading } from "./context";
+
+export { useGlobalLoading };
 
 export const GlobalLoadingProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { GlobalLoadingProvider, useGlobalLoading } from "./components/GlobalLoading";
+import { GlobalLoadingProvider } from "./components/GlobalLoading";
+import { useGlobalLoading } from "./components/GlobalLoading";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GuestRoute from "./routes/GuestRoute";
