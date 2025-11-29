@@ -76,9 +76,9 @@ function LogInPage() {
                     </button>
                 </div>
                 <br/>
-                <button type="submit" disabled={isLoading} style={{ position: 'relative', minHeight: '40px' }}>
+                <button type="submit" disabled={isLoading} className={styles.submit_button}>
                     {isLoading ? (
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                        <span className={styles.loading_content}>
                             <LoadingSpinner size="small" text="" />
                             <span>Вход...</span>
                         </span>
