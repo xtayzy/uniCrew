@@ -6,8 +6,8 @@ const SEOHead = ({ title, description, keywords, ogImage }) => {
     const baseUrl = "https://unicrew.kz";
     const currentUrl = `${baseUrl}${location.pathname}`;
     
-    const defaultTitle = "UniCrew — Платформа для поиска команды студенческих проектов";
-    const defaultDescription = "Найди свою идеальную команду для учебных проектов, дипломных работ, хакатонов и стартапов. UniCrew помогает студентам находить единомышленников с нужными навыками.";
+    const defaultTitle = "UniCrew.kz — Найди команду для студенческих проектов | Хакатоны, Дипломы, Стартапы";
+    const defaultDescription = "UniCrew.kz — платформа для поиска команды студентам. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов. Бесплатная регистрация.";
     const defaultImage = `${baseUrl}/unicrew_logo_2.png`;
     
     useEffect(() => {

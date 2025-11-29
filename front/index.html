@@ -4,9 +4,9 @@
     <meta charset="UTF-8"/>
     
     <!-- Primary Meta Tags -->
-    <title>UniCrew — Платформа для поиска команды студенческих проектов</title>
-    <meta name="title" content="UniCrew — Платформа для поиска команды студенческих проектов"/>
-    <meta name="description" content="Найди свою идеальную команду для учебных проектов, дипломных работ, хакатонов и стартапов. UniCrew помогает студентам находить единомышленников с нужными навыками."/>
+    <title>UniCrew.kz — Найди команду для студенческих проектов | Хакатоны, Дипломы, Стартапы</title>
+    <meta name="title" content="UniCrew.kz — Найди команду для студенческих проектов | Хакатоны, Дипломы, Стартапы"/>
+    <meta name="description" content="UniCrew.kz — платформа для поиска команды студентам. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов. Бесплатная регистрация."/>
     <meta name="keywords" content="студенческие проекты, команда, хакатон, дипломная работа, стартап, поиск команды, студенты, проекты"/>
     <meta name="author" content="UniCrew"/>
     <meta name="robots" content="index, follow"/>
@@ -15,8 +15,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="https://unicrew.kz/"/>
-    <meta property="og:title" content="UniCrew — Платформа для поиска команды студенческих проектов"/>
-    <meta property="og:description" content="Найди свою идеальную команду для учебных проектов, дипломных работ, хакатонов и стартапов. UniCrew помогает студентам находить единомышленников с нужными навыками."/>
+    <meta property="og:title" content="UniCrew.kz — Найди команду для студенческих проектов | Хакатоны, Дипломы, Стартапы"/>
+    <meta property="og:description" content="UniCrew.kz — платформа для поиска команды студентам. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов. Бесплатная регистрация."/>
     <meta property="og:image" content="https://unicrew.kz/unicrew_logo_2.png"/>
     <meta property="og:site_name" content="UniCrew"/>
     <meta property="og:locale" content="ru_RU"/>
@@ -24,8 +24,8 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image"/>
     <meta property="twitter:url" content="https://unicrew.kz/"/>
-    <meta property="twitter:title" content="UniCrew — Платформа для поиска команды студенческих проектов"/>
-    <meta property="twitter:description" content="Найди свою идеальную команду для учебных проектов, дипломных работ, хакатонов и стартапов. UniCrew помогает студентам находить единомышленников с нужными навыками."/>
+    <meta property="twitter:title" content="UniCrew.kz — Найди команду для студенческих проектов | Хакатоны, Дипломы, Стартапы"/>
+    <meta property="twitter:description" content="UniCrew.kz — платформа для поиска команды студентам. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов. Бесплатная регистрация."/>
     <meta property="twitter:image" content="https://unicrew.kz/unicrew_logo_2.png"/>
     
     <!-- Favicon -->
@@ -52,12 +52,17 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "UniCrew",
+      "name": "UniCrew.kz",
+      "alternateName": "UniCrew",
       "url": "https://unicrew.kz",
-      "description": "Платформа для поиска команды студенческих проектов",
+      "description": "Платформа для поиска команды студенческих проектов. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов.",
+      "inLanguage": "ru-RU",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://unicrew.kz/teams?search={search_term_string}",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://unicrew.kz/teams?search={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
       }
     }
@@ -68,9 +73,28 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "UniCrew",
+      "alternateName": "UniCrew.kz",
       "url": "https://unicrew.kz",
       "logo": "https://unicrew.kz/unicrew_logo_2.png",
+      "description": "Платформа для поиска команды студенческих проектов",
       "sameAs": []
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "UniCrew.kz",
+      "url": "https://unicrew.kz",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KZT"
+      },
+      "description": "Платформа для поиска команды студенческих проектов. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов."
     }
     </script>
 </head>
