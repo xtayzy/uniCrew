@@ -496,9 +496,17 @@
 
 /* Адаптивность */
 @media (max-width: 1024px) {
+    .teams_page {
+        padding: 20px;
+    }
+    
     .teams_grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
+    }
+    
+    .toolbar h1 {
+        font-size: 1.875rem;
     }
 }
 
@@ -511,15 +519,43 @@
         flex-direction: column;
         gap: 16px;
         align-items: stretch;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+    
+    .toolbar h1 {
+        font-size: 1.75rem;
+        text-align: center;
     }
     
     .toolbar_btns {
         justify-content: center;
+        width: 100%;
+    }
+    
+    .create_button {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px 20px;
+        font-size: 15px;
     }
     
     .teams_grid {
         grid-template-columns: 1fr;
         gap: 16px;
+        margin-top: 24px;
+    }
+    
+    .team_card {
+        padding: 18px;
+    }
+    
+    .team_card h2 {
+        font-size: 1.125rem;
+    }
+    
+    .team_card p {
+        font-size: 13px;
     }
     
     .filters {
@@ -528,10 +564,64 @@
     
     .filterRow3 {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
     
     .filterRow2 {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .filterBox {
+        padding: 8px;
+    }
+    
+    .inputRow {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .inputInline {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .addBtn {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .join_button {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .team_actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .invite_btn,
+    .requests_btn {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .request_item {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .request_actions {
+        width: 100%;
+        justify-content: stretch;
+        margin-left: 0;
+    }
+    
+    .approve_btn,
+    .reject_btn {
+        flex: 1;
+        padding: 8px 12px;
     }
 }
 
@@ -540,7 +630,91 @@
         padding: 12px;
     }
     
+    .toolbar h1 {
+        font-size: 1.5rem;
+    }
+    
     .team_card {
-        padding: 16px;
+        padding: 14px;
+    }
+    
+    .team_card h2 {
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+    
+    .team_card p {
+        font-size: 12px;
+        margin: 3px 0;
+    }
+    
+    .team_tags {
+        gap: 4px;
+        margin-top: 8px;
+    }
+    
+    .tag {
+        font-size: 11px;
+        padding: 3px 6px;
+        max-width: none;
+    }
+    
+    .members_list ul {
+        font-size: 12px;
+        padding-left: 16px;
+    }
+    
+    .created_at {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+    
+    .join_button {
+        padding: 8px 14px;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+    
+    .request_item {
+        padding: 10px;
+    }
+    
+    .request_info strong {
+        font-size: 13px;
+    }
+    
+    .request_message {
+        font-size: 11px;
+    }
+    
+    .filterBox {
+        padding: 6px;
+    }
+    
+    .suggestions {
+        max-height: 180px;
+    }
+    
+    .suggestionItem {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .teams_page {
+        padding: 8px;
+    }
+    
+    .toolbar h1 {
+        font-size: 1.375rem;
+    }
+    
+    .team_card {
+        padding: 12px;
+    }
+    
+    .team_card h2 {
+        font-size: 0.9375rem;
     }
 }

@@ -159,6 +159,7 @@
         margin: 40px auto;
         padding: 32px 24px;
         max-width: 90%;
+        border-radius: 12px;
     }
     
     .main_block h2 {
@@ -166,14 +167,36 @@
         margin-bottom: 24px;
     }
     
-    .main_block input {
+    .main_block input,
+    .passwordInput {
         padding: 12px 14px;
-        font-size: 16px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+        margin: 10px 0;
+    }
+    
+    .passwordWrapper {
+        margin: 10px 0;
     }
     
     .main_block button[type="submit"] {
         padding: 12px;
         font-size: 16px;
+        margin-top: 14px;
+    }
+    
+    .main_block hr {
+        margin: 20px 0;
+    }
+    
+    .main_block p {
+        font-size: 13px;
+        margin-top: 14px;
+    }
+    
+    .main_block .error,
+    .main_block .success {
+        padding: 10px;
+        font-size: 13px;
     }
 }
 
@@ -181,9 +204,53 @@
     .main_block {
         margin: 20px auto;
         padding: 24px 20px;
+        max-width: 95%;
+        border-radius: 10px;
     }
     
     .main_block h2 {
         font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .main_block input,
+    .passwordInput {
+        padding: 10px 12px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+        margin: 8px 0;
+    }
+    
+    .passwordWrapper {
+        margin: 8px 0;
+    }
+    
+    .toggle_visibility {
+        padding: 6px;
+    }
+    
+    .toggle_visibility svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .main_block button[type="submit"] {
+        padding: 10px;
+        font-size: 15px;
+        margin-top: 12px;
+    }
+    
+    .main_block p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .main_block {
+        margin: 16px auto;
+        padding: 20px 16px;
+    }
+    
+    .main_block h2 {
+        font-size: 20px;
     }
 }

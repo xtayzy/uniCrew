@@ -743,38 +743,220 @@
 }
 
 /* Адаптивность */
+@media (max-width: 1024px) {
+    .team_detail_page {
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+    
+    .team_content {
+        gap: 32px;
+        padding: 32px;
+    }
+}
+
 @media (max-width: 768px) {
     .team_detail_page {
+        margin: 20px auto;
         padding: 16px;
     }
     
     .team_content {
         grid-template-columns: 1fr;
-        padding: 20px;
-        gap: 20px;
+        padding: 24px;
+        gap: 24px;
     }
     
     .team_header {
         flex-direction: column;
         align-items: stretch;
+        gap: 16px;
     }
     
     .team_title {
         font-size: 24px;
     }
     
+    .status_badge {
+        align-self: flex-start;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .team_description {
+        padding: 24px;
+    }
+    
+    .team_description h3 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+    
+    .team_description p {
+        font-size: 15px;
+    }
+    
     .team_info {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .info_item {
+        padding: 20px;
+    }
+    
+    .requirements {
+        gap: 20px;
+    }
+    
+    .requirement_section h3 {
+        font-size: 18px;
+    }
+    
+    .team_sidebar {
+        gap: 20px;
+    }
+    
+    .creator_section,
+    .members_section,
+    .requests_section,
+    .actions_section,
+    .messenger_links {
+        padding: 24px;
     }
     
     .header {
         flex-direction: column;
         gap: 16px;
         align-items: stretch;
+        margin-bottom: 24px;
+    }
+    
+    .back_btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
     }
     
     .header_actions {
         justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .edit_btn,
+    .manage_btn {
+        width: 100%;
+        padding: 12px 20px;
+    }
+    
+    .limited_access {
+        padding: 16px;
+    }
+    
+    .access_actions {
+        flex-direction: column;
+    }
+    
+    .access_actions .join_btn,
+    .access_actions .public_btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .team_detail_page {
+        margin: 16px auto;
+        padding: 12px;
+    }
+    
+    .team_content {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .team_title {
+        font-size: 20px;
+    }
+    
+    .team_description {
+        padding: 20px;
+    }
+    
+    .team_description h3 {
+        font-size: 18px;
+    }
+    
+    .team_description p {
+        font-size: 14px;
+    }
+    
+    .info_item {
+        padding: 16px;
+    }
+    
+    .info_item h4 {
+        font-size: 12px;
+    }
+    
+    .info_item span {
+        font-size: 14px;
+    }
+    
+    .skill_tag,
+    .quality_tag {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .creator_section,
+    .members_section,
+    .requests_section,
+    .actions_section,
+    .messenger_links {
+        padding: 20px;
+    }
+    
+    .members_section h3,
+    .requests_section h3,
+    .actions_section h3,
+    .messenger_links h3 {
+        font-size: 16px;
+    }
+    
+    .member_item,
+    .request_item {
+        padding: 12px;
+    }
+    
+    .action_buttons {
+        gap: 10px;
+    }
+    
+    .edit_btn,
+    .manage_btn {
+        font-size: 15px;
+    }
+    
+    .messenger_link {
+        padding: 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .team_detail_page {
+        margin: 12px auto;
+        padding: 8px;
+    }
+    
+    .team_content {
+        padding: 16px;
+    }
+    
+    .team_title {
+        font-size: 18px;
     }
 }
 

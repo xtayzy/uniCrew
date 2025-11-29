@@ -153,7 +153,7 @@
 /* Адаптивность */
 @media (max-width: 768px) {
     .about_page {
-        margin: 20px;
+        margin: 20px auto;
         padding: 40px 20px;
         border-radius: 16px;
     }
@@ -161,10 +161,12 @@
     .about_header {
         padding: 30px 20px;
         margin-bottom: 40px;
+        border-radius: 16px;
     }
     
     .about_header h1 {
         font-size: 2.2rem;
+        margin-bottom: 12px;
     }
     
     .about_header p {
@@ -174,38 +176,98 @@
     .about_section {
         padding: 24px 20px;
         margin-bottom: 32px;
+        border-radius: 12px;
     }
     
     .about_section h2 {
         font-size: 1.5rem;
+        margin-bottom: 16px;
     }
     
     .about_section p,
     .about_section ul li,
     .about_section ol li {
         font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    .about_section ul,
+    .about_section ol {
+        padding-left: 20px;
     }
 }
 
 @media (max-width: 480px) {
     .about_page {
-        margin: 16px;
+        margin: 16px auto;
         padding: 30px 16px;
+        border-radius: 12px;
     }
     
     .about_header {
         padding: 24px 16px;
+        margin-bottom: 32px;
+        border-radius: 12px;
     }
     
     .about_header h1 {
         font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .about_header p {
+        font-size: 1rem;
     }
     
     .about_section {
         padding: 20px 16px;
+        margin-bottom: 24px;
+        border-radius: 10px;
     }
     
     .about_section h2 {
         font-size: 1.3rem;
+        margin-bottom: 14px;
+    }
+    
+    .about_section p,
+    .about_section ul li,
+    .about_section ol li {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+    }
+    
+    .about_section ul,
+    .about_section ol {
+        padding-left: 18px;
+    }
+}
+
+@media (max-width: 360px) {
+    .about_page {
+        margin: 12px auto;
+        padding: 24px 12px;
+    }
+    
+    .about_header {
+        padding: 20px 12px;
+    }
+    
+    .about_header h1 {
+        font-size: 1.625rem;
+    }
+    
+    .about_section {
+        padding: 16px 12px;
+    }
+    
+    .about_section h2 {
+        font-size: 1.125rem;
+    }
+    
+    .about_section p,
+    .about_section ul li,
+    .about_section ol li {
+        font-size: 0.875rem;
     }
 }

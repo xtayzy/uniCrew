@@ -388,15 +388,28 @@
 }
 
 /* Адаптивность */
+@media (max-width: 1024px) {
+    .user_detail_page {
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+    
+    .user_content {
+        gap: 32px;
+        padding: 32px;
+    }
+}
+
 @media (max-width: 768px) {
     .user_detail_page {
+        margin: 20px auto;
         padding: 16px;
     }
     
     .user_content {
         grid-template-columns: 1fr;
-        padding: 20px;
-        gap: 20px;
+        padding: 24px;
+        gap: 24px;
     }
     
     .profile_avatar img {
@@ -408,19 +421,179 @@
         flex-direction: column;
         gap: 16px;
         align-items: stretch;
+        margin-bottom: 24px;
+    }
+    
+    .back_btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
     }
     
     .header_actions {
         justify-content: center;
+        width: 100%;
+    }
+    
+    .invite_btn {
+        width: 100%;
+        padding: 12px 20px;
+    }
+    
+    .profile_info {
+        padding: 24px;
+    }
+    
+    .username {
+        font-size: 24px;
+    }
+    
+    .full_name {
+        font-size: 18px;
+    }
+    
+    .position {
+        font-size: 15px;
     }
     
     .detail_item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 4px;
+        gap: 6px;
+        padding: 14px 16px;
+    }
+    
+    .detail_label {
+        font-size: 12px;
     }
     
     .detail_value {
         text-align: left;
+        font-size: 14px;
+    }
+    
+    .skills_section,
+    .qualities_section,
+    .about_section {
+        padding: 24px;
+    }
+    
+    .section_title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+    
+    .skill_tag,
+    .quality_tag {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .about_text {
+        padding: 20px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user_detail_page {
+        margin: 16px auto;
+        padding: 12px;
+    }
+    
+    .user_content {
+        padding: 20px;
+        gap: 20px;
+    }
+    
+    .profile_avatar img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .profile_info {
+        padding: 20px;
+    }
+    
+    .username {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .full_name {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+    
+    .position {
+        font-size: 14px;
+    }
+    
+    .detail_item {
+        padding: 12px;
+    }
+    
+    .detail_label {
+        font-size: 11px;
+    }
+    
+    .detail_value {
+        font-size: 13px;
+    }
+    
+    .skills_section,
+    .qualities_section,
+    .about_section {
+        padding: 20px;
+    }
+    
+    .section_title {
+        font-size: 18px;
+        margin-bottom: 14px;
+    }
+    
+    .skills,
+    .qualities {
+        gap: 6px;
+    }
+    
+    .skill_tag,
+    .quality_tag {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .about_text {
+        padding: 16px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    .error h2 {
+        font-size: 24px;
+    }
+    
+    .error p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .user_detail_page {
+        margin: 12px auto;
+        padding: 8px;
+    }
+    
+    .user_content {
+        padding: 16px;
+    }
+    
+    .profile_avatar img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .username {
+        font-size: 18px;
     }
 }

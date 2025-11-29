@@ -137,31 +137,129 @@
 @media (max-width: 768px) {
     .create_team_page {
         padding: 0 16px;
+        margin: 20px auto;
+    }
+    
+    .create_team_header {
+        margin-bottom: 24px;
     }
     
     .create_team_header h1 {
-        font-size: 2rem;
+        font-size: 1.875rem;
+        margin-bottom: 12px;
+    }
+    
+    .create_team_header p {
+        font-size: 1rem;
     }
     
     .create_team_form {
         padding: 24px;
+        border-radius: 12px;
+    }
+    
+    .form_group {
+        margin-bottom: 20px;
+    }
+    
+    .form_label {
+        font-size: 0.875rem;
+        margin-bottom: 6px;
+    }
+    
+    .form_input,
+    .form_textarea,
+    .form_select {
+        padding: 10px 14px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+    }
+    
+    .form_textarea {
+        min-height: 100px;
     }
     
     .form_actions {
         flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
     }
     
     .form_btn {
         width: 100%;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    
+    .form_error,
+    .form_success {
+        padding: 10px;
+        font-size: 13px;
     }
 }
 
 @media (max-width: 480px) {
+    .create_team_page {
+        padding: 0 12px;
+        margin: 16px auto;
+    }
+    
+    .create_team_header {
+        margin-bottom: 20px;
+    }
+    
     .create_team_header h1 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .create_team_header p {
+        font-size: 0.9375rem;
     }
     
     .create_team_form {
         padding: 20px;
+        border-radius: 10px;
+    }
+    
+    .form_group {
+        margin-bottom: 16px;
+    }
+    
+    .form_label {
+        font-size: 0.8125rem;
+    }
+    
+    .form_input,
+    .form_textarea,
+    .form_select {
+        padding: 10px 12px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+    }
+    
+    .form_textarea {
+        min-height: 80px;
+    }
+    
+    .form_actions {
+        margin-top: 20px;
+    }
+    
+    .form_btn {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 360px) {
+    .create_team_page {
+        padding: 0 8px;
+    }
+    
+    .create_team_header h1 {
+        font-size: 1.375rem;
+    }
+    
+    .create_team_form {
+        padding: 16px;
     }
 }

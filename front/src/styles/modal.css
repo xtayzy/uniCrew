@@ -212,28 +212,182 @@
 
 /* Адаптивность */
 @media (max-width: 768px) {
+    .modal_overlay {
+        padding: 20px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+    
     .modal {
         width: 95%;
+        max-width: 100%;
         padding: 24px;
-        margin: 20px;
+        margin: 0;
+        max-height: calc(100vh - 80px);
+        border-radius: 12px;
+    }
+    
+    .modal h3 {
+        font-size: 17px;
+        margin: 20px 0 10px 0;
+    }
+    
+    .modal .title {
+        font-size: 13px;
+    }
+    
+    .modal input,
+    .modal textarea,
+    .modal select {
+        padding: 10px 14px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+    }
+    
+    .modal textarea {
+        min-height: 80px;
+    }
+    
+    .modal .field {
+        margin-bottom: 16px;
+    }
+    
+    .modal .field label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .modal .section {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+    }
+    
+    .modal .tags {
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+    
+    .modal .tag {
+        padding: 5px 10px;
+        font-size: 13px;
     }
     
     .modal .buttons {
         flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
     }
     
     .modal .buttons button {
         width: 100%;
+        padding: 12px 20px;
+        font-size: 15px;
+        min-width: auto;
+    }
+    
+    .modal .suggestions {
+        max-height: 180px;
+    }
+    
+    .modal .suggestions li {
+        padding: 10px 14px;
+        font-size: 13px;
     }
 }
 
 @media (max-width: 480px) {
+    .modal_overlay {
+        padding: 10px;
+        padding-top: 20px;
+    }
+    
     .modal {
+        width: 100%;
         padding: 20px;
-        margin: 10px;
+        max-height: calc(100vh - 40px);
+        border-radius: 10px;
     }
     
     .modal h3 {
         font-size: 16px;
+        margin: 16px 0 8px 0;
+    }
+    
+    .modal .title {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .modal input,
+    .modal textarea,
+    .modal select {
+        padding: 10px 12px;
+        font-size: 16px; /* Предотвращает zoom на iOS */
+        border-radius: 6px;
+    }
+    
+    .modal textarea {
+        min-height: 70px;
+    }
+    
+    .modal .field {
+        margin-bottom: 14px;
+    }
+    
+    .modal .field label {
+        font-size: 12px;
+    }
+    
+    .modal .section {
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+    }
+    
+    .modal .tags {
+        gap: 4px;
+    }
+    
+    .modal .tag {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .modal .buttons {
+        margin-top: 20px;
+        gap: 10px;
+    }
+    
+    .modal .buttons button {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+    
+    .modal .suggestions {
+        max-height: 160px;
+    }
+    
+    .modal .suggestions li {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .modal_overlay {
+        padding: 8px;
+        padding-top: 16px;
+    }
+    
+    .modal {
+        padding: 16px;
+        max-height: calc(100vh - 32px);
+    }
+    
+    .modal h3 {
+        font-size: 15px;
+    }
+    
+    .modal .buttons button {
+        padding: 8px 16px;
+        font-size: 13px;
     }
 }

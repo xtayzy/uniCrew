@@ -254,18 +254,79 @@
 }
 
 /* Адаптивность */
+@media (max-width: 1024px) {
+    .users_page {
+        padding: 20px;
+    }
+    
+    .users_grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 18px;
+    }
+}
+
 @media (max-width: 768px) {
     .users_page {
         padding: 16px;
     }
     
+    .users_page h2 {
+        font-size: 1.75rem;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+    
     .users_grid {
         grid-template-columns: 1fr;
         gap: 16px;
+        margin-top: 24px;
     }
     
     .user_card {
-        padding: 16px;
+        padding: 18px;
+    }
+    
+    .user_avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .user_card h3 {
+        font-size: 1.125rem;
+    }
+    
+    .user_subname {
+        font-size: 12px;
+    }
+    
+    .user_edu,
+    .user_role {
+        font-size: 13px;
+    }
+    
+    .tag {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+    
+    .filterBox,
+    .filterChipBox {
+        padding: 8px;
+    }
+    
+    .inputRow {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .inputInline {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .addBtn {
+        width: 100%;
+        padding: 10px;
     }
 }
 
@@ -274,7 +335,85 @@
         padding: 12px;
     }
     
+    .users_page h2 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+    }
+    
+    .users_grid {
+        gap: 12px;
+        margin-top: 20px;
+    }
+    
+    .user_card {
+        padding: 14px;
+    }
+    
+    .user_avatar {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 8px;
+    }
+    
+    .user_card h3 {
+        font-size: 1rem;
+        margin: 4px 0 2px;
+    }
+    
+    .user_subname {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+    
+    .user_edu,
+    .user_role {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .user_skills,
+    .user_qualities {
+        gap: 4px;
+        margin-top: 8px;
+    }
+    
+    .tag {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    .filterBox,
+    .filterChipBox {
+        padding: 6px;
+        gap: 4px;
+    }
+    
+    .suggestions {
+        max-height: 180px;
+    }
+    
+    .suggestionItem {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 360px) {
+    .users_page {
+        padding: 8px;
+    }
+    
+    .users_page h2 {
+        font-size: 1.375rem;
+    }
+    
     .user_card {
         padding: 12px;
+    }
+    
+    .user_avatar {
+        width: 50px;
+        height: 50px;
     }
 }
