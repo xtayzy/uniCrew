@@ -314,13 +314,6 @@
         height: 32px;
         font-size: 14px;
     }
-}
-
-@media (min-width: 1024px) {
-    .notification_header {
-        padding-right: 110px; /* Еще больший отступ на больших экранах */
-    }
-}
     
     .actions {
         flex-direction: column;
@@ -329,5 +322,11 @@
     .accept_btn,
     .reject_btn {
         width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .notification_header {
+        padding-right: 110px; /* Еще больший отступ на больших экранах */
     }
 }
