@@ -250,7 +250,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if obj.avatar:
             request = self.context.get('request')
             if request:
-                return request.build_absolute_uri(obj.avatar.url)
+                url = request.build_absolute_uri(obj.avatar.url)
+                # Принудительно заменяем http на https
+                if url.startswith('http://'):
+                    url = url.replace('http://', 'https://', 1)
+                return url
             # Fallback: используем настройки из переменных окружения
             from django.conf import settings
             domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
@@ -360,7 +364,11 @@ class UserListSerializer(serializers.ModelSerializer):
         if obj.avatar:
             request = self.context.get('request')
             if request:
-                return request.build_absolute_uri(obj.avatar.url)
+                url = request.build_absolute_uri(obj.avatar.url)
+                # Принудительно заменяем http на https
+                if url.startswith('http://'):
+                    url = url.replace('http://', 'https://', 1)
+                return url
             # Fallback: используем настройки из переменных окружения
             from django.conf import settings
             domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
