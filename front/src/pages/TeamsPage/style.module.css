@@ -55,8 +55,6 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
 }
 
 .team_card:hover {
@@ -148,14 +146,9 @@
   font-size: 14px;
   font-weight: 500;
   margin-top: 12px;
-  margin-left: auto; /* Выравнивание по правому краю */
-  width: auto; /* Ширина по содержимому */
-  min-width: 140px; /* Минимальная ширина для единообразия */
+  width: 100%;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .join_button:hover {
