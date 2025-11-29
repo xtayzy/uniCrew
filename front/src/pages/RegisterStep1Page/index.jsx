@@ -13,21 +13,30 @@ function RegisterStep1Page() {
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
     const [error, setError] = useState("");
-    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Отправка:", {username, email, password1, password2});
+        setError("");
+        setLoading(true);
+        
         try {
-            const res = await registerStep1(username, email, password1, password2);
-            console.log("Ответ:", res);
-            setMessage(res.message);
-            setError("");
-            navigate("/register-step2", {state: {email}});
+            // Не ждем полного ответа, сразу переходим после успешного запроса
+            registerStep1(username, email, password1, password2)
+                .then(() => {
+                    // Переход происходит сразу после успешного запроса
+                    navigate("/register-step2", {state: {email}});
+                })
+                .catch((err) => {
+                    console.error("Ошибка:", err.response ? err.response.data : err.message);
+                    setError(err.response?.data?.message || "Ошибка регистрации");
+                    setLoading(false);
+                });
         } catch (err) {
             console.error("Ошибка:", err.response ? err.response.data : err.message);
             setError(err.response?.data?.message || "Ошибка регистрации");
+            setLoading(false);
         }
     };
 
@@ -96,10 +105,11 @@ function RegisterStep1Page() {
                     </button>
                 </div>
                 <br/>
-                <button type="submit">Продолжить</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? "Отправка..." : "Продолжить"}
+                </button>
             </form>
             {error && <p style={{color: "red"}}>{error}</p>}
-            {message && <p style={{color: "green"}}>{message}</p>}
             <p style={{ marginTop: "12px" }}>
                 Уже есть аккаунт? <Link to="/login">Войти</Link>
             </p>

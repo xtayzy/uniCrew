@@ -1,6 +1,7 @@
 import random
 import string
 import datetime
+import threading
 from django.utils import timezone
 from django.conf import settings
 
@@ -55,13 +56,26 @@ class RegisterStep1Serializer(serializers.Serializer):
 
         code = pending.generate_code()
 
-        send_mail(
-            "Подтверждение регистрации",
-            f"Здравствуйте!\n\nВаш код подтверждения для регистрации в UniCrew: {code}\n\nКод действителен в течение 10 минут.\n\nЕсли вы не запрашивали регистрацию, проигнорируйте это письмо.",
-            settings.DEFAULT_FROM_EMAIL,
-            [pending.email],
-            fail_silently=False,
-        )
+        # Отправляем email асинхронно, чтобы не блокировать ответ
+        def send_email_async():
+            try:
+                send_mail(
+                    "Подтверждение регистрации",
+                    f"Здравствуйте!\n\nВаш код подтверждения для регистрации в UniCrew: {code}\n\nКод действителен в течение 10 минут.\n\nЕсли вы не запрашивали регистрацию, проигнорируйте это письмо.",
+                    settings.DEFAULT_FROM_EMAIL,
+                    [pending.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                # Логируем ошибку, но не блокируем ответ
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Ошибка отправки email: {e}")
+
+        # Запускаем отправку email в отдельном потоке
+        email_thread = threading.Thread(target=send_email_async)
+        email_thread.daemon = True
+        email_thread.start()
 
         return pending
 
