@@ -45,7 +45,6 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-top: 30px;
-  align-items: stretch; /* Карточки в одной строке растягиваются до высоты самой высокой */
 }
 
 .team_card {
@@ -56,9 +55,6 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%; /* Минимальная высота - вся высота ячейки сетки */
 }
 
 .team_card:hover {
@@ -74,9 +70,7 @@
 }
 
 .members_list {
-  margin: 8px 0;
-  flex-grow: 1; /* Растягивается, чтобы прижать кнопку вниз */
-  flex-shrink: 0; /* Не сжимается */
+  margin: 12px 0;
 }
 
 .members_list ul {
@@ -140,9 +134,6 @@
 .created_at {
   color: #6b7280;
   font-size: 12px;
-  margin-top: auto; /* Прижимает кнопку к низу */
-  flex-shrink: 0; /* Дата не сжимается */
-  margin-bottom: 8px; /* Отступ перед кнопкой */
 }
 
 .join_button {
@@ -154,11 +145,10 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  margin-top: 0; /* Убран отступ сверху, так как created_at уже имеет margin-bottom */
+  margin-top: 12px;
   width: 100%;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
-  flex-shrink: 0; /* Кнопка не сжимается */
 }
 
 .join_button:hover {
