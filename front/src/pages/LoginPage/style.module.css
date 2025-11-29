@@ -135,14 +135,9 @@
 
 .main_block .error_message {
     color: #dc2626;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    padding: 12px;
-    border-radius: 8px;
     margin: -16px 0 24px 0;
     text-align: center;
     font-size: 14px;
-    font-weight: 500;
 }
 
 .main_block .success {
