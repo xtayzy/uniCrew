@@ -100,6 +100,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
+    padding-right: 80px; /* Отступ для кнопок действий */
 }
 
 .icon {
@@ -116,6 +117,7 @@
     color: #6b7280;
     font-size: 14px;
     margin-left: auto;
+    white-space: nowrap; /* Предотвращаем перенос текста */
 }
 
 .notification_body {
@@ -203,49 +205,57 @@
 
 .notification_actions {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 16px;
+    right: 16px;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
+    z-index: 1;
 }
 
 .mark_read_btn {
-    background: #6c757d;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+    font-weight: 600;
 }
 
 .mark_read_btn:hover {
-    background: #545b62;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
 }
 
 .delete_btn {
-    background: #dc3545;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
     border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
 }
 
 .delete_btn:hover {
-    background: #c82333;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
 /* Адаптивность */
@@ -267,12 +277,26 @@
     
     .notification_header {
         flex-wrap: wrap;
+        padding-right: 70px; /* Меньший отступ на мобильных */
     }
     
     .time {
         margin-left: 0;
         width: 100%;
         text-align: right;
+    }
+    
+    .notification_actions {
+        top: 12px;
+        right: 12px;
+        gap: 4px;
+    }
+    
+    .mark_read_btn,
+    .delete_btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
     }
     
     .actions {
