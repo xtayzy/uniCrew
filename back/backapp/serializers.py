@@ -221,6 +221,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     skills_list = serializers.SerializerMethodField(read_only=True)
     personal_qualities_list = serializers.SerializerMethodField(read_only=True)
     education_level_display = serializers.SerializerMethodField(read_only=True)
+    avatar = serializers.SerializerMethodField(read_only=True)
     faculty = FacultySerializer(read_only=True)
 
     class Meta:
@@ -244,6 +245,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "personal_qualities_list",
         ]
         read_only_fields = ["username", "email"]
+
+    def get_avatar(self, obj):
+        if obj.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
+            # Fallback: используем настройки из переменных окружения
+            from django.conf import settings
+            domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
+            return f"https://{domain}{obj.avatar.url}"
+        return None
 
     def get_skills_list(self, obj):
         global_skills = [skill.name for skill in obj.skills.all()]
@@ -322,6 +334,7 @@ class UserListSerializer(serializers.ModelSerializer):
     skills_list = serializers.SerializerMethodField()
     personal_qualities_list = serializers.SerializerMethodField()
     education_level_display = serializers.SerializerMethodField(read_only=True)
+    avatar = serializers.SerializerMethodField(read_only=True)
     faculty = FacultySerializer(read_only=True)
 
     class Meta:
@@ -342,6 +355,17 @@ class UserListSerializer(serializers.ModelSerializer):
             "skills_list",
             "personal_qualities_list",
         ]
+
+    def get_avatar(self, obj):
+        if obj.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.avatar.url)
+            # Fallback: используем настройки из переменных окружения
+            from django.conf import settings
+            domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
+            return f"https://{domain}{obj.avatar.url}"
+        return None
 
     def get_skills_list(self, obj):
         global_skills = [skill.name for skill in obj.skills.all()]

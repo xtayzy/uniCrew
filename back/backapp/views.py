@@ -187,6 +187,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             return UserListSerializer
         return UserProfileSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
     def get_queryset(self):
         queryset = User.objects.select_related('faculty', 'faculty__school').prefetch_related(
             'skills', 'custom_skills', 'personal_qualities', 'custom_personal_qualities'
