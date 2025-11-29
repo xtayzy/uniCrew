@@ -34,8 +34,6 @@ services:
         condition: service_healthy
     volumes:
       - media:/app/media
-    ports:
-      - "8000:8000"
     restart: unless-stopped
 
   frontend:
@@ -46,8 +44,6 @@ services:
         VITE_API_URL: ${VITE_API_URL}
     depends_on:
       - backend
-    ports:
-      - "80:80"
     restart: unless-stopped
 
 volumes:
