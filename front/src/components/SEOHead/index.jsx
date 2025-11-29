@@ -37,11 +37,17 @@ const SEOHead = ({ title, description, keywords, ogImage }) => {
         updateMetaTag("og:description", description || defaultDescription, "property");
         updateMetaTag("og:url", currentUrl, "property");
         updateMetaTag("og:image", ogImage || defaultImage, "property");
+        updateMetaTag("og:image:secure_url", ogImage || defaultImage, "property");
+        updateMetaTag("og:image:type", "image/png", "property");
+        updateMetaTag("og:image:alt", title || defaultTitle, "property");
         
         // Twitter Card tags
-        updateMetaTag("twitter:title", title || defaultTitle, "property");
-        updateMetaTag("twitter:description", description || defaultDescription, "property");
-        updateMetaTag("twitter:image", ogImage || defaultImage, "property");
+        updateMetaTag("twitter:card", "summary_large_image", "name");
+        updateMetaTag("twitter:url", currentUrl, "name");
+        updateMetaTag("twitter:title", title || defaultTitle, "name");
+        updateMetaTag("twitter:description", description || defaultDescription, "name");
+        updateMetaTag("twitter:image", ogImage || defaultImage, "name");
+        updateMetaTag("twitter:image:alt", title || defaultTitle, "name");
         
         // Canonical URL
         let canonical = document.querySelector("link[rel='canonical']");
