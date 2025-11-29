@@ -413,7 +413,10 @@ class ProjectCategorySerializer(serializers.ModelSerializer):
 class TeamMemberSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     user_id = serializers.IntegerField(source='user.id', read_only=True)
-    team_title = serializers.CharField(source='team.title', read_only=True)
+    team_title = serializers.SerializerMethodField()
+
+    def get_team_title(self, obj):
+        return obj.team.title if obj.team else None
 
     class Meta:
         model = TeamMember
