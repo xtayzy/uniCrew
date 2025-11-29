@@ -22,7 +22,9 @@ function InvitePage() {
         const fetchTeam = async () => {
             try {
                 setError(null);
-                const response = await axios.get(`${API_URL}teams/invite/?token=${encodeURIComponent(token)}`);
+                const response = await axios.get(`${API_URL}teams/invite/`, {
+                    params: { token: token }
+                });
                 setTeam(response.data);
             } catch (err) {
                 console.error("Ошибка загрузки команды:", err);
