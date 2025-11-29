@@ -91,24 +91,16 @@
     text-align: center;
 }
 
-.error {
+.error_message {
     color: #dc2626;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 12px 0;
+    margin: -16px 0 24px 0;
     text-align: center;
     font-size: 14px;
 }
 
-.success {
+.success_message {
     color: #059669;
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    padding: 12px;
-    border-radius: 8px;
-    margin: 12px 0;
+    margin: -16px 0 24px 0;
     text-align: center;
     font-size: 14px;
 }
@@ -149,11 +141,6 @@
         font-size: 13px;
     }
     
-    .error,
-    .success {
-        padding: 10px;
-        font-size: 13px;
-    }
 }
 
 @media (max-width: 480px) {

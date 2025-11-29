@@ -28,6 +28,8 @@ function ForgotCredentialsPage() {
     return (
         <div className={styles.container}>
             <h2>Восстановление пароля</h2>
+            {error && <p className={styles.error_message}>{error}</p>}
+            {message && <p className={styles.success_message}>{message}</p>}
             <p className={styles.subtitle}>Укажите email — отправим ваш логин и новый пароль.</p>
             <form onSubmit={handleSubmit}>
                 <input
@@ -47,8 +49,6 @@ function ForgotCredentialsPage() {
                     ) : "Отправить"}
                 </button>
             </form>
-            {error && <p className={styles.error}>{error}</p>}
-            {message && <p className={styles.success}>{message}</p>}
             <p className={styles.info}>
                 Вспомнили? <Link to="/login">Войти</Link>
             </p>
