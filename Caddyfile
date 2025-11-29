@@ -1,6 +1,16 @@
 unicrew.kz, www.unicrew.kz {
 	encode gzip
 
+	@admin path /admin/*
+	handle @admin {
+		reverse_proxy backend:8000 {
+			header_up Host {host}
+			header_up X-Real-IP {remote}
+			header_up X-Forwarded-For {remote}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
 	@api path /api/*
 	handle @api {
 		reverse_proxy backend:8000 {
