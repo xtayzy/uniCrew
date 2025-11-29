@@ -100,8 +100,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
-    padding-right: 100px; /* Увеличенный отступ для кнопок действий на больших экранах */
-    position: relative;
+    padding-right: 80px; /* Отступ для кнопок действий */
 }
 
 .icon {
@@ -112,8 +111,6 @@
     font-weight: 600;
     color: #111827;
     font-size: 16px;
-    flex: 1;
-    min-width: 0; /* Позволяет элементу сжиматься */
 }
 
 .time {
@@ -121,8 +118,6 @@
     font-size: 14px;
     margin-left: auto;
     white-space: nowrap; /* Предотвращаем перенос текста */
-    flex-shrink: 0; /* Время не сжимается */
-    padding-right: 4px; /* Дополнительный отступ от края */
 }
 
 .notification_body {
@@ -210,63 +205,57 @@
 
 .notification_actions {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
     z-index: 1;
 }
 
 .mark_read_btn {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    color: #10b981;
-    border: 2px solid #10b981;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-}
-
-.mark_read_btn:hover {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
-    border-color: #059669;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.delete_btn {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    color: #ef4444;
-    border: 2px solid #ef4444;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
-    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+    font-weight: 600;
+}
+
+.mark_read_btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.delete_btn {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
 }
 
 .delete_btn:hover {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: white;
-    border-color: #dc2626;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
 /* Адаптивность */
@@ -288,31 +277,26 @@
     
     .notification_header {
         flex-wrap: wrap;
-        padding-right: 80px; /* Отступ для кнопок на мобильных */
-    }
-    
-    .type {
-        flex: 0 1 auto; /* На мобильных тип может сжиматься */
+        padding-right: 70px; /* Меньший отступ на мобильных */
     }
     
     .time {
         margin-left: 0;
         width: 100%;
         text-align: right;
-        margin-top: 4px;
     }
     
     .notification_actions {
-        top: 16px;
-        right: 16px;
-        gap: 6px;
+        top: 12px;
+        right: 12px;
+        gap: 4px;
     }
     
     .mark_read_btn,
     .delete_btn {
-        width: 32px;
-        height: 32px;
-        font-size: 14px;
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
     }
     
     .actions {
@@ -322,11 +306,5 @@
     .accept_btn,
     .reject_btn {
         width: 100%;
-    }
-}
-
-@media (min-width: 1024px) {
-    .notification_header {
-        padding-right: 110px; /* Еще больший отступ на больших экранах */
     }
 }
