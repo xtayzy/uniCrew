@@ -11,7 +11,7 @@ import { Users, Calendar, Tag, CheckCircle, XCircle, LogIn, UserPlus } from "luc
 function InvitePage() {
     const { token } = useParams();
     const navigate = useNavigate();
-    const { isAuth, login_context } = useAuth();
+    const { isAuth } = useAuth();
     const [team, setTeam] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
