@@ -58,6 +58,9 @@ const NotificationsComponent = () => {
                         : notif
                 )
             );
+            
+            // Отправляем событие для обновления счетчика в Header
+            window.dispatchEvent(new Event('notificationUpdated'));
         } catch (error) {
             console.error('Ошибка при отметке уведомления:', error);
         }
@@ -74,6 +77,9 @@ const NotificationsComponent = () => {
             setNotifications(prev => 
                 prev.map(notif => ({ ...notif, is_read: true }))
             );
+            
+            // Отправляем событие для обновления счетчика в Header
+            window.dispatchEvent(new Event('notificationUpdated'));
         } catch (error) {
             console.error('Ошибка при отметке всех уведомлений:', error);
         }
@@ -190,6 +196,9 @@ const NotificationsComponent = () => {
 
         try {
             console.log('Удаляем уведомление:', { notificationId });
+            const notification = notifications.find(n => n.id === notificationId);
+            const wasUnread = notification && !notification.is_read;
+            
             await axios.post(`${API_URL}users/delete_notification/`, {
                 notification_id: notificationId,
             }, {
@@ -200,6 +209,11 @@ const NotificationsComponent = () => {
             
             // Обновляем список уведомлений
             fetchNotifications();
+            
+            // Если удалили непрочитанное уведомление, обновляем счетчик
+            if (wasUnread) {
+                window.dispatchEvent(new Event('notificationUpdated'));
+            }
         } catch (error) {
             console.error('Ошибка при удалении уведомления:', error);
             if (error.response?.data?.detail) {

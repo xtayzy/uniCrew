@@ -33,7 +33,18 @@ function Header() {
             fetchUnreadCount();
             // Обновляем счетчик каждые 30 секунд
             const interval = setInterval(fetchUnreadCount, 30000);
-            return () => clearInterval(interval);
+            
+            // Слушаем события обновления уведомлений
+            const handleNotificationUpdate = () => {
+                fetchUnreadCount();
+            };
+            
+            window.addEventListener('notificationUpdated', handleNotificationUpdate);
+            
+            return () => {
+                clearInterval(interval);
+                window.removeEventListener('notificationUpdated', handleNotificationUpdate);
+            };
         }
     }, [isAuth, tokens, fetchUnreadCount]);
 
