@@ -381,6 +381,40 @@ const TeamPrivatePage = () => {
                             <h4>Дата создания</h4>
                             <span>{team.created_at ? new Date(team.created_at).toLocaleDateString('ru-RU') : 'Не указана'}</span>
                         </div>
+                        {isTeamCreator() && (
+                            <div className={styles.info_item}>
+                                <h4>Пригласительная ссылка</h4>
+                                <div className={styles.invite_link_container}>
+                                    {inviteLinkLoading ? (
+                                        <span>Загрузка...</span>
+                                    ) : inviteLink ? (
+                                        <>
+                                            <input 
+                                                type="text" 
+                                                value={inviteLink} 
+                                                readOnly 
+                                                className={styles.invite_link_input}
+                                                onClick={(e) => e.target.select()}
+                                            />
+                                            <button 
+                                                onClick={copyInviteLink}
+                                                className={styles.copy_btn}
+                                                title="Копировать ссылку"
+                                            >
+                                                📋
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button 
+                                            onClick={fetchInviteLink}
+                                            className={styles.generate_btn}
+                                        >
+                                            Получить ссылку
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {(team.whatsapp_link || team.telegram_link) && (
