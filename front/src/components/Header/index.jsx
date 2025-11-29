@@ -136,8 +136,9 @@ function Header() {
             </header>
 
             {/* Выдвижное меню для мобильных */}
-            <div className={`${styles.mobile_menu_overlay} ${isMenuOpen ? styles.mobile_menu_overlay_open : ''}`} onClick={() => setIsMenuOpen(false)}>
-                <nav className={`${styles.mobile_menu} ${isMenuOpen ? styles.mobile_menu_open : ''}`} onClick={(e) => e.stopPropagation()}>
+            {isMenuOpen && (
+                <div className={`${styles.mobile_menu_overlay} ${styles.mobile_menu_overlay_open}`} onClick={() => setIsMenuOpen(false)}>
+                    <nav className={`${styles.mobile_menu} ${styles.mobile_menu_open}`} onClick={(e) => e.stopPropagation()}>
                     <div className={styles.mobile_menu_header}>
                         <span className={styles.mobile_menu_title}>Меню</span>
                         <button 
@@ -176,8 +177,9 @@ function Header() {
                             </>
                         )}
                     </div>
-                </nav>
-            </div>
+                    </nav>
+                </div>
+            )}
         </>
     );
 }
