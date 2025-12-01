@@ -621,27 +621,38 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.status = "APPROVED"
         member.save()
         
+        # Логируем все уведомления перед удалением
+        import logging
+        logger = logging.getLogger(__name__)
+        all_notifications = Notification.objects.filter(
+            user=request.user,
+            notification_type="TEAM_REQUEST",
+            team=team
+        )
+        logger.info(f"=== APPROVE: Всего уведомлений TEAM_REQUEST для команды {team.id}: {all_notifications.count()}")
+        for notif in all_notifications:
+            logger.info(f"  - Уведомление id={notif.id}, team_member_id={notif.team_member_id if notif.team_member else None}, member.id={member.id}")
+        
         # Удаляем только уведомление для конкретного участника
-        # Используем team_member_id для точного поиска по ID, избегая проблем с объектами в памяти
-        try:
-            notification = Notification.objects.get(
-                user=request.user,
-                notification_type="TEAM_REQUEST",
-                team=team,
-                team_member_id=member.id
-            )
-            notification.delete()
-        except Notification.DoesNotExist:
-            # Если уведомление не найдено, это не критично - возможно оно уже было удалено
-            pass
-        except Notification.MultipleObjectsReturned:
-            # Если найдено несколько уведомлений (не должно быть, но на всякий случай), удаляем все
-            Notification.objects.filter(
-                user=request.user,
-                notification_type="TEAM_REQUEST",
-                team=team,
-                team_member_id=member.id
-            ).delete()
+        # Пробуем оба варианта: team_member_id и team_member__id
+        notifications_to_delete = Notification.objects.filter(
+            user=request.user,
+            notification_type="TEAM_REQUEST",
+            team=team
+        ).filter(team_member_id=member.id)
+        
+        count_before = notifications_to_delete.count()
+        logger.info(f"=== APPROVE: Найдено уведомлений для удаления (member.id={member.id}): {count_before}")
+        
+        # Проверяем, что мы удаляем правильное уведомление
+        for notif in notifications_to_delete:
+            logger.info(f"  - Удаляем уведомление id={notif.id}, team_member_id={notif.team_member_id}")
+        
+        if count_before > 0:
+            deleted_count = notifications_to_delete.delete()[0]
+            logger.info(f"=== APPROVE: Удалено {deleted_count} уведомлений")
+        else:
+            logger.warning(f"=== APPROVE: Уведомление для member.id={member.id} не найдено!")
         
         Notification.objects.create(
             user=member.user,
@@ -668,27 +679,38 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.status = "REJECTED"
         member.save()
         
+        # Логируем все уведомления перед удалением
+        import logging
+        logger = logging.getLogger(__name__)
+        all_notifications = Notification.objects.filter(
+            user=request.user,
+            notification_type="TEAM_REQUEST",
+            team=team
+        )
+        logger.info(f"=== REJECT: Всего уведомлений TEAM_REQUEST для команды {team.id}: {all_notifications.count()}")
+        for notif in all_notifications:
+            logger.info(f"  - Уведомление id={notif.id}, team_member_id={notif.team_member_id if notif.team_member else None}, member.id={member.id}")
+        
         # Удаляем только уведомление для конкретного участника
-        # Используем team_member_id для точного поиска по ID, избегая проблем с объектами в памяти
-        try:
-            notification = Notification.objects.get(
-                user=request.user,
-                notification_type="TEAM_REQUEST",
-                team=team,
-                team_member_id=member.id
-            )
-            notification.delete()
-        except Notification.DoesNotExist:
-            # Если уведомление не найдено, это не критично - возможно оно уже было удалено
-            pass
-        except Notification.MultipleObjectsReturned:
-            # Если найдено несколько уведомлений (не должно быть, но на всякий случай), удаляем все
-            Notification.objects.filter(
-                user=request.user,
-                notification_type="TEAM_REQUEST",
-                team=team,
-                team_member_id=member.id
-            ).delete()
+        # Пробуем оба варианта: team_member_id и team_member__id
+        notifications_to_delete = Notification.objects.filter(
+            user=request.user,
+            notification_type="TEAM_REQUEST",
+            team=team
+        ).filter(team_member_id=member.id)
+        
+        count_before = notifications_to_delete.count()
+        logger.info(f"=== REJECT: Найдено уведомлений для удаления (member.id={member.id}): {count_before}")
+        
+        # Проверяем, что мы удаляем правильное уведомление
+        for notif in notifications_to_delete:
+            logger.info(f"  - Удаляем уведомление id={notif.id}, team_member_id={notif.team_member_id}")
+        
+        if count_before > 0:
+            deleted_count = notifications_to_delete.delete()[0]
+            logger.info(f"=== REJECT: Удалено {deleted_count} уведомлений")
+        else:
+            logger.warning(f"=== REJECT: Уведомление для member.id={member.id} не найдено!")
         
         Notification.objects.create(
             user=member.user,
