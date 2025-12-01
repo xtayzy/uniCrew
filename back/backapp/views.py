@@ -622,12 +622,26 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.save()
         
         # Удаляем только уведомление для конкретного участника
-        Notification.objects.filter(
-            user=request.user,
-            notification_type="TEAM_REQUEST",
-            team=team,
-            team_member_id=member.id
-        ).delete()
+        # Используем get() для поиска конкретного уведомления, чтобы избежать удаления других
+        try:
+            notification = Notification.objects.get(
+                user=request.user,
+                notification_type="TEAM_REQUEST",
+                team=team,
+                team_member=member
+            )
+            notification.delete()
+        except Notification.DoesNotExist:
+            # Если уведомление не найдено, это не критично - возможно оно уже было удалено
+            pass
+        except Notification.MultipleObjectsReturned:
+            # Если найдено несколько уведомлений (не должно быть, но на всякий случай), удаляем все
+            Notification.objects.filter(
+                user=request.user,
+                notification_type="TEAM_REQUEST",
+                team=team,
+                team_member=member
+            ).delete()
         
         Notification.objects.create(
             user=member.user,
@@ -655,12 +669,26 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.save()
         
         # Удаляем только уведомление для конкретного участника
-        Notification.objects.filter(
-            user=request.user,
-            notification_type="TEAM_REQUEST",
-            team=team,
-            team_member_id=member.id
-        ).delete()
+        # Используем get() для поиска конкретного уведомления, чтобы избежать удаления других
+        try:
+            notification = Notification.objects.get(
+                user=request.user,
+                notification_type="TEAM_REQUEST",
+                team=team,
+                team_member=member
+            )
+            notification.delete()
+        except Notification.DoesNotExist:
+            # Если уведомление не найдено, это не критично - возможно оно уже было удалено
+            pass
+        except Notification.MultipleObjectsReturned:
+            # Если найдено несколько уведомлений (не должно быть, но на всякий случай), удаляем все
+            Notification.objects.filter(
+                user=request.user,
+                notification_type="TEAM_REQUEST",
+                team=team,
+                team_member=member
+            ).delete()
         
         Notification.objects.create(
             user=member.user,
@@ -724,12 +752,24 @@ class TeamViewSet(viewsets.ModelViewSet):
             # Если статус изменился на APPROVED или REJECTED, удаляем уведомление о заявке
             if old_status == "PENDING" and new_status in ["APPROVED", "REJECTED"]:
                 # Удаляем уведомление для создателя команды о заявке этого участника
-                Notification.objects.filter(
-                    user=request.user,
-                    notification_type="TEAM_REQUEST",
-                    team=team,
-                    team_member_id=member.id
-                ).delete()
+                # Используем get() для поиска конкретного уведомления
+                try:
+                    notification = Notification.objects.get(
+                        user=request.user,
+                        notification_type="TEAM_REQUEST",
+                        team=team,
+                        team_member=member
+                    )
+                    notification.delete()
+                except Notification.DoesNotExist:
+                    pass
+                except Notification.MultipleObjectsReturned:
+                    Notification.objects.filter(
+                        user=request.user,
+                        notification_type="TEAM_REQUEST",
+                        team=team,
+                        team_member=member
+                    ).delete()
                 
                 # Создаем уведомление для пользователя о результате заявки
                 notification_type = "TEAM_REQUEST_APPROVED" if new_status == "APPROVED" else "TEAM_REQUEST_REJECTED"
