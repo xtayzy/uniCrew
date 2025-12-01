@@ -622,13 +622,13 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.save()
         
         # Удаляем только уведомление для конкретного участника
-        # Используем get() для поиска конкретного уведомления, чтобы избежать удаления других
+        # Используем team_member_id для точного поиска по ID, избегая проблем с объектами в памяти
         try:
             notification = Notification.objects.get(
                 user=request.user,
                 notification_type="TEAM_REQUEST",
                 team=team,
-                team_member=member
+                team_member_id=member.id
             )
             notification.delete()
         except Notification.DoesNotExist:
@@ -640,7 +640,7 @@ class TeamViewSet(viewsets.ModelViewSet):
                 user=request.user,
                 notification_type="TEAM_REQUEST",
                 team=team,
-                team_member=member
+                team_member_id=member.id
             ).delete()
         
         Notification.objects.create(
@@ -669,13 +669,13 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.save()
         
         # Удаляем только уведомление для конкретного участника
-        # Используем get() для поиска конкретного уведомления, чтобы избежать удаления других
+        # Используем team_member_id для точного поиска по ID, избегая проблем с объектами в памяти
         try:
             notification = Notification.objects.get(
                 user=request.user,
                 notification_type="TEAM_REQUEST",
                 team=team,
-                team_member=member
+                team_member_id=member.id
             )
             notification.delete()
         except Notification.DoesNotExist:
@@ -687,7 +687,7 @@ class TeamViewSet(viewsets.ModelViewSet):
                 user=request.user,
                 notification_type="TEAM_REQUEST",
                 team=team,
-                team_member=member
+                team_member_id=member.id
             ).delete()
         
         Notification.objects.create(
@@ -752,13 +752,13 @@ class TeamViewSet(viewsets.ModelViewSet):
             # Если статус изменился на APPROVED или REJECTED, удаляем уведомление о заявке
             if old_status == "PENDING" and new_status in ["APPROVED", "REJECTED"]:
                 # Удаляем уведомление для создателя команды о заявке этого участника
-                # Используем get() для поиска конкретного уведомления
+                # Используем team_member_id для точного поиска по ID
                 try:
                     notification = Notification.objects.get(
                         user=request.user,
                         notification_type="TEAM_REQUEST",
                         team=team,
-                        team_member=member
+                        team_member_id=member.id
                     )
                     notification.delete()
                 except Notification.DoesNotExist:
@@ -768,7 +768,7 @@ class TeamViewSet(viewsets.ModelViewSet):
                         user=request.user,
                         notification_type="TEAM_REQUEST",
                         team=team,
-                        team_member=member
+                        team_member_id=member.id
                     ).delete()
                 
                 # Создаем уведомление для пользователя о результате заявки
