@@ -634,12 +634,13 @@ class TeamViewSet(viewsets.ModelViewSet):
             logger.info(f"  - Уведомление id={notif.id}, team_member_id={notif.team_member_id if notif.team_member else None}, member.id={member.id}")
         
         # Удаляем только уведомление для конкретного участника
-        # Пробуем оба варианта: team_member_id и team_member__id
+        # Используем объект team_member для более точного поиска
         notifications_to_delete = Notification.objects.filter(
             user=request.user,
             notification_type="TEAM_REQUEST",
-            team=team
-        ).filter(team_member_id=member.id)
+            team=team,
+            team_member=member
+        )
         
         count_before = notifications_to_delete.count()
         logger.info(f"=== APPROVE: Найдено уведомлений для удаления (member.id={member.id}): {count_before}")
@@ -692,12 +693,13 @@ class TeamViewSet(viewsets.ModelViewSet):
             logger.info(f"  - Уведомление id={notif.id}, team_member_id={notif.team_member_id if notif.team_member else None}, member.id={member.id}")
         
         # Удаляем только уведомление для конкретного участника
-        # Пробуем оба варианта: team_member_id и team_member__id
+        # Используем объект team_member для более точного поиска
         notifications_to_delete = Notification.objects.filter(
             user=request.user,
             notification_type="TEAM_REQUEST",
-            team=team
-        ).filter(team_member_id=member.id)
+            team=team,
+            team_member=member
+        )
         
         count_before = notifications_to_delete.count()
         logger.info(f"=== REJECT: Найдено уведомлений для удаления (member.id={member.id}): {count_before}")
