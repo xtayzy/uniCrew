@@ -715,9 +715,37 @@ class TeamViewSet(viewsets.ModelViewSet):
         except TeamMember.DoesNotExist:
             return Response({"detail": "Участник не найден."}, status=404)
 
+        old_status = member.status
         serializer = TeamMemberUpdateSerializer(member, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            new_status = member.status
+            
+            # Если статус изменился на APPROVED или REJECTED, удаляем уведомление о заявке
+            if old_status == "PENDING" and new_status in ["APPROVED", "REJECTED"]:
+                # Удаляем уведомление для создателя команды о заявке этого участника
+                Notification.objects.filter(
+                    user=request.user,
+                    notification_type="TEAM_REQUEST",
+                    team=team,
+                    team_member=member
+                ).delete()
+                
+                # Создаем уведомление для пользователя о результате заявки
+                notification_type = "TEAM_REQUEST_APPROVED" if new_status == "APPROVED" else "TEAM_REQUEST_REJECTED"
+                message = (
+                    f"Ваша заявка на вступление в команду '{team.title}' была одобрена"
+                    if new_status == "APPROVED"
+                    else f"Ваша заявка на вступление в команду '{team.title}' была отклонена"
+                )
+                Notification.objects.create(
+                    user=member.user,
+                    notification_type=notification_type,
+                    team=team,
+                    team_member=member,
+                    message=message
+                )
+            
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
