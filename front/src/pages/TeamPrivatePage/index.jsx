@@ -241,7 +241,7 @@ const TeamPrivatePage = () => {
     }
 
     if (loading || userLoading) {
-        return <LoadingSpinner fullScreen={true} text="Загрузка команды..." />;
+        return <LoadingSpinner text="Загрузка команды..." />;
     }
 
     if (!team) {

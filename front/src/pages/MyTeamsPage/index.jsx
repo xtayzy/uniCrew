@@ -120,7 +120,7 @@ export default function MyTeamsPage() {
         );
     }
 
-    if (loading) return <LoadingSpinner fullScreen={true} text="Загрузка команд..." />;
+    if (loading) return <LoadingSpinner text="Загрузка команд..." />;
 
     return (
         <div className={styles.teams_page}>

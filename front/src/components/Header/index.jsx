@@ -9,6 +9,7 @@ import { API_URL } from "@/config";
 function Header() {
     const { isAuth, logout, tokens } = useAuth();
     const [unreadCount, setUnreadCount] = useState(0);
+    const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -16,6 +17,7 @@ function Header() {
 
     const fetchUnreadCount = useCallback(async () => {
         try {
+            setIsLoadingNotifications(true);
             const response = await axios.get(`${API_URL}users/notifications/`, {
                 headers: {
                     Authorization: `Bearer ${tokens?.access}`,
@@ -25,6 +27,9 @@ function Header() {
             setUnreadCount(unread);
         } catch (error) {
             console.error('Ошибка загрузки уведомлений:', error);
+            setUnreadCount(0);
+        } finally {
+            setIsLoadingNotifications(false);
         }
     }, [tokens]);
 
@@ -45,6 +50,9 @@ function Header() {
                 clearInterval(interval);
                 window.removeEventListener('notificationUpdated', handleNotificationUpdate);
             };
+        } else {
+            setUnreadCount(0);
+            setIsLoadingNotifications(false);
         }
     }, [isAuth, tokens, fetchUnreadCount]);
 
@@ -86,7 +94,7 @@ function Header() {
                         <>
                             <Link to="/notifications" className={styles.notification_link} title="Уведомления">
                                 <Bell className={styles.icon} size={20}/>
-                                {unreadCount > 0 && (
+                                {!isLoadingNotifications && unreadCount > 0 && (
                                     <span className={styles.notification_badge}>{unreadCount}</span>
                                 )}
                             </Link>

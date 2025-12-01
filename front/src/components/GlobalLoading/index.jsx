@@ -32,7 +32,7 @@ export const GlobalLoadingProvider = ({ children }) => {
                 <>
                     <div className={styles.globalLoadingPlaceholder}></div>
                     <div className={styles.globalLoadingOverlay}>
-                        <LoadingSpinner size="large" text={loadingText} />
+                        <LoadingSpinner size="large" text={loadingText} fullScreen={false} />
                     </div>
                 </>
             )}

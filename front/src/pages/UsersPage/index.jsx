@@ -9,7 +9,7 @@ import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
 
 function UsersPage() {
-    const { tokens } = useAuth();
+    const { tokens, isInitializing } = useAuth();
     const navigate = useNavigate();
     const access = tokens?.access;
     const [users, setUsers] = useState([]);
@@ -19,6 +19,8 @@ function UsersPage() {
     const [isRequesting, setIsRequesting] = useState(false);
 
     useEffect(() => {
+        // Ждем завершения инициализации токенов
+        if (isInitializing) return;
         if (isRequesting) return; // Защита от повторных запросов
         
         setLoading(true);
@@ -34,12 +36,23 @@ function UsersPage() {
         if (query.skills) params.set("skills", query.skills);
         if (query.personal_qualities) params.set("personal_qualities", query.personal_qualities);
         const url = `${API_URL}users/${params.toString() ? `?${params.toString()}` : ""}`;
-        const headers = access ? { Authorization: `Bearer ${access}` } : {};
         
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 секунд таймаут
         
-        axios.get(url, { headers, signal: controller.signal, timeout: 30000 })
+        // Используем axios interceptor для автоматического добавления токена
+        // Если токен есть, interceptor добавит его автоматически
+        const config = {
+            signal: controller.signal,
+            timeout: 30000
+        };
+        
+        // Добавляем токен явно, если он есть (на случай, если interceptor еще не настроен)
+        if (tokens?.access) {
+            config.headers = { Authorization: `Bearer ${tokens.access}` };
+        }
+        
+        axios.get(url, config)
             .then(res => {
                 clearTimeout(timeoutId);
                 setUsers(res.data);
@@ -49,11 +62,12 @@ function UsersPage() {
             })
             .catch(err => {
                 clearTimeout(timeoutId);
-                if (err.name === 'AbortError' || err.code === 'ECONNABORTED') {
-                    console.error("Запрос отменен или превышено время ожидания");
-                } else {
-                    console.error("Ошибка загрузки пользователей:", err);
+                // Игнорируем отмененные запросы (при размонтировании или обновлении страницы)
+                if (err.name === 'AbortError' || err.code === 'ECONNABORTED' || err.code === 'ERR_CANCELED' || err.name === 'CanceledError') {
+                    // Не устанавливаем ошибку для отмененных запросов
+                    return;
                 }
+                console.error("Ошибка загрузки пользователей:", err);
                 setError(err);
                 setLoading(false);
                 setIsRequesting(false);
@@ -63,7 +77,7 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [access, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
+    }, [isInitializing, tokens, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
 
     if (error) {
         return (
@@ -220,7 +234,8 @@ function SkillsQualitiesPicker({ onChange }) {
             setSkillsAll((sk.data || []).map(s => s.name));
             setQualitiesAll((q.data || []).map(x => x.name));
         }).catch((err) => {
-            if (err.name !== 'AbortError') {
+            // Игнорируем отмененные запросы (при размонтировании или обновлении страницы)
+            if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED' && err.name !== 'CanceledError') {
                 console.error("Ошибка загрузки навыков/качеств:", err);
             }
         });

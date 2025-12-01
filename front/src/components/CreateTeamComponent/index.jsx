@@ -375,7 +375,7 @@ export default function CreateTeamComponent() {
                     <button className={styles.button} type="submit" disabled={submitting} style={{ position: 'relative', minHeight: '40px' }}>
                         {submitting ? (
                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                <LoadingSpinner size="small" text="" />
+                                <LoadingSpinner size="small" text="" fullScreen={false} />
                                 <span>Создание...</span>
                             </span>
                         ) : "Создать"}

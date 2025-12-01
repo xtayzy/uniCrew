@@ -8,6 +8,9 @@
     border-radius: 24px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     border: 1px solid #e2e8f0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Левая часть */
@@ -21,6 +24,8 @@
     position: relative;
     border: 1px solid #e2e8f0;
     overflow: hidden;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .profile_left::before {
@@ -112,6 +117,9 @@
     font-weight: 600;
     font-size: 18px;
     color: #475569;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 
@@ -127,6 +135,8 @@
     position: relative;
     border: 1px solid #e2e8f0;
     overflow: hidden;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .profile_right::before {
@@ -305,11 +315,16 @@
         padding: 20px;
         gap: 24px;
         max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
     
     .profile_left {
         width: 100%;
+        max-width: 100%;
         padding: 32px 24px;
+        box-sizing: border-box;
     }
     
     .profile_left .profile_avatar img {
@@ -320,6 +335,16 @@
     .profile_right {
         padding: 32px 24px;
         gap: 32px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .profile_left_block2 .block .st2 {
+        font-size: 16px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
     }
     
     .edit_icon {

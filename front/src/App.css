@@ -10,7 +10,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0; /* Предотвращает переполнение */
+    min-height: calc(100vh - 80px); /* Минимальная высота для footer внизу */
     position: relative;
 }
 
@@ -103,4 +103,13 @@ body {
     z-index: 2;
     margin-top: auto;
     flex-shrink: 0;
+}
+
+/* Скрываем footer когда показывается LoadingSpinner с fullScreen */
+body.loading-fullscreen .footer {
+    display: none !important;
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
 }

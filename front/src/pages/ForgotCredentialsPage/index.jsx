@@ -43,7 +43,7 @@ function ForgotCredentialsPage() {
                 <button type="submit" disabled={isLoading} className={styles.submit_button}>
                     {isLoading ? (
                         <span className={styles.loading_content}>
-                            <LoadingSpinner size="small" text="" />
+                            <LoadingSpinner size="small" text="" fullScreen={false} />
                             <span>Отправка...</span>
                         </span>
                     ) : "Отправить"}

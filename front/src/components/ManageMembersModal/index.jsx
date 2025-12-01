@@ -37,7 +37,7 @@ const ManageMembersModal = ({ team, isOpen, onClose, onUpdate }) => {
         setActionLoading(memberId);
         try {
             await axios.put(
-                `${API_URL}teams/${team.id}/update_member_status/${memberId}/`,
+                `${API_URL}teams/${team.id}/members/${memberId}/`,
                 { status: newStatus },
                 {
                     headers: {

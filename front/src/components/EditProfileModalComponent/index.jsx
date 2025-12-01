@@ -35,10 +35,16 @@ export default function EditProfileModalComponent({ profile, access, onClose, on
     }, [access]);
 
     const handleFileChange = (e) => {
-        setFormData({ ...formData, avatar: e.target.files[0] });
+        const file = e.target.files[0];
+        if (file) {
+            console.log("Выбран файл аватара:", file.name, file.size, file.type);
+            setFormData({ ...formData, avatar: file });
+        }
     };
 
     const handleSave = async () => {
+        console.log("=== НАЧАЛО СОХРАНЕНИЯ ПРОФИЛЯ ===");
+        console.log("formData.avatar:", formData.avatar);
         try {
             const data = new FormData();
             // добавляем обновляемые поля
@@ -48,24 +54,40 @@ export default function EditProfileModalComponent({ profile, access, onClose, on
             if (formData.course) data.append("course", formData.course);
             if (formData.education_level) data.append("education_level", formData.education_level);
             if (formData.position) data.append("position", formData.position);
-            if (formData.avatar) data.append("avatar", formData.avatar);
+            if (formData.avatar) {
+                console.log("Отправляю аватар:", formData.avatar.name, formData.avatar.size, formData.avatar.type);
+                // Убеждаемся, что файл добавляется правильно
+                data.append("avatar_file", formData.avatar, formData.avatar.name);
+            } else {
+                console.log("Аватар не выбран");
+            }
 
             // 🔥 добавляем неизменённые данные, чтобы ничего не стерлось
             if (profile.skills) data.append("skills", JSON.stringify(profile.skills));
             if (profile.personal_qualities) data.append("personal_qualities", JSON.stringify(profile.personal_qualities));
             if (profile.about_myself) data.append("about_myself", profile.about_myself);
 
+            // Проверяем содержимое FormData перед отправкой
+            console.log("FormData содержимое:");
+            for (let pair of data.entries()) {
+                console.log(pair[0], pair[1]);
+            }
+
             const res = await axios.patch(`${API_URL}profile/`, data, {
                 headers: {
                     Authorization: `Bearer ${access}`,
-                    "Content-Type": "multipart/form-data",
+                    // Не устанавливаем Content-Type - браузер сам установит с boundary
                 },
             });
 
+            console.log("Ответ сервера:", res.data);
             onSave(res.data);
             onClose();
         } catch (e) {
             console.error("Ошибка сохранения профиля:", e);
+            if (e.response) {
+                console.error("Детали ошибки:", e.response.data);
+            }
         }
     };
 

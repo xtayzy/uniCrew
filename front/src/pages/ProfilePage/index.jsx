@@ -56,7 +56,7 @@ function ProfilePage() {
         );
     }
 
-    if (!profile) return <LoadingSpinner fullScreen={true} text="Загрузка профиля..." />;
+    if (!profile) return <LoadingSpinner text="Загрузка профиля..." />;
 
     console.log(profile);
 

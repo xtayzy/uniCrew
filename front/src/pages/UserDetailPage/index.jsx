@@ -67,7 +67,7 @@ const UserDetailPage = () => {
     }
 
     if (loading) {
-        return <LoadingSpinner fullScreen={true} text="Загрузка профиля..." />;
+        return <LoadingSpinner text="Загрузка профиля..." />;
     }
 
     if (!user) {

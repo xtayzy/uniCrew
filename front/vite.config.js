@@ -25,6 +25,7 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     minify: process.env.NODE_ENV === "production", // Минификация только в production
+    sourcemap: false, // Отключаем source maps для избежания проблем с CSP
     rollupOptions: {
       output: {
         // Отключаем минификацию CSS классов в production
@@ -34,7 +35,15 @@ export default defineConfig({
           }
           return "assets/[name]-[hash].[ext]";
         },
+        // Настройки для минификации без использования eval
+        format: 'es',
+        manualChunks: undefined,
       },
+    },
+    // Отключаем использование eval в production
+    target: 'esnext',
+    esbuild: {
+      legalComments: 'none',
     },
   },
 });

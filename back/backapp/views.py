@@ -167,14 +167,87 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
     def update(self, request, *args, **kwargs):
+        # Используем print для немедленного вывода (gunicorn перенаправляет stdout в логи)
+        print("=" * 80)
+        print("=== НАЧАЛО ОБНОВЛЕНИЯ ПРОФИЛЯ ===")
+        print(f"Request method: {request.method}")
+        print(f"Request content_type: {request.content_type}")
+        print(f"Request META CONTENT_TYPE: {request.META.get('CONTENT_TYPE', 'NOT SET')}")
+        print(f"Request FILES keys: {list(request.FILES.keys())}")
+        print(f"Request data keys: {list(request.data.keys())}")
+        print(f"Request POST keys: {list(request.POST.keys())}")
+        print("=" * 80)
+        
+        instance = self.get_object()
+        
+        # Проверяем ВСЕ возможные места, где может быть файл
+        avatar_file = None
+        file_key = None
+        
+        # 1. Проверяем request.FILES с ключом 'avatar_file'
+        if 'avatar_file' in request.FILES:
+            avatar_file = request.FILES['avatar_file']
+            file_key = 'avatar_file'
+            print(f"✓✓✓ НАЙДЕН avatar_file в FILES: {avatar_file.name}, размер: {avatar_file.size}, тип: {avatar_file.content_type}")
+        # 2. Проверяем все файлы в FILES (может быть другое имя)
+        else:
+            print("avatar_file НЕ найден в FILES, проверяем все файлы:")
+            for key in request.FILES.keys():
+                file_obj = request.FILES[key]
+                print(f"  - Файл '{key}': {file_obj.name if hasattr(file_obj, 'name') else 'unknown'}, размер: {file_obj.size if hasattr(file_obj, 'size') else 'unknown'}")
+                if 'avatar' in key.lower() or key == 'avatar':
+                    avatar_file = file_obj
+                    file_key = key
+                    print(f"✓✓✓ Используем файл с ключом '{key}' как аватар")
+                    break
+        
+        # Сохраняем аватар, если найден
+        if avatar_file:
+            try:
+                print(f"Сохраняем аватар: {avatar_file.name}")
+                instance.avatar = avatar_file
+                instance.save(update_fields=['avatar'])
+                print(f"✓✓✓ Аватар сохранен в БД: {instance.avatar}")
+                # Перезагружаем из БД
+                instance.refresh_from_db()
+                print(f"✓✓✓ Аватар после refresh_from_db: {instance.avatar}, URL: {instance.avatar.url if instance.avatar else 'None'}")
+            except Exception as e:
+                print(f"✗✗✗ ОШИБКА сохранения аватара: {e}")
+                import traceback
+                traceback.print_exc()
+        else:
+            print("✗✗✗ avatar_file НЕ найден ни в FILES, ни в data!")
+            print(f"Все ключи в FILES: {list(request.FILES.keys())}")
+            print(f"Все ключи в data: {list(request.data.keys())}")
+            print(f"Все ключи в POST: {list(request.POST.keys())}")
+        
+        # Создаем данные для сериализатора (БЕЗ файла, т.к. он уже сохранен)
+        data = {}
+        for key, value in request.data.items():
+            if key != 'avatar_file' and key != file_key:  # Исключаем файл
+                data[key] = value
+        
+        print(f"Данные для сериализатора (без файла): {list(data.keys())}")
+        
+        # Обновляем остальные поля через сериализатор
         serializer = self.get_serializer(
-            self.get_object(),
-            data=request.data,
+            instance,
+            data=data,
             partial=True,
             context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
+        # Финальная проверка
+        instance.refresh_from_db()
+        print("=" * 80)
+        print(f"ФИНАЛЬНАЯ ПРОВЕРКА - аватар в БД: {instance.avatar}")
+        if instance.avatar:
+            print(f"  URL: {instance.avatar.url}")
+        print(f"Аватар в ответе сериализатора: {serializer.data.get('avatar')}")
+        print("=" * 80)
+        
         return Response(serializer.data)
 
 
@@ -548,10 +621,12 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.status = "APPROVED"
         member.save()
         
+        # Удаляем только уведомление для конкретного участника
         Notification.objects.filter(
             user=request.user,
             notification_type="TEAM_REQUEST",
-            team=team
+            team=team,
+            team_member=member
         ).delete()
         
         Notification.objects.create(
@@ -579,10 +654,12 @@ class TeamViewSet(viewsets.ModelViewSet):
         member.status = "REJECTED"
         member.save()
         
+        # Удаляем только уведомление для конкретного участника
         Notification.objects.filter(
             user=request.user,
             notification_type="TEAM_REQUEST",
-            team=team
+            team=team,
+            team_member=member
         ).delete()
         
         Notification.objects.create(

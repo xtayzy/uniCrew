@@ -236,6 +236,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     personal_qualities_list = serializers.SerializerMethodField(read_only=True)
     education_level_display = serializers.SerializerMethodField(read_only=True)
     avatar = serializers.SerializerMethodField(read_only=True)
+    avatar_file = serializers.ImageField(write_only=True, required=False, allow_null=True)
     faculty = FacultySerializer(read_only=True)
 
     class Meta:
@@ -253,6 +254,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "position",
             "about_myself",
             "avatar",
+            "avatar_file",
             "skills",
             "personal_qualities",
             "skills_list",
@@ -261,18 +263,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["username", "email"]
 
     def get_avatar(self, obj):
+        # Перезагружаем объект из БД для получения актуального значения
+        obj.refresh_from_db()
         if obj.avatar:
-            request = self.context.get('request')
-            if request:
-                url = request.build_absolute_uri(obj.avatar.url)
-                # Принудительно заменяем http на https
-                if url.startswith('http://'):
-                    url = url.replace('http://', 'https://', 1)
-                return url
-            # Fallback: используем настройки из переменных окружения
-            from django.conf import settings
-            domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
-            return f"https://{domain}{obj.avatar.url}"
+            try:
+                request = self.context.get('request')
+                if request:
+                    url = request.build_absolute_uri(obj.avatar.url)
+                    # Принудительно заменяем http на https
+                    if url.startswith('http://'):
+                        url = url.replace('http://', 'https://', 1)
+                    return url
+                # Fallback: используем настройки из переменных окружения
+                from django.conf import settings
+                domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
+                return f"https://{domain}{obj.avatar.url}"
+            except Exception as e:
+                print(f"Ошибка в get_avatar: {e}")
+                return None
         return None
 
     def get_skills_list(self, obj):
@@ -289,16 +297,31 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.get_education_level_display()
 
     def update(self, instance, validated_data):
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info(f"validated_data keys: {list(validated_data.keys())}")
+        
         # === Обычные поля ===
         for field in ["first_name", "last_name", "faculty", "course",
                       "education_level", "position", "about_myself"]:
             if field in validated_data:
                 setattr(instance, field, validated_data[field])
 
-        if validated_data.get("avatar"):
-            instance.avatar = validated_data["avatar"]
+        # === Аватар ===
+        if "avatar_file" in validated_data:
+            avatar_file = validated_data["avatar_file"]
+            if avatar_file:
+                print(f"Получен файл аватара в validated_data: {avatar_file.name if hasattr(avatar_file, 'name') else 'unknown'}, размер: {avatar_file.size if hasattr(avatar_file, 'size') else 'unknown'}")
+                instance.avatar = avatar_file
+                print(f"Аватар установлен в instance: {instance.avatar}")
+            else:
+                print("avatar_file в validated_data, но значение None")
+        else:
+            print(f"avatar_file отсутствует в validated_data. Все ключи: {list(validated_data.keys())}")
 
         instance.save()
+        print(f"Instance сохранен, аватар: {instance.avatar}")
 
         # === Навыки ===
         if "skills" in validated_data:  # ✅ обновляем только если реально переданы
@@ -375,18 +398,24 @@ class UserListSerializer(serializers.ModelSerializer):
         ]
 
     def get_avatar(self, obj):
+        # Перезагружаем объект из БД для получения актуального значения
+        obj.refresh_from_db()
         if obj.avatar:
-            request = self.context.get('request')
-            if request:
-                url = request.build_absolute_uri(obj.avatar.url)
-                # Принудительно заменяем http на https
-                if url.startswith('http://'):
-                    url = url.replace('http://', 'https://', 1)
-                return url
-            # Fallback: используем настройки из переменных окружения
-            from django.conf import settings
-            domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
-            return f"https://{domain}{obj.avatar.url}"
+            try:
+                request = self.context.get('request')
+                if request:
+                    url = request.build_absolute_uri(obj.avatar.url)
+                    # Принудительно заменяем http на https
+                    if url.startswith('http://'):
+                        url = url.replace('http://', 'https://', 1)
+                    return url
+                # Fallback: используем настройки из переменных окружения
+                from django.conf import settings
+                domain = getattr(settings, 'DOMAIN', 'unicrew.kz')
+                return f"https://{domain}{obj.avatar.url}"
+            except Exception as e:
+                print(f"Ошибка в get_avatar: {e}")
+                return None
         return None
 
     def get_skills_list(self, obj):

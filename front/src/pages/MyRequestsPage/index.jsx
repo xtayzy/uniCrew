@@ -94,7 +94,7 @@ const MyRequestsPage = () => {
     }
 
     if (loading) {
-        return <LoadingSpinner fullScreen={true} text="Загрузка заявок..." />;
+        return <LoadingSpinner text="Загрузка заявок..." />;
     }
 
     return (
