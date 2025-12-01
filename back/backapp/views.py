@@ -659,7 +659,7 @@ class TeamViewSet(viewsets.ModelViewSet):
             user=request.user,
             notification_type="TEAM_REQUEST",
             team=team,
-            team_member=member
+            team_member_id=member.id
         ).delete()
         
         Notification.objects.create(
@@ -728,7 +728,7 @@ class TeamViewSet(viewsets.ModelViewSet):
                     user=request.user,
                     notification_type="TEAM_REQUEST",
                     team=team,
-                    team_member=member
+                    team_member_id=member.id
                 ).delete()
                 
                 # Создаем уведомление для пользователя о результате заявки
