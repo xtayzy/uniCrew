@@ -67,29 +67,7 @@
       "url": "https://unicrew.kz",
       "description": "Платформа для поиска команды студенческих проектов. Найди участников для дипломных работ, хакатонов, стартапов и учебных проектов.",
       "inLanguage": "ru-RU",
-      "mainEntity": {
-        "@type": "ItemList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Команды",
-            "url": "https://unicrew.kz/teams"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Пользователи",
-            "url": "https://unicrew.kz/users"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "О сайте",
-            "url": "https://unicrew.kz/about"
-          }
-        ]
-      },
+      "image": "https://unicrew.kz/logo_unicrew.jpg",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -108,9 +86,45 @@
       "name": "UniCrew",
       "alternateName": "UniCrew.kz",
       "url": "https://unicrew.kz",
-      "logo": "https://unicrew.kz/unicrew_logo_2.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://unicrew.kz/logo_unicrew.jpg",
+        "width": 1024,
+        "height": 1024
+      },
+      "image": "https://unicrew.kz/logo_unicrew.jpg",
       "description": "Платформа для поиска команды студенческих проектов",
       "sameAs": []
+    }
+    </script>
+    
+    <!-- Navigation Structure for Sitelinks -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": "Главная навигация",
+      "url": "https://unicrew.kz",
+      "hasPart": [
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Команды",
+          "url": "https://unicrew.kz/teams",
+          "description": "Поиск команд для студенческих проектов"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "Пользователи",
+          "url": "https://unicrew.kz/users",
+          "description": "Поиск участников для проектов"
+        },
+        {
+          "@type": "SiteNavigationElement",
+          "name": "О сайте",
+          "url": "https://unicrew.kz/about",
+          "description": "Информация о платформе UniCrew"
+        }
+      ]
     }
     </script>
     
@@ -131,39 +145,6 @@
     }
     </script>
     
-    <!-- BreadcrumbList for better navigation -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Главная",
-          "item": "https://unicrew.kz/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Команды",
-          "item": "https://unicrew.kz/teams"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Пользователи",
-          "item": "https://unicrew.kz/users"
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": "О сайте",
-          "item": "https://unicrew.kz/about"
-        }
-      ]
-    }
-    </script>
 </head>
 <body>
 <div id="root"></div>
