@@ -30,7 +30,13 @@ export default function EditProfileModalComponent({ profile, access, onClose, on
             .get(`${API_URL}faculties/`, {
                 headers: { Authorization: `Bearer ${access}` },
             })
-            .then((res) => setFaculties(res.data))
+            .then((res) => {
+                // Обрабатываем пагинированный ответ
+                const facultiesData = Array.isArray(res.data) 
+                    ? res.data 
+                    : (res.data?.results || []);
+                setFaculties(facultiesData);
+            })
             .catch((e) => console.error("Ошибка загрузки факультетов:", e));
     }, [access]);
 
@@ -119,7 +125,7 @@ export default function EditProfileModalComponent({ profile, access, onClose, on
                     onChange={(e) => setFormData({ ...formData, faculty_id: e.target.value })}
                 >
                     <option value="">— Не выбрано —</option>
-                    {faculties.map((f) => (
+                    {Array.isArray(faculties) && faculties.map((f) => (
                         <option key={f.id} value={f.id}>
                             {f.name} ({f.school_name})
                         </option>
