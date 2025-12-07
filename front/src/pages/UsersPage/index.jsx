@@ -364,14 +364,28 @@ function SchoolFacultyPicker({ value, onChange, access }) {
     }, [access]);
 
     useEffect(() => {
-        if (!value.school) { setFaculties([]); return; }
+        if (!value.school || value.school === "") { 
+            console.log('Школа не выбрана, очищаем факультеты');
+            setFaculties([]); 
+            return; 
+        }
+        
+        console.log('Загрузка факультетов для школы:', value.school);
         const headers = access ? { Authorization: `Bearer ${access}` } : {};
-        axios.get(`${API_URL}faculties/?school=${value.school}`, { headers })
+        const schoolId = value.school;
+        const url = `${API_URL}faculties/?school=${schoolId}`;
+        console.log('Запрос факультетов:', url);
+        
+        axios.get(url, { headers })
             .then(res => {
                 const facultiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                console.log('Загружены факультеты:', facultiesData);
                 setFaculties(facultiesData);
             })
-            .catch(() => setFaculties([]));
+            .catch((err) => {
+                console.error('Ошибка загрузки факультетов:', err);
+                setFaculties([]);
+            });
     }, [value.school, access]);
 
     return (
