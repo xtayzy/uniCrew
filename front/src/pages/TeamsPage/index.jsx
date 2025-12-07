@@ -370,7 +370,7 @@ const TeamsPage = () => {
                         <option value="DONE">Завершён</option>
                     </select>
                 </div>
-                <div className={styles.filterRow2}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                     <div className={styles.filterBox}>
                         {Array.isArray(selectedSkills) && selectedSkills.map(s => (
                             <span key={s} className={styles.filterChip}>{s}<button className={styles.filterChipRemove} onClick={() => removeSkill(s)} type="button">×</button></span>
