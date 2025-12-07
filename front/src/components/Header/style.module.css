@@ -349,21 +349,31 @@
 
 /* Адаптивность */
 @media (max-width: 1024px) and (min-width: 769px) {
+    .header_container {
+        padding: 16px 20px;
+    }
+    
+    .logo_text {
+        font-size: 22px;
+    }
+    
     .nav {
         display: flex;
-        gap: 4px;
-        padding: 6px;
+        gap: 3px;
+        padding: 5px;
         align-items: center;
     }
     
     .nav_link {
-        padding: 10px 12px;
-        font-size: 14px;
+        padding: 8px 10px;
+        font-size: 13px;
         box-sizing: border-box;
+        gap: 4px;
     }
     
     .nav_link span {
         display: inline;
+        font-size: 13px;
     }
     
     .nav_icon {
@@ -371,9 +381,36 @@
     }
     
     .nav_divider {
-        width: 2px;
-        height: 24px;
-        margin: 0 8px;
+        width: 1px;
+        height: 20px;
+        margin: 0 4px;
+    }
+    
+    .header_right {
+        gap: 8px;
+    }
+    
+    .notification_link,
+    .profile_link,
+    .logout_btn {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0;
+    }
+    
+    .profile_link {
+        gap: 0;
+    }
+    
+    .profile_text {
+        display: none;
+    }
+    
+    .login_btn {
+        padding: 10px 16px;
+        font-size: 14px;
     }
 }
 
