@@ -20,9 +20,12 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
                     Authorization: `Bearer ${tokens?.access}`,
                 },
             });
-            setUsers(response.data);
+            // Обрабатываем ответ с пагинацией
+            const usersData = Array.isArray(response.data) ? response.data : (response.data?.results || []);
+            setUsers(Array.isArray(usersData) ? usersData : []);
         } catch (error) {
             console.error("Ошибка загрузки пользователей:", error);
+            setUsers([]); // Устанавливаем пустой массив при ошибке
         }
     }, [tokens]);
 
@@ -34,10 +37,16 @@ const InviteUserModal = ({ team, isOpen, onClose, onSuccess }) => {
 
     useEffect(() => {
         if (searchQuery.trim()) {
+            if (!Array.isArray(users)) {
+                setFilteredUsers([]);
+                return;
+            }
             const filtered = users.filter(user => 
-                user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (user.first_name && user.first_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                (user.last_name && user.last_name.toLowerCase().includes(searchQuery.toLowerCase()))
+                user && user.username && (
+                    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (user.first_name && user.first_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (user.last_name && user.last_name.toLowerCase().includes(searchQuery.toLowerCase()))
+                )
             );
             setFilteredUsers(filtered.slice(0, 10)); // Ограничиваем до 10 результатов
         } else {
