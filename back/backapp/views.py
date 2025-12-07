@@ -162,13 +162,13 @@ class CustomPersonalQualityViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [AllowAny]  # Разрешаем чтение для всех
 
 
 class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [AllowAny]  # Разрешаем чтение для всех
 
 
 class UserProfileUpdateView(generics.RetrieveUpdateAPIView):

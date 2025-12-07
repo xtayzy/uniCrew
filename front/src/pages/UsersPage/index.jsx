@@ -310,8 +310,16 @@ function SchoolFacultyPicker({ value, onChange, access }) {
     useEffect(() => {
         const headers = access ? { Authorization: `Bearer ${access}` } : {};
         axios.get(`${API_URL}schools/`, { headers })
-            .then(res => setSchools(res.data || []))
-            .catch(() => setSchools([]));
+            .then(res => {
+                // Обрабатываем ответ - может быть массив или объект с пагинацией
+                const schoolsData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                setSchools(schoolsData);
+                console.log('Загружены школы:', schoolsData);
+            })
+            .catch((err) => {
+                console.error('Ошибка загрузки школ:', err);
+                setSchools([]);
+            });
     }, [access]);
 
     useEffect(() => {
