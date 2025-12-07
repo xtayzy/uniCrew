@@ -22,7 +22,8 @@ const TeamsPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [count, setCount] = useState(0);
 
-    const [query, setQuery] = useState({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
+    const [formQuery, setFormQuery] = useState({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
+    const [searchQuery, setSearchQuery] = useState({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
     const [categories, setCategories] = useState([]);
     const [skillsAll, setSkillsAll] = useState([]);
     const [qualitiesAll, setQualitiesAll] = useState([]);
@@ -42,11 +43,11 @@ const TeamsPage = () => {
                 setError(null);
                 setLoading(true);
                 const params = new URLSearchParams();
-                if (query.title) params.set("title", query.title);
-                if (query.category_id) params.set("category_id", query.category_id);
-                if (query.status) params.set("status", query.status);
-                if (query.required_skills) params.set("required_skills", query.required_skills);
-                if (query.required_qualities) params.set("required_qualities", query.required_qualities);
+                if (searchQuery.title) params.set("title", searchQuery.title);
+                if (searchQuery.category_id) params.set("category_id", searchQuery.category_id);
+                if (searchQuery.status) params.set("status", searchQuery.status);
+                if (searchQuery.required_skills) params.set("required_skills", searchQuery.required_skills);
+                if (searchQuery.required_qualities) params.set("required_qualities", searchQuery.required_qualities);
                 params.set("page", currentPage.toString());
                 const queryString = params.toString() ? '?' + params.toString() : '';
                 const url = `${API_URL}teams/${queryString}`;
@@ -91,12 +92,18 @@ const TeamsPage = () => {
 
         fetchTeams();
         return () => controller.abort();
-    }, [query.title, query.category_id, query.status, query.required_skills, query.required_qualities, currentPage]);
+    }, [searchQuery.title, searchQuery.category_id, searchQuery.status, searchQuery.required_skills, searchQuery.required_qualities, currentPage]);
     
-    // Сбрасываем страницу на 1 при изменении фильтров
+    // Сбрасываем страницу на 1 при изменении поискового запроса
     useEffect(() => {
         setCurrentPage(1);
-    }, [query.title, query.category_id, query.status, query.required_skills, query.required_qualities]);
+    }, [searchQuery.title, searchQuery.category_id, searchQuery.status, searchQuery.required_skills, searchQuery.required_qualities]);
+    
+    // Функция для запуска поиска
+    const handleSearch = () => {
+        setSearchQuery({ ...formQuery });
+        setCurrentPage(1);
+    };
 
     useEffect(() => {
         const controller = new AbortController();
@@ -224,14 +231,14 @@ const TeamsPage = () => {
             </div>
             <div className={styles.filters}>
                 <div className={styles.filterRow3}>
-                    <input className={styles.input} placeholder="Название" value={query.title} onChange={(e) => setQuery({ ...query, title: e.target.value })} />
-                    <select className={styles.select} value={query.category_id} onChange={(e) => setQuery({ ...query, category_id: e.target.value })}>
+                    <input className={styles.input} placeholder="Название" value={formQuery.title} onChange={(e) => setFormQuery({ ...formQuery, title: e.target.value })} />
+                    <select className={styles.select} value={formQuery.category_id} onChange={(e) => setFormQuery({ ...formQuery, category_id: e.target.value })}>
                         <option value="">Все категории</option>
                         {Array.isArray(categories) && categories.map(c => (
                             <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                     </select>
-                    <select className={styles.select} value={query.status} onChange={(e) => setQuery({ ...query, status: e.target.value })}>
+                    <select className={styles.select} value={formQuery.status} onChange={(e) => setFormQuery({ ...formQuery, status: e.target.value })}>
                         <option value="">Любой статус</option>
                         <option value="OPEN">Открыт набор</option>
                         <option value="CLOSED">Набор закрыт</option>

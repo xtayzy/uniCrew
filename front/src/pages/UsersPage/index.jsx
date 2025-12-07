@@ -16,7 +16,8 @@ function UsersPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [query, setQuery] = useState({ username: "", faculty: "", school: "", course: "", education: "", skills: "", personal_qualities: "" });
+    const [formQuery, setFormQuery] = useState({ username: "", faculty: "", school: "", course: "", education: "", skills: "", personal_qualities: "" });
+    const [searchQuery, setSearchQuery] = useState({ username: "", faculty: "", school: "", course: "", education: "", skills: "", personal_qualities: "" });
     const [isRequesting, setIsRequesting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -32,13 +33,13 @@ function UsersPage() {
         setIsRequesting(true);
         
         const params = new URLSearchParams();
-        if (query.username) params.set("username", query.username);
-        if (query.faculty) params.set("faculty", query.faculty);
-        if (query.school) params.set("school", query.school);
-        if (query.course) params.set("course", query.course);
-        if (query.education) params.set("education", query.education);
-        if (query.skills) params.set("skills", query.skills);
-        if (query.personal_qualities) params.set("personal_qualities", query.personal_qualities);
+        if (searchQuery.username) params.set("username", searchQuery.username);
+        if (searchQuery.faculty) params.set("faculty", searchQuery.faculty);
+        if (searchQuery.school) params.set("school", searchQuery.school);
+        if (searchQuery.course) params.set("course", searchQuery.course);
+        if (searchQuery.education) params.set("education", searchQuery.education);
+        if (searchQuery.skills) params.set("skills", searchQuery.skills);
+        if (searchQuery.personal_qualities) params.set("personal_qualities", searchQuery.personal_qualities);
         params.set("page", currentPage.toString());
         const url = `${API_URL}users/${params.toString() ? `?${params.toString()}` : ""}`;
         
@@ -108,12 +109,18 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [isInitializing, tokens, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities, currentPage]);
+    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage]);
     
-    // Сбрасываем страницу на 1 при изменении фильтров
+    // Сбрасываем страницу на 1 при изменении поискового запроса
     useEffect(() => {
         setCurrentPage(1);
-    }, [query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
+    }, [searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities]);
+    
+    // Функция для запуска поиска
+    const handleSearch = () => {
+        setSearchQuery({ ...formQuery });
+        setCurrentPage(1);
+    };
 
     if (error) {
         return (
@@ -293,12 +300,9 @@ function SkillsQualitiesPicker({ onChange }) {
         return () => controller.abort();
     }, []);
 
+    // Обновляем formQuery при изменении навыков и качеств
     useEffect(() => {
-        // Debounce для предотвращения слишком частых обновлений
-        const timeoutId = setTimeout(() => {
-            onChange(skillsSel.join(','), qualsSel.join(','));
-        }, 300);
-        return () => clearTimeout(timeoutId);
+        onChange(skillsSel.join(','), qualsSel.join(','));
     }, [skillsSel, qualsSel, onChange]);
 
     const addSkill = (name) => {
