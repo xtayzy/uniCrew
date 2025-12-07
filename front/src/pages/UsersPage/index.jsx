@@ -25,29 +25,15 @@ function UsersPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [count, setCount] = useState(0);
 
-    // Отслеживаем размонтирование компонента и сбрасываем состояние при переходе
+    // Отслеживаем размонтирование компонента
     useEffect(() => {
-        if (location.pathname !== '/users') {
-            isMountedRef.current = false;
-            // Сбрасываем состояние при переходе на другую страницу
-            setUsers([]);
-            setLoading(true);
-            setError(null);
-            setIsRequesting(false);
-            return;
-        }
         isMountedRef.current = true;
         return () => {
             isMountedRef.current = false;
         };
-    }, [location.pathname]);
+    }, []);
 
     useEffect(() => {
-        // Проверяем, что мы на странице /users
-        if (location.pathname !== '/users') {
-            return;
-        }
-        
         // Ждем завершения инициализации токенов
         if (isInitializing) return;
         if (isRequesting) return; // Защита от повторных запросов
@@ -85,8 +71,8 @@ function UsersPage() {
         axios.get(url, config)
             .then(res => {
                 clearTimeout(timeoutId);
-                // Проверяем, что компонент все еще смонтирован и мы на правильной странице
-                if (!isMountedRef.current || location.pathname !== '/users') {
+                // Проверяем, что компонент все еще смонтирован
+                if (!isMountedRef.current) {
                     return;
                 }
                 
@@ -114,8 +100,8 @@ function UsersPage() {
                     totalPagesCount = 1;
                 }
                 
-                // Дополнительная проверка перед обновлением состояния
-                if (isMountedRef.current && location.pathname === '/users') {
+                // Проверяем, что компонент все еще смонтирован перед обновлением состояния
+                if (isMountedRef.current) {
                     setUsers(usersData);
                     setCount(totalCount);
                     setTotalPages(totalPagesCount);
@@ -131,8 +117,8 @@ function UsersPage() {
                     // Не устанавливаем ошибку для отмененных запросов
                     return;
                 }
-                // Проверяем, что компонент все еще смонтирован и мы на правильной странице
-                if (!isMountedRef.current || location.pathname !== '/users') {
+                // Проверяем, что компонент все еще смонтирован
+                if (!isMountedRef.current) {
                     return;
                 }
                 console.error("Ошибка загрузки пользователей:", err);
@@ -145,7 +131,7 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage, location.pathname]);
+    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage]);
     
     // Сбрасываем страницу на 1 при изменении поискового запроса
     useEffect(() => {
@@ -160,16 +146,10 @@ function UsersPage() {
     
     // Выполняем начальный поиск при загрузке страницы
     useEffect(() => {
-        if (location.pathname !== '/users') return;
         if (!isInitializing) {
             handleSearch();
         }
-    }, [isInitializing, location.pathname]); // Только при первой загрузке
-
-    // Не рендерим контент, если мы не на странице /users
-    if (location.pathname !== '/users') {
-        return null;
-    }
+    }, [isInitializing]); // Только при первой загрузке
 
     if (error) {
         return (
