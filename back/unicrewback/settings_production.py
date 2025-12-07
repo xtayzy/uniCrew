@@ -115,3 +115,11 @@ LOGGING = {
     },
 }
 
+# Убеждаемся, что пагинация включена
+if 'REST_FRAMEWORK' not in globals() or 'DEFAULT_PAGINATION_CLASS' not in REST_FRAMEWORK:
+    REST_FRAMEWORK = {
+        **REST_FRAMEWORK,
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+        "PAGE_SIZE": 15,
+    }
+
