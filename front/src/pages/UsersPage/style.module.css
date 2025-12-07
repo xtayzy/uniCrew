@@ -228,11 +228,15 @@
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .searchButton {
@@ -264,7 +268,12 @@
 .addBtn:hover {
   background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.3);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.2);
 }
 
 .suggestWrap { 
