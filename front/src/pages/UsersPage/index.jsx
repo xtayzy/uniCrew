@@ -25,9 +25,18 @@ function UsersPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [count, setCount] = useState(0);
 
-    // Отслеживаем размонтирование компонента
+    // Отслеживаем размонтирование компонента и сбрасываем состояние при переходе
     useEffect(() => {
-        isMountedRef.current = location.pathname === '/users';
+        if (location.pathname !== '/users') {
+            isMountedRef.current = false;
+            // Сбрасываем состояние при переходе на другую страницу
+            setUsers([]);
+            setLoading(true);
+            setError(null);
+            setIsRequesting(false);
+            return;
+        }
+        isMountedRef.current = true;
         return () => {
             isMountedRef.current = false;
         };
