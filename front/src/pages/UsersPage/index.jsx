@@ -42,11 +42,6 @@ function UsersPage() {
         };
     }, [location.pathname]);
 
-    // Ранний возврат, если мы не на странице /users
-    if (location.pathname !== '/users') {
-        return null;
-    }
-
     useEffect(() => {
         // Проверяем, что мы на странице /users
         if (location.pathname !== '/users') {
@@ -165,10 +160,16 @@ function UsersPage() {
     
     // Выполняем начальный поиск при загрузке страницы
     useEffect(() => {
+        if (location.pathname !== '/users') return;
         if (!isInitializing) {
             handleSearch();
         }
-    }, [isInitializing]); // Только при первой загрузке
+    }, [isInitializing, location.pathname]); // Только при первой загрузке
+
+    // Не рендерим контент, если мы не на странице /users
+    if (location.pathname !== '/users') {
+        return null;
+    }
 
     if (error) {
         return (
