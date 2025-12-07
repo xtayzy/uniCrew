@@ -26,13 +26,9 @@ import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 
 // Обертка для принудительного размонтирования компонентов при изменении маршрута
-function RouteKeyWrapper({ children, path }) {
+function RouteKeyWrapper({ children }) {
     const location = useLocation();
     // Используем key на основе текущего pathname, чтобы размонтировать при изменении
-    const isActive = location.pathname === path || location.pathname.startsWith(path + '/');
-    if (!isActive) {
-        return null;
-    }
     return <div key={location.pathname}>{children}</div>;
 }
 
@@ -46,12 +42,12 @@ function AppContent() {
             <main className="main-content" key={location.pathname}>
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
                 <Routes>
-                    <Route path="/" element={<RouteKeyWrapper path="/"><HomePage /></RouteKeyWrapper>} />
-                    <Route path="/teams" element={<RouteKeyWrapper path="/teams"><TeamsPage/></RouteKeyWrapper>} />
+                    <Route path="/" element={<RouteKeyWrapper><HomePage /></RouteKeyWrapper>} />
+                    <Route path="/teams" element={<RouteKeyWrapper><TeamsPage/></RouteKeyWrapper>} />
                     <Route
                         path="/my-teams"
                         element={
-                            <RouteKeyWrapper path="/my-teams">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <MyTeamsPage />
                                 </ProtectedRoute>
@@ -61,20 +57,20 @@ function AppContent() {
                     <Route
                         path="/teams/create"
                         element={
-                            <RouteKeyWrapper path="/teams/create">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <CreateTeamPage />
                                 </ProtectedRoute>
                             </RouteKeyWrapper>
                         }
                     />
-                    <Route path="/about" element={<RouteKeyWrapper path="/about"><AboutPage/></RouteKeyWrapper>}/>
+                    <Route path="/about" element={<RouteKeyWrapper><AboutPage/></RouteKeyWrapper>}/>
 
                     {/* Только для НЕавторизованных */}
                     <Route
                         path="/login"
                         element={
-                            <RouteKeyWrapper path="/login">
+                            <RouteKeyWrapper>
                                 <GuestRoute>
                                     <LogInPage />
                                 </GuestRoute>
@@ -84,7 +80,7 @@ function AppContent() {
                     <Route
                         path="/forgot"
                         element={
-                            <RouteKeyWrapper path="/forgot">
+                            <RouteKeyWrapper>
                                 <GuestRoute>
                                     <ForgotCredentialsPage />
                                 </GuestRoute>
@@ -94,7 +90,7 @@ function AppContent() {
                     <Route
                         path="/register-step1"
                         element={
-                            <RouteKeyWrapper path="/register-step1">
+                            <RouteKeyWrapper>
                                 <GuestRoute>
                                     <RegisterStep1Page />
                                 </GuestRoute>
@@ -104,7 +100,7 @@ function AppContent() {
                     <Route
                         path="/register-step2"
                         element={
-                            <RouteKeyWrapper path="/register-step2">
+                            <RouteKeyWrapper>
                                 <GuestRoute>
                                     <RegisterStep2Page />
                                 </GuestRoute>
@@ -116,7 +112,7 @@ function AppContent() {
                     <Route
                         path="/profile"
                         element={
-                            <RouteKeyWrapper path="/profile">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <ProfilePage />
                                 </ProtectedRoute>
@@ -126,13 +122,13 @@ function AppContent() {
 
                     <Route
                         path="/users"
-                        element={<RouteKeyWrapper path="/users"><UsersPage/></RouteKeyWrapper>}
+                        element={<RouteKeyWrapper><UsersPage/></RouteKeyWrapper>}
                     />
 
                     <Route
                         path="/notifications"
                         element={
-                            <RouteKeyWrapper path="/notifications">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <NotificationsPage/>
                                 </ProtectedRoute>
@@ -143,7 +139,7 @@ function AppContent() {
                     <Route
                         path="/my-requests"
                         element={
-                            <RouteKeyWrapper path="/my-requests">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <MyRequestsPage/>
                                 </ProtectedRoute>
@@ -154,7 +150,7 @@ function AppContent() {
                     <Route
                         path="/teams/:teamId"
                         element={
-                            <RouteKeyWrapper path="/teams">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <TeamPublicPage/>
                                 </ProtectedRoute>
@@ -165,7 +161,7 @@ function AppContent() {
                     <Route
                         path="/teams/:teamId/private"
                         element={
-                            <RouteKeyWrapper path="/teams">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <TeamPrivatePage/>
                                 </ProtectedRoute>
@@ -176,7 +172,7 @@ function AppContent() {
                     <Route
                         path="/users/:username"
                         element={
-                            <RouteKeyWrapper path="/users">
+                            <RouteKeyWrapper>
                                 <ProtectedRoute>
                                     <UserDetailPage/>
                                 </ProtectedRoute>
