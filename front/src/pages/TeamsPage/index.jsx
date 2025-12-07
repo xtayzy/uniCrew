@@ -376,19 +376,17 @@ const TeamsPage = () => {
                             <span key={s} className={styles.filterChip}>{s}<button className={styles.filterChipRemove} onClick={() => removeSkill(s)} type="button">×</button></span>
                         ))}
                         <div className={styles.suggestWrap}>
-                            <div className={styles.inputRow}>
-                                <input
-                                    className={styles.inputInline}
-                                    placeholder="Навык..."
-                                    value={skillQ}
-                                    onChange={(e) => {
-                                        setSkillQ(e.target.value);
-                                    }}
-                                    onKeyDown={(e) => { if (e.key === 'Enter' && skillQ.trim()) { addSkill(skillQ.trim()); e.preventDefault(); } }}
-                                    onBlur={() => setSkillSug([])}
-                                />
-                                <button type="button" className={styles.addBtn} onClick={() => skillQ.trim() && addSkill(skillQ.trim())}>Добавить</button>
-                            </div>
+                            <input
+                                className={styles.inputInline}
+                                placeholder="Навык..."
+                                value={skillQ}
+                                onChange={(e) => {
+                                    setSkillQ(e.target.value);
+                                }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' && skillQ.trim()) { addSkill(skillQ.trim()); e.preventDefault(); } }}
+                                onBlur={() => setSkillSug([])}
+                            />
+                            <button type="button" className={styles.addBtn} onClick={() => skillQ.trim() && addSkill(skillQ.trim())}>Добавить</button>
                             {Array.isArray(skillSug) && skillSug.length > 0 ? (
                                 <div className={styles.suggestions}>
                                     {skillSug.map(s => (
@@ -403,19 +401,17 @@ const TeamsPage = () => {
                             <span key={q} className={styles.filterChip}>{q}<button className={styles.filterChipRemove} onClick={() => removeQuality(q)} type="button">×</button></span>
                         ))}
                         <div className={styles.suggestWrap}>
-                            <div className={styles.inputRow}>
-                                <input
-                                    className={styles.inputInline}
-                                    placeholder="Качество..."
-                                    value={qualityQ}
-                                    onChange={(e) => {
-                                        setQualityQ(e.target.value);
-                                    }}
-                                    onKeyDown={(e) => { if (e.key === 'Enter' && qualityQ.trim()) { addQuality(qualityQ.trim()); e.preventDefault(); } }}
-                                    onBlur={() => setQualSug([])}
-                                />
-                                <button type="button" className={styles.addBtn} onClick={() => qualityQ.trim() && addQuality(qualityQ.trim())}>Добавить</button>
-                            </div>
+                            <input
+                                className={styles.inputInline}
+                                placeholder="Качество..."
+                                value={qualityQ}
+                                onChange={(e) => {
+                                    setQualityQ(e.target.value);
+                                }}
+                                onKeyDown={(e) => { if (e.key === 'Enter' && qualityQ.trim()) { addQuality(qualityQ.trim()); e.preventDefault(); } }}
+                                onBlur={() => setQualSug([])}
+                            />
+                            <button type="button" className={styles.addBtn} onClick={() => qualityQ.trim() && addQuality(qualityQ.trim())}>Добавить</button>
                             {Array.isArray(qualSug) && qualSug.length > 0 ? (
                                 <div className={styles.suggestions}>
                                     {qualSug.map(s => (
