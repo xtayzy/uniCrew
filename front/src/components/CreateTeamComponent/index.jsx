@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../config.js";
@@ -30,6 +30,8 @@ export default function CreateTeamComponent() {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
     const [loadError, setLoadError] = useState(null);
+    const skillSearchControllerRef = useRef(null);
+    const qualitySearchControllerRef = useRef(null);
 
     const headers = useMemo(() => {
         const hdrs = { "Content-Type": "application/json" };
@@ -70,20 +72,113 @@ export default function CreateTeamComponent() {
         loadInitialData();
     }, [headers]);
 
-    const getFiltered = (sourceArray, query) => {
-        const q = query.trim().toLowerCase();
-        if (!q) return [];
-        return sourceArray
-            .filter((name) => name.toLowerCase().includes(q))
-            .slice(0, 8);
-    };
+    // Поиск навыков через API с дебаунсом
+    useEffect(() => {
+        const q = skillQuery.trim();
+        if (q.length < 1) {
+            setSkillSuggestions([]);
+            if (skillSearchControllerRef.current) {
+                skillSearchControllerRef.current.abort();
+            }
+            return;
+        }
+        if (skillSearchControllerRef.current) {
+            skillSearchControllerRef.current.abort();
+        }
+        const timeoutId = setTimeout(() => {
+            const controller = new AbortController();
+            skillSearchControllerRef.current = controller;
+            axios.get(`${API_URL}skills/?q=${encodeURIComponent(q)}`, { 
+                signal: controller.signal, 
+                timeout: 5000 
+            }).then((res) => {
+                const skillsData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                const queryLower = q.toLowerCase();
+                const filtered = Array.isArray(skillsData) ? skillsData
+                    .filter(skill => skill.name && skill.name.toLowerCase().includes(queryLower))
+                    .slice(0, 20)
+                    .map(s => s.name) : [];
+                setSkillSuggestions(filtered);
+            }).catch((err) => {
+                if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
+                    // Fallback на локальный поиск
+                    const filtered = Array.isArray(skillsOriginal) ? skillsOriginal
+                        .filter(s => s.toLowerCase().includes(q.toLowerCase()))
+                        .slice(0, 20) : [];
+                    setSkillSuggestions(filtered);
+                }
+            });
+        }, 300);
+        return () => {
+            clearTimeout(timeoutId);
+            if (skillSearchControllerRef.current) {
+                skillSearchControllerRef.current.abort();
+            }
+        };
+    }, [skillQuery, skillsOriginal]);
+
+    // Поиск качеств через API с дебаунсом
+    useEffect(() => {
+        const q = qualityQuery.trim();
+        if (q.length < 1) {
+            setQualitySuggestions([]);
+            if (qualitySearchControllerRef.current) {
+                qualitySearchControllerRef.current.abort();
+            }
+            return;
+        }
+        if (qualitySearchControllerRef.current) {
+            qualitySearchControllerRef.current.abort();
+        }
+        const timeoutId = setTimeout(() => {
+            const controller = new AbortController();
+            qualitySearchControllerRef.current = controller;
+            axios.get(`${API_URL}personal-qualities/?q=${encodeURIComponent(q)}`, { 
+                signal: controller.signal, 
+                timeout: 5000 
+            }).then((res) => {
+                const qualitiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                const queryLower = q.toLowerCase();
+                const filtered = Array.isArray(qualitiesData) ? qualitiesData
+                    .filter(quality => quality.name && quality.name.toLowerCase().includes(queryLower))
+                    .slice(0, 20)
+                    .map(q => q.name) : [];
+                setQualitySuggestions(filtered);
+            }).catch((err) => {
+                if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
+                    // Fallback на локальный поиск
+                    const filtered = Array.isArray(qualitiesOriginal) ? qualitiesOriginal
+                        .filter(s => s.toLowerCase().includes(q.toLowerCase()))
+                        .slice(0, 20) : [];
+                    setQualitySuggestions(filtered);
+                }
+            });
+        }, 300);
+        return () => {
+            clearTimeout(timeoutId);
+            if (qualitySearchControllerRef.current) {
+                qualitySearchControllerRef.current.abort();
+            }
+        };
+    }, [qualityQuery, qualitiesOriginal]);
 
     const addSkill = (name) => {
         if (!name) return;
-        if (!skillsLowerSet.has(name.toLowerCase())) return;
-        if (selectedSkills.some((s) => s.toLowerCase() === name.toLowerCase())) return;
-        const canonical = skillsOriginal.find((x) => x.toLowerCase() === name.toLowerCase()) || name;
-        setSelectedSkills((prev) => [...prev, canonical]);
+        const nameLower = name.toLowerCase();
+        if (selectedSkills.some((s) => s.toLowerCase() === nameLower)) return;
+        
+        // Проверяем, есть ли навык в оригинальном списке или в подсказках
+        const existsInOriginal = skillsOriginal.find(s => s.toLowerCase() === nameLower);
+        const existsInSuggestions = skillSuggestions.find(s => s.toLowerCase() === nameLower);
+        
+        if (existsInOriginal) {
+            setSelectedSkills((prev) => [...prev, existsInOriginal]);
+        } else if (existsInSuggestions) {
+            setSelectedSkills((prev) => [...prev, existsInSuggestions]);
+        } else {
+            // Если не найден, не добавляем
+            return;
+        }
         setSkillQuery("");
         setSkillSuggestions([]);
     };
@@ -94,10 +189,21 @@ export default function CreateTeamComponent() {
 
     const addQuality = (name) => {
         if (!name) return;
-        if (!qualitiesLowerSet.has(name.toLowerCase())) return;
-        if (selectedQualities.some((q) => q.toLowerCase() === name.toLowerCase())) return;
-        const canonical = qualitiesOriginal.find((x) => x.toLowerCase() === name.toLowerCase()) || name;
-        setSelectedQualities((prev) => [...prev, canonical]);
+        const nameLower = name.toLowerCase();
+        if (selectedQualities.some((q) => q.toLowerCase() === nameLower)) return;
+        
+        // Проверяем, есть ли качество в оригинальном списке или в подсказках
+        const existsInOriginal = qualitiesOriginal.find(q => q.toLowerCase() === nameLower);
+        const existsInSuggestions = qualitySuggestions.find(q => q.toLowerCase() === nameLower);
+        
+        if (existsInOriginal) {
+            setSelectedQualities((prev) => [...prev, existsInOriginal]);
+        } else if (existsInSuggestions) {
+            setSelectedQualities((prev) => [...prev, existsInSuggestions]);
+        } else {
+            // Если не найдено, не добавляем
+            return;
+        }
         setQualityQuery("");
         setQualitySuggestions([]);
     };
@@ -254,22 +360,20 @@ export default function CreateTeamComponent() {
                             type="text"
                             value={skillQuery}
                             onChange={(e) => {
-                                const v = e.target.value;
-                                setSkillQuery(v);
-                                setSkillSuggestions(getFiltered(skillsOriginal, v));
+                                setSkillQuery(e.target.value);
                             }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === "Tab") {
                                     e.preventDefault();
-                                    if (skillQuery.trim()) {
-                                        // пробуем добавить точное совпадение по вводу
-                                        if (skillsLowerSet.has(skillQuery.trim().toLowerCase())) {
-                                            addSkill(skillQuery.trim());
-                                        } else if (skillSuggestions.length > 0) {
-                                            addSkill(skillSuggestions[0]);
-                                        }
-                                    } else if (skillSuggestions.length > 0) {
+                                    if (skillQuery.trim() && skillSuggestions.length > 0) {
                                         addSkill(skillSuggestions[0]);
+                                    } else if (skillQuery.trim()) {
+                                        // Пробуем найти точное совпадение
+                                        const found = skillsOriginal.find(s => s.toLowerCase() === skillQuery.trim().toLowerCase()) ||
+                                                     skillSuggestions.find(s => s.toLowerCase() === skillQuery.trim().toLowerCase());
+                                        if (found) {
+                                            addSkill(found);
+                                        }
                                     }
                                 } else if (e.key === "Backspace" && !skillQuery && selectedSkills.length > 0) {
                                     removeSkill(selectedSkills[selectedSkills.length - 1]);
@@ -278,7 +382,11 @@ export default function CreateTeamComponent() {
                             onBlur={() => {
                                 const v = skillQuery.trim();
                                 if (!v) return;
-                                if (skillsLowerSet.has(v.toLowerCase())) addSkill(v);
+                                const found = skillsOriginal.find(s => s.toLowerCase() === v.toLowerCase()) ||
+                                             skillSuggestions.find(s => s.toLowerCase() === v.toLowerCase());
+                                if (found) {
+                                    addSkill(found);
+                                }
                             }}
                             placeholder="Начните вводить навык..."
                         />
@@ -330,21 +438,20 @@ export default function CreateTeamComponent() {
                             type="text"
                             value={qualityQuery}
                             onChange={(e) => {
-                                const v = e.target.value;
-                                setQualityQuery(v);
-                                setQualitySuggestions(getFiltered(qualitiesOriginal, v));
+                                setQualityQuery(e.target.value);
                             }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === "Tab") {
                                     e.preventDefault();
-                                    if (qualityQuery.trim()) {
-                                        if (qualitiesLowerSet.has(qualityQuery.trim().toLowerCase())) {
-                                            addQuality(qualityQuery.trim());
-                                        } else if (qualitySuggestions.length > 0) {
-                                            addQuality(qualitySuggestions[0]);
-                                        }
-                                    } else if (qualitySuggestions.length > 0) {
+                                    if (qualityQuery.trim() && qualitySuggestions.length > 0) {
                                         addQuality(qualitySuggestions[0]);
+                                    } else if (qualityQuery.trim()) {
+                                        // Пробуем найти точное совпадение
+                                        const found = qualitiesOriginal.find(q => q.toLowerCase() === qualityQuery.trim().toLowerCase()) ||
+                                                     qualitySuggestions.find(q => q.toLowerCase() === qualityQuery.trim().toLowerCase());
+                                        if (found) {
+                                            addQuality(found);
+                                        }
                                     }
                                 } else if (e.key === "Backspace" && !qualityQuery && selectedQualities.length > 0) {
                                     removeQuality(selectedQualities[selectedQualities.length - 1]);
@@ -353,7 +460,11 @@ export default function CreateTeamComponent() {
                             onBlur={() => {
                                 const v = qualityQuery.trim();
                                 if (!v) return;
-                                if (qualitiesLowerSet.has(v.toLowerCase())) addQuality(v);
+                                const found = qualitiesOriginal.find(q => q.toLowerCase() === v.toLowerCase()) ||
+                                             qualitySuggestions.find(q => q.toLowerCase() === v.toLowerCase());
+                                if (found) {
+                                    addQuality(found);
+                                }
                             }}
                             placeholder="Начните вводить качество..."
                         />
