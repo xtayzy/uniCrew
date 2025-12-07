@@ -254,7 +254,6 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
-    pagination_class = None  # Используем глобальную пагинацию из настроек
 
     def get_serializer_class(self):
         if self.action == "list":
