@@ -344,6 +344,11 @@
         margin-top: 24px;
     }
     
+    .filterRow3 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
     .user_card {
         padding: 18px;
     }
