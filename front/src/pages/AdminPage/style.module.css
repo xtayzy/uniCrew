@@ -1,37 +1,43 @@
 .admin_page {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px;
+    min-height: calc(100vh - 200px);
 }
 
 .admin_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .admin_header h1 {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #1f2937;
     margin: 0;
 }
 
 .back_btn {
     padding: 10px 20px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    color: #ffffff;
+    border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: #475569;
-    transition: all 0.2s;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
 }
 
 .back_btn:hover {
-    background: #e2e8f0;
-    color: #334155;
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
 }
 
 .stats {
@@ -42,11 +48,19 @@
 }
 
 .stat_card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     padding: 24px;
-    border-radius: 12px;
+    border-radius: 16px;
     color: white;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.stat_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .stat_value {
@@ -63,8 +77,8 @@
 .tabs {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .tab {
@@ -76,8 +90,8 @@
     font-size: 16px;
     font-weight: 500;
     color: #64748b;
-    transition: all 0.2s;
-    margin-bottom: -2px;
+    transition: all 0.2s ease;
+    margin-bottom: -1px;
 }
 
 .tab:hover {
@@ -91,8 +105,9 @@
 
 .content {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
     overflow: hidden;
 }
 
@@ -115,12 +130,12 @@
     font-weight: 600;
     font-size: 14px;
     color: #475569;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .table td {
     padding: 16px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e5e7eb;
     font-size: 14px;
     color: #334155;
 }
@@ -169,22 +184,25 @@
     background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
 }
 
 .delete_btn:hover:not(:disabled) {
     background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 .delete_btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 @media (max-width: 768px) {
