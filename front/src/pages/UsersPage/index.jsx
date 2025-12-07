@@ -335,16 +335,33 @@ function SchoolFacultyPicker({ value, onChange, access }) {
 
     return (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <select className={styles.select} value={value.school} onChange={(e) => onChange({ school: e.target.value, faculty: "" })}>
+            <select 
+                className={styles.select} 
+                value={value.school || ""} 
+                onChange={(e) => {
+                    const schoolValue = e.target.value;
+                    console.log('Выбрана школа:', schoolValue);
+                    onChange({ school: schoolValue, faculty: "" });
+                }}
+            >
                 <option value="">Школа</option>
                 {Array.isArray(schools) && schools.map(s => (
-                    <option key={s.id} value={s.id}>{s.name}</option>
+                    <option key={s.id} value={String(s.id)}>{s.name}</option>
                 ))}
             </select>
-            <select className={styles.select} value={value.faculty} onChange={(e) => onChange({ ...value, faculty: e.target.value })} disabled={!value.school}>
+            <select 
+                className={styles.select} 
+                value={value.faculty || ""} 
+                onChange={(e) => {
+                    const facultyValue = e.target.value;
+                    console.log('Выбран факультет:', facultyValue);
+                    onChange({ ...value, faculty: facultyValue });
+                }} 
+                disabled={!value.school}
+            >
                 <option value="">Факультет</option>
                 {Array.isArray(faculties) && faculties.map(f => (
-                    <option key={f.id} value={f.id}>{f.name}</option>
+                    <option key={f.id} value={String(f.id)}>{f.name}</option>
                 ))}
             </select>
         </div>
