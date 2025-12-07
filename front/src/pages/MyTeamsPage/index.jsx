@@ -35,10 +35,10 @@ export default function MyTeamsPage() {
                 const me = await axios.get(`${API_URL}profile/`, { headers });
                 const uname = me?.data?.username;
 
-                // 2) Загружаем команды, где он создатель (серверный фильтр)
-                const [ownersRes, allRes] = await Promise.all([
+                // 2) Загружаем команды, где он создатель и участник (серверные фильтры)
+                const [ownersRes, membersRes] = await Promise.all([
                     axios.get(`${API_URL}teams/?creator_name=${encodeURIComponent(uname)}`, { headers }),
-                    axios.get(`${API_URL}teams/`, { headers }),
+                    axios.get(`${API_URL}teams/?member_name=${encodeURIComponent(uname)}`, { headers }),
                 ]);
 
                 // Обрабатываем ответы с пагинацией
@@ -49,15 +49,15 @@ export default function MyTeamsPage() {
                     owners = ownersRes.data.results;
                 }
 
-                let all = [];
-                if (Array.isArray(allRes.data)) {
-                    all = allRes.data;
-                } else if (allRes.data && Array.isArray(allRes.data.results)) {
-                    all = allRes.data.results;
+                let members = [];
+                if (Array.isArray(membersRes.data)) {
+                    members = membersRes.data;
+                } else if (membersRes.data && Array.isArray(membersRes.data.results)) {
+                    members = membersRes.data.results;
                 }
 
-                // 3) Команды, где он участник (фильтр по members на клиенте)
-                const members = Array.isArray(all) ? all.filter((t) => Array.isArray(t.members) && t.members.some((m) => m.user === uname) && t.creator !== uname) : [];
+                // Исключаем команды, где пользователь является создателем (они уже в owners)
+                members = Array.isArray(members) ? members.filter((t) => t.creator !== uname) : [];
 
                 setOwnerTeams(owners);
                 setMemberTeams(members);

@@ -514,6 +514,10 @@ class TeamViewSet(viewsets.ModelViewSet):
         if creator_name:
             queryset = queryset.filter(creator__username=creator_name)
 
+        member_name = params.get("member_name")
+        if member_name:
+            queryset = queryset.filter(memberships__user__username=member_name, memberships__status="APPROVED")
+
         return queryset.distinct()
 
 
