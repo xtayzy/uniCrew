@@ -443,9 +443,6 @@
     
     .nav_link span {
         display: inline;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         font-size: 14px;
     }
     
@@ -521,9 +518,6 @@
     
     .nav_link span {
         display: inline;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         font-size: 13px;
     }
     
