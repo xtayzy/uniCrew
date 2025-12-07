@@ -64,25 +64,25 @@ function Header() {
                 </Link>
 
                 {/* Навигация */}
-                <nav className={styles.nav}>
-                    <Link to="/teams" className={styles.nav_link}>
+                <nav className={styles.nav} itemScope itemType="https://schema.org/SiteNavigationElement">
+                    <Link to="/teams" className={styles.nav_link} itemProp="url">
                         <Users className={styles.nav_icon} size={18}/>
-                        <span>Команды</span>
+                        <span itemProp="name">Команды</span>
                     </Link>
-                    <Link to="/users" className={styles.nav_link}>
+                    <Link to="/users" className={styles.nav_link} itemProp="url">
                         <User className={styles.nav_icon} size={18}/>
-                        <span>Пользователи</span>
+                        <span itemProp="name">Пользователи</span>
                     </Link>
-                    <Link to="/about" className={styles.nav_link}>
+                    <Link to="/about" className={styles.nav_link} itemProp="url">
                         <Info className={styles.nav_icon} size={18}/>
-                        <span>О сайте</span>
+                        <span itemProp="name">О сайте</span>
                     </Link>
                     {isAuth && (
                         <>
                             <div className={styles.nav_divider}></div>
-                            <Link to="/my-requests" className={styles.nav_link}>
+                            <Link to="/my-requests" className={styles.nav_link} itemProp="url">
                                 <FileText className={styles.nav_icon} size={18}/>
-                                <span>Мои заявки</span>
+                                <span itemProp="name">Мои заявки</span>
                             </Link>
                         </>
                     )}
