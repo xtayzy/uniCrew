@@ -33,10 +33,20 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
                 return;
             }
             try {
-                const res = await axios.get(`${API_URL}skills/?q=${formData.newSkill}`);
-                setSkillSuggestions(res.data);
+                const res = await axios.get(`${API_URL}skills/?q=${encodeURIComponent(formData.newSkill.trim())}`);
+                // Обрабатываем пагинированный ответ
+                const skillsData = Array.isArray(res.data) 
+                    ? res.data 
+                    : (res.data?.results || []);
+                // Фильтруем на фронтенде для поиска по вхождению (если бэкенд ищет только по началу)
+                const query = formData.newSkill.trim().toLowerCase();
+                const filtered = Array.isArray(skillsData) ? skillsData.filter(skill => 
+                    skill.name && skill.name.toLowerCase().includes(query)
+                ).slice(0, 20) : [];
+                setSkillSuggestions(filtered);
             } catch (e) {
                 console.error("Ошибка загрузки навыков:", e);
+                setSkillSuggestions([]);
             }
         };
 
@@ -46,10 +56,20 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
                 return;
             }
             try {
-                const res = await axios.get(`${API_URL}personal-qualities/?q=${formData.newQuality}`);
-                setQualitySuggestions(res.data);
+                const res = await axios.get(`${API_URL}personal-qualities/?q=${encodeURIComponent(formData.newQuality.trim())}`);
+                // Обрабатываем пагинированный ответ
+                const qualitiesData = Array.isArray(res.data) 
+                    ? res.data 
+                    : (res.data?.results || []);
+                // Фильтруем на фронтенде для поиска по вхождению (если бэкенд ищет только по началу)
+                const query = formData.newQuality.trim().toLowerCase();
+                const filtered = Array.isArray(qualitiesData) ? qualitiesData.filter(quality => 
+                    quality.name && quality.name.toLowerCase().includes(query)
+                ).slice(0, 20) : [];
+                setQualitySuggestions(filtered);
             } catch (e) {
                 console.error("Ошибка загрузки качеств:", e);
+                setQualitySuggestions([]);
             }
         };
 
@@ -187,8 +207,8 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
 
                         {skillSuggestions.length > 0 && (
                             <ul className={styles.suggestions}>
-                                {skillSuggestions.map((s) => (
-                                    <li key={s.id} onClick={() => handleSelectSkill(s.name)}>
+                                {Array.isArray(skillSuggestions) && skillSuggestions.map((s) => (
+                                    <li key={s.id || s.name} onClick={() => handleSelectSkill(s.name)}>
                                         {s.name}
                                     </li>
                                 ))}
@@ -227,8 +247,8 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
 
                         {qualitySuggestions.length > 0 && (
                             <ul className={styles.suggestions}>
-                                {qualitySuggestions.map((q) => (
-                                    <li key={q.id} onClick={() => handleSelectQuality(q.name)}>
+                                {Array.isArray(qualitySuggestions) && qualitySuggestions.map((q) => (
+                                    <li key={q.id || q.name} onClick={() => handleSelectQuality(q.name)}>
                                         {q.name}
                                     </li>
                                 ))}

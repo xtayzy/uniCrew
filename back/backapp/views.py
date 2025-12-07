@@ -107,7 +107,7 @@ class SkillViewSet(viewsets.ModelViewSet):
         queryset = Skill.objects.all()
         query = self.request.query_params.get("q")
         if query:
-            queryset = queryset.filter(name__istartswith=query)
+            queryset = queryset.filter(name__icontains=query)
         return queryset
 
 
@@ -119,7 +119,7 @@ class PersonalQualityViewSet(viewsets.ModelViewSet):
         queryset = PersonalQuality.objects.all()
         query = self.request.query_params.get("q")
         if query:
-            queryset = queryset.filter(name__istartswith=query)
+            queryset = queryset.filter(name__icontains=query)
         return queryset
 
 
