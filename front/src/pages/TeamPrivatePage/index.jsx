@@ -66,13 +66,13 @@ const TeamPrivatePage = () => {
         const creatorName = typeof team.creator === 'string' ? team.creator : team.creator?.username;
         const isCreator = creatorName === currentUser.username;
         
-        const isApprovedMember = team.members?.some(member => 
+        const isApprovedMember = Array.isArray(team.members) && team.members.some(member => 
             member.user === currentUser.username && member.status === 'APPROVED'
         );
-        const isPendingMember = team.members?.some(member => 
+        const isPendingMember = Array.isArray(team.members) && team.members.some(member => 
             member.user === currentUser.username && member.status === 'PENDING'
         );
-        const isInvitedMember = team.members?.some(member => 
+        const isInvitedMember = Array.isArray(team.members) && team.members.some(member => 
             member.user === currentUser.username && member.status === 'INVITED'
         );
         
@@ -207,15 +207,15 @@ const TeamPrivatePage = () => {
     };
 
     const getApprovedMembers = () => {
-        return (team.members || []).filter(member => member.status === 'APPROVED');
+        return Array.isArray(team.members) ? team.members.filter(member => member.status === 'APPROVED') : [];
     };
 
     const getPendingRequests = () => {
-        return (team.members || []).filter(member => member.status === 'PENDING');
+        return Array.isArray(team.members) ? team.members.filter(member => member.status === 'PENDING') : [];
     };
 
     const getInvitedMembers = () => {
-        return (team.members || []).filter(member => member.status === 'INVITED');
+        return Array.isArray(team.members) ? team.members.filter(member => member.status === 'INVITED') : [];
     };
 
     const isTeamCreator = () => {
@@ -379,7 +379,7 @@ const TeamPrivatePage = () => {
                         <div className={styles.requirement_section}>
                             <h3>Требуемые навыки</h3>
                             <div className={styles.tags}>
-                                {team.required_skills && team.required_skills.length > 0 ? (
+                                {Array.isArray(team.required_skills) && team.required_skills.length > 0 ? (
                                     team.required_skills.map((skill, index) => (
                                         <span key={index} className={styles.skill_tag}>
                                             {skill}
@@ -394,7 +394,7 @@ const TeamPrivatePage = () => {
                         <div className={styles.requirement_section}>
                             <h3>Требуемые качества</h3>
                             <div className={styles.tags}>
-                                {team.required_qualities && team.required_qualities.length > 0 ? (
+                                {Array.isArray(team.required_qualities) && team.required_qualities.length > 0 ? (
                                     team.required_qualities.map((quality, index) => (
                                         <span key={index} className={styles.quality_tag}>
                                             {quality}
