@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -31,11 +31,39 @@ function AppContent() {
     const location = useLocation();
     const [routeKey, setRouteKey] = useState(0);
     const prevPathnameRef = useRef(location.pathname);
+    const [forceUpdate, setForceUpdate] = useState(0);
     
-    // Принудительно обновляем ключ при изменении маршрута
+    // Отслеживаем изменения URL через window.location для принудительного обновления
+    useLayoutEffect(() => {
+        const checkLocation = () => {
+            const currentPath = window.location.pathname;
+            if (prevPathnameRef.current !== currentPath) {
+                console.log('Location changed from', prevPathnameRef.current, 'to:', currentPath);
+                prevPathnameRef.current = currentPath;
+                setRouteKey(prev => prev + 1);
+                setForceUpdate(prev => prev + 1);
+            }
+        };
+        
+        // Проверяем сразу
+        checkLocation();
+        
+        // Проверяем периодически на случай, если React Router не обновляет location
+        const interval = setInterval(checkLocation, 100);
+        
+        // Также слушаем события popstate
+        window.addEventListener('popstate', checkLocation);
+        
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('popstate', checkLocation);
+        };
+    }, []);
+    
+    // Также отслеживаем изменения через useLocation
     useEffect(() => {
         if (prevPathnameRef.current !== location.pathname) {
-            console.log('Location changed from', prevPathnameRef.current, 'to:', location.pathname);
+            console.log('useLocation changed from', prevPathnameRef.current, 'to:', location.pathname);
             prevPathnameRef.current = location.pathname;
             setRouteKey(prev => prev + 1);
         }
@@ -44,9 +72,9 @@ function AppContent() {
     return (
         <div className="app-container">
             <Header />
-            <main className="main-content" key={routeKey}>
+            <main className="main-content" key={`${routeKey}-${forceUpdate}`}>
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
-                <Routes key={routeKey}>
+                <Routes key={`${routeKey}-${forceUpdate}`}>
                     <Route path="/" element={<HomePage key={routeKey} />} />
                     <Route path="/teams" element={<TeamsPage key={routeKey} />} />
                     <Route
