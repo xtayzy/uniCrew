@@ -444,7 +444,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class ProjectCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProjectCategory.objects.all()
     serializer_class = ProjectCategorySerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [AllowAny]  # Разрешаем чтение для всех
 
 
 class TeamViewSet(viewsets.ModelViewSet):

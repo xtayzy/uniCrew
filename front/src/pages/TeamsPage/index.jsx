@@ -117,10 +117,13 @@ const TeamsPage = () => {
         const fetchCategories = async () => {
             try {
                 const res = await axios.get(`${API_URL}project-categories/`, { signal: controller.signal, timeout: 10000 });
-                setCategories(res.data || []);
+                // Обрабатываем ответ - может быть массив или объект с пагинацией
+                const categoriesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                setCategories(categoriesData);
+                console.log('Загружены категории:', categoriesData);
             } catch (e) {
-                if (e.name !== 'AbortError') {
-                    console.error(e);
+                if (e.name !== 'AbortError' && e.code !== 'ERR_CANCELED' && e.name !== 'CanceledError') {
+                    console.error('Ошибка загрузки категорий:', e);
                 }
             }
         };
