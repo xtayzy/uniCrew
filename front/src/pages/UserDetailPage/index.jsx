@@ -21,8 +21,16 @@ const UserDetailPage = () => {
         const fetchUser = async () => {
             try {
                 const response = await axios.get(`${API_URL}users/?username=${username}`);
-                if (response.data && response.data.length > 0) {
-                    setUser(response.data[0]);
+                // Обрабатываем ответ - может быть массив или объект с пагинацией
+                let usersData = [];
+                if (response.data && Array.isArray(response.data)) {
+                    usersData = response.data;
+                } else if (response.data && Array.isArray(response.data.results)) {
+                    usersData = response.data.results;
+                }
+                
+                if (usersData.length > 0) {
+                    setUser(usersData[0]);
                     setError(null);
                 } else {
                     setError({ message: 'Пользователь не найден', status: 404 });
