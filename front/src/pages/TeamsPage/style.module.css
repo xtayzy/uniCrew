@@ -339,7 +339,13 @@
   box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
 }
 
-.suggestWrap { position: relative; width: 100%; }
+.suggestWrap { 
+  position: relative; 
+  width: 100%; 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+}
 
 .suggestions {
   position: absolute;
@@ -581,14 +587,23 @@
         gap: 8px;
     }
     
+    .suggestWrap {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+    
     .inputInline {
         width: 100%;
         min-width: auto;
+        padding: 8px;
     }
     
     .addBtn {
         width: 100%;
         padding: 10px;
+        font-size: 14px;
+        white-space: nowrap;
     }
     
     .join_button {
@@ -689,6 +704,24 @@
     
     .filterBox {
         padding: 6px;
+        gap: 4px;
+    }
+    
+    .suggestWrap {
+        flex-direction: column;
+        gap: 6px;
+        align-items: stretch;
+    }
+    
+    .inputInline {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    .addBtn {
+        padding: 8px 12px;
+        font-size: 13px;
+        white-space: nowrap;
     }
     
     .suggestions {
