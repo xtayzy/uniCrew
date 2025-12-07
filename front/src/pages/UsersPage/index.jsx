@@ -247,26 +247,12 @@ function UsersPage() {
                     }, [])} 
                 />
                 {/* Кнопка поиска */}
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                    <button 
-                        onClick={handleSearch}
-                        style={{
-                            padding: '12px 32px',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            backgroundColor: '#3b82f6',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            transition: 'background-color 0.2s',
-                        }}
-                        onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
-                        onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
-                    >
-                        Найти
-                    </button>
-                </div>
+                <button 
+                    className={styles.searchButton} 
+                    onClick={handleSearch}
+                >
+                    Найти
+                </button>
             </div>
             
             <PageTransition 
