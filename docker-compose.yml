@@ -34,6 +34,7 @@ services:
         condition: service_healthy
     volumes:
       - media:/app/media
+      - ./back:/app:ro  # Монтируем код для разработки (read-only для безопасности)
     restart: unless-stopped
 
   frontend:
