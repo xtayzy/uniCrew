@@ -116,6 +116,35 @@ const TeamPrivatePage = () => {
         setIsManageMembersModalOpen(false);
     };
 
+    const handleDeleteTeam = async () => {
+        if (!team) return;
+        
+        const confirmMessage = `Вы уверены, что хотите удалить команду "${team.title}"?\n\nЭто действие нельзя отменить. Все данные команды, включая задачи и участников, будут удалены.`;
+        
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+        
+        try {
+            await axios.delete(`${API_URL}teams/${teamId}/`, {
+                headers: {
+                    'Authorization': `Bearer ${tokens?.access}`,
+                }
+            });
+            
+            alert('Команда успешно удалена');
+            navigate('/teams');
+        } catch (error) {
+            console.error('Ошибка удаления команды:', error);
+            if (error.response?.status === 403) {
+                alert('У вас нет прав для удаления этой команды');
+            } else if (error.response?.status === 404) {
+                alert('Команда не найдена');
+            } else {
+                alert('Ошибка при удалении команды');
+            }
+        }
+    };
 
     const handleTeamUpdate = async (updatedData) => {
         try {
@@ -529,6 +558,9 @@ const TeamPrivatePage = () => {
                                     </button>
                                     <button className={styles.manage_btn} onClick={handleManageMembers}>
                                         Управление участниками
+                                    </button>
+                                    <button className={styles.delete_btn} onClick={handleDeleteTeam}>
+                                        Удалить команду
                                     </button>
                                 </div>
                             ) : isPendingMember() ? (
