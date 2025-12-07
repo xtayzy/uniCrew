@@ -10,6 +10,7 @@ import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
 import SEOHead from "../../components/SEOHead";
+import Pagination from "../../components/Pagination";
 
 const TeamsPage = () => {
     const [teams, setTeams] = useState([]);
@@ -17,6 +18,9 @@ const TeamsPage = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { isAuth } = useAuth();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [count, setCount] = useState(0);
 
     const [query, setQuery] = useState({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
     const [categories, setCategories] = useState([]);
@@ -36,16 +40,32 @@ const TeamsPage = () => {
         const fetchTeams = async () => {
             try {
                 setError(null);
+                setLoading(true);
                 const params = new URLSearchParams();
                 if (query.title) params.set("title", query.title);
                 if (query.category_id) params.set("category_id", query.category_id);
                 if (query.status) params.set("status", query.status);
                 if (query.required_skills) params.set("required_skills", query.required_skills);
                 if (query.required_qualities) params.set("required_qualities", query.required_qualities);
+                params.set("page", currentPage.toString());
                 const queryString = params.toString() ? '?' + params.toString() : '';
                 const url = `${API_URL}teams/${queryString}`;
                 const response = await axios.get(url, { signal: controller.signal, timeout: 30000 });
-                setTeams(response.data);
+                
+                // Обрабатываем ответ с пагинацией
+                if (response.data.results) {
+                    setTeams(response.data.results);
+                    setCount(response.data.count || 0);
+                    // Вычисляем общее количество страниц
+                    const pageSize = 15;
+                    const total = Math.ceil((response.data.count || 0) / pageSize);
+                    setTotalPages(total || 1);
+                } else {
+                    // Fallback для старого формата ответа (без пагинации)
+                    setTeams(response.data);
+                    setCount(response.data.length);
+                    setTotalPages(1);
+                }
             } catch (error) {
                 if (error.name !== 'AbortError' && error.code !== 'ECONNABORTED') {
                     console.error('Ошибка загрузки команд:', error);
@@ -58,6 +78,11 @@ const TeamsPage = () => {
 
         fetchTeams();
         return () => controller.abort();
+    }, [query.title, query.category_id, query.status, query.required_skills, query.required_qualities, currentPage]);
+    
+    // Сбрасываем страницу на 1 при изменении фильтров
+    useEffect(() => {
+        setCurrentPage(1);
     }, [query.title, query.category_id, query.status, query.required_skills, query.required_qualities]);
 
     useEffect(() => {
@@ -341,6 +366,16 @@ const TeamsPage = () => {
                     </div>
                 ))}
                 </div>
+                {!loading && totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => {
+                            setCurrentPage(page);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                    />
+                )}
             </PageTransition>
 
             <JoinTeamModal

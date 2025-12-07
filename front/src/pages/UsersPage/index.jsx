@@ -7,6 +7,7 @@ import LoadingSkeleton from "../../components/LoadingSkeleton";
 import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
+import Pagination from "../../components/Pagination";
 
 function UsersPage() {
     const { tokens, isInitializing } = useAuth();
@@ -17,6 +18,9 @@ function UsersPage() {
     const [error, setError] = useState(null);
     const [query, setQuery] = useState({ username: "", faculty: "", school: "", course: "", education: "", skills: "", personal_qualities: "" });
     const [isRequesting, setIsRequesting] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
         // Ждем завершения инициализации токенов
@@ -35,6 +39,7 @@ function UsersPage() {
         if (query.education) params.set("education", query.education);
         if (query.skills) params.set("skills", query.skills);
         if (query.personal_qualities) params.set("personal_qualities", query.personal_qualities);
+        params.set("page", currentPage.toString());
         const url = `${API_URL}users/${params.toString() ? `?${params.toString()}` : ""}`;
         
         const controller = new AbortController();
@@ -55,7 +60,20 @@ function UsersPage() {
         axios.get(url, config)
             .then(res => {
                 clearTimeout(timeoutId);
-                setUsers(res.data);
+                // Обрабатываем ответ с пагинацией
+                if (res.data.results) {
+                    setUsers(res.data.results);
+                    setCount(res.data.count || 0);
+                    // Вычисляем общее количество страниц
+                    const pageSize = 15;
+                    const total = Math.ceil((res.data.count || 0) / pageSize);
+                    setTotalPages(total || 1);
+                } else {
+                    // Fallback для старого формата ответа (без пагинации)
+                    setUsers(res.data);
+                    setCount(res.data.length);
+                    setTotalPages(1);
+                }
                 setError(null);
                 setLoading(false);
                 setIsRequesting(false);
@@ -77,7 +95,12 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [isInitializing, tokens, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
+    }, [isInitializing, tokens, query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities, currentPage]);
+    
+    // Сбрасываем страницу на 1 при изменении фильтров
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [query.username, query.faculty, query.school, query.course, query.education, query.skills, query.personal_qualities]);
 
     if (error) {
         return (
@@ -171,6 +194,16 @@ function UsersPage() {
                     </div>
                 ))}
                 </div>
+                {!loading && totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => {
+                            setCurrentPage(page);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                    />
+                )}
             </PageTransition>
         </div>
     );
