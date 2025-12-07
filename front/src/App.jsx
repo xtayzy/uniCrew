@@ -27,14 +27,14 @@ import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 
 function AppContent() {
     const { isLoading } = useGlobalLoading();
+    const location = useLocation();
     
     return (
-        <Router>
-            <div className="app-container">
-                <Header />
-                <main className="main-content">
-                    {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
-                    <Routes>
+        <div className="app-container">
+            <Header />
+            <main className="main-content">
+                {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
+                <Routes key={location.pathname}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/teams" element={<TeamsPage/>} />
                     <Route
@@ -149,10 +149,10 @@ function AppContent() {
                         }
                     />
 
-                    </Routes>
-                </main>
-                <Footer />
-            </div>
+                </Routes>
+            </main>
+            <Footer />
+        </div>
     );
 }
 
