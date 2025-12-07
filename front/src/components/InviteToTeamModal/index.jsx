@@ -26,10 +26,16 @@ const InviteToTeamModal = ({ user, isOpen, onClose, onSuccess }) => {
                 },
             });
             
+            // Обрабатываем пагинированный ответ
+            const teamsData = Array.isArray(teamsResponse.data) 
+                ? teamsResponse.data 
+                : (teamsResponse.data?.results || []);
+            
             // Фильтруем команды, где пользователь уже является участником
-            const filteredTeams = (teamsResponse.data || []).filter(team => {
-                return !team.members.some(member => member.user === user.username);
-            });
+            const filteredTeams = Array.isArray(teamsData) ? teamsData.filter(team => {
+                const members = Array.isArray(team.members) ? team.members : [];
+                return !members.some(member => member.user === user.username);
+            }) : [];
             
             setTeams(filteredTeams);
         } catch (error) {
