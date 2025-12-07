@@ -149,14 +149,24 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
     const handleSave = async () => {
         try {
             const data = new FormData();
-            data.append("about_myself", formData.about_myself);
+            data.append("about_myself", formData.about_myself || "");
 
-            formData.skills.forEach((s) => data.append("skills", s));
-            formData.personal_qualities.forEach((q) => data.append("personal_qualities", q));
+            // Отправляем списки как JSON строки (как в EditProfileModalComponent)
+            if (Array.isArray(formData.skills) && formData.skills.length > 0) {
+                data.append("skills", JSON.stringify(formData.skills));
+            } else {
+                data.append("skills", JSON.stringify([]));
+            }
+
+            if (Array.isArray(formData.personal_qualities) && formData.personal_qualities.length > 0) {
+                data.append("personal_qualities", JSON.stringify(formData.personal_qualities));
+            } else {
+                data.append("personal_qualities", JSON.stringify([]));
+            }
 
             // 🔹 если у тебя будет input type="file" для аватара:
             if (formData.avatar instanceof File) {
-                data.append("avatar", formData.avatar);
+                data.append("avatar_file", formData.avatar, formData.avatar.name);
             }
 
             const res = await axios.patch(`${API_URL}profile/`, data, {

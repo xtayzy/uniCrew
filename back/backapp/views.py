@@ -242,10 +242,22 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
             print(f"Все ключи в POST: {list(request.POST.keys())}")
         
         # Создаем данные для сериализатора (БЕЗ файла, т.к. он уже сохранен)
+        import json
         data = {}
         for key, value in request.data.items():
             if key != 'avatar_file' and key != file_key:  # Исключаем файл
-                data[key] = value
+                # Если это skills или personal_qualities и это строка (JSON), парсим её
+                if key in ['skills', 'personal_qualities'] and isinstance(value, str):
+                    try:
+                        data[key] = json.loads(value)
+                    except (json.JSONDecodeError, TypeError):
+                        # Если не JSON, пытаемся получить как список из QueryDict
+                        if hasattr(request.data, 'getlist'):
+                            data[key] = request.data.getlist(key)
+                        else:
+                            data[key] = value
+                else:
+                    data[key] = value
         
         print(f"Данные для сериализатора (без файла): {list(data.keys())}")
         
