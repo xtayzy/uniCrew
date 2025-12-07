@@ -41,11 +41,23 @@ export default function MyTeamsPage() {
                     axios.get(`${API_URL}teams/`, { headers }),
                 ]);
 
-                const owners = ownersRes.data || [];
-                const all = allRes.data || [];
+                // Обрабатываем ответы с пагинацией
+                let owners = [];
+                if (Array.isArray(ownersRes.data)) {
+                    owners = ownersRes.data;
+                } else if (ownersRes.data && Array.isArray(ownersRes.data.results)) {
+                    owners = ownersRes.data.results;
+                }
+
+                let all = [];
+                if (Array.isArray(allRes.data)) {
+                    all = allRes.data;
+                } else if (allRes.data && Array.isArray(allRes.data.results)) {
+                    all = allRes.data.results;
+                }
 
                 // 3) Команды, где он участник (фильтр по members на клиенте)
-                const members = all.filter((t) => Array.isArray(t.members) && t.members.some((m) => m.user === uname) && t.creator !== uname);
+                const members = Array.isArray(all) ? all.filter((t) => Array.isArray(t.members) && t.members.some((m) => m.user === uname) && t.creator !== uname) : [];
 
                 setOwnerTeams(owners);
                 setMemberTeams(members);
