@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Fragment, useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -28,8 +29,17 @@ import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 // Обертка для принудительного размонтирования компонентов при изменении маршрута
 function RouteKeyWrapper({ children }) {
     const location = useLocation();
-    // Используем key на основе текущего pathname, чтобы размонтировать при изменении
-    return <div key={location.pathname}>{children}</div>;
+    
+    useEffect(() => {
+        // Логируем для диагностики
+        console.log('RouteKeyWrapper mounted for:', location.pathname);
+        return () => {
+            console.log('RouteKeyWrapper unmounting for:', location.pathname);
+        };
+    }, [location.pathname]);
+    
+    // Используем Fragment с key для принудительного размонтирования
+    return <Fragment key={location.pathname}>{children}</Fragment>;
 }
 
 function AppContent() {

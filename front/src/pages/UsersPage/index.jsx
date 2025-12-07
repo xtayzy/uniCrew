@@ -27,11 +27,13 @@ function UsersPage() {
 
     // Отслеживаем размонтирование компонента
     useEffect(() => {
+        console.log('UsersPage mounted, pathname:', location.pathname);
         isMountedRef.current = true;
         return () => {
+            console.log('UsersPage unmounting, pathname:', location.pathname);
             isMountedRef.current = false;
         };
-    }, []);
+    }, [location.pathname]);
 
     useEffect(() => {
         // Ждем завершения инициализации токенов
