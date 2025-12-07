@@ -30,7 +30,9 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                     Authorization: `Bearer ${tokens?.access}`,
                 },
             });
-            setTasks(response.data);
+            // Обрабатываем ответ - может быть массив или объект с пагинацией
+            const tasksData = Array.isArray(response.data) ? response.data : (response.data?.results || []);
+            setTasks(tasksData);
         } catch (error) {
             console.error('Ошибка загрузки задач:', error);
         } finally {
@@ -46,7 +48,9 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                     Authorization: `Bearer ${tokens?.access}`,
                 },
             });
-            setTeamMembers(response.data.filter(member => member.status === 'APPROVED'));
+            // Обрабатываем ответ - может быть массив или объект с пагинацией
+            const membersData = Array.isArray(response.data) ? response.data : (response.data?.results || []);
+            setTeamMembers(Array.isArray(membersData) ? membersData.filter(member => member.status === 'APPROVED') : []);
         } catch (error) {
             console.error('Ошибка загрузки участников:', error);
         }
@@ -251,7 +255,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
             </div>
 
             <div className={styles.tasks_list}>
-                {tasks.length === 0 ? (
+                {!Array.isArray(tasks) || tasks.length === 0 ? (
                     <div className={styles.no_tasks}>
                         <p>Задач пока нет</p>
                         {isTeamCreator && (
@@ -385,7 +389,7 @@ const TaskTracker = ({ team, currentUser, isTeamCreator }) => {
                                     onChange={(e) => setFormData({...formData, assigned_to: e.target.value})}
                                 >
                                     <option value="">Не назначено</option>
-                                    {teamMembers.map((member) => (
+                                    {Array.isArray(teamMembers) && teamMembers.map((member) => (
                                         <option key={member.id} value={member.user}>
                                             @{member.user}
                                         </option>
