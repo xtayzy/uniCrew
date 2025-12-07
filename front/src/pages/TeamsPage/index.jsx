@@ -169,18 +169,20 @@ const TeamsPage = () => {
     }, [selectedQualities]);
 
     const addSkill = (name) => {
+        if (!Array.isArray(skillsAll)) return;
         const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());
         if (!exists) return;
-        if (selectedSkills.some(s => s.toLowerCase() === exists.toLowerCase())) return;
+        if (Array.isArray(selectedSkills) && selectedSkills.some(s => s.toLowerCase() === exists.toLowerCase())) return;
         setSelectedSkills(prev => [...prev, exists]);
         setSkillQ("");
         setSkillSug([]);
     };
     const removeSkill = (name) => setSelectedSkills(prev => prev.filter(s => s !== name));
     const addQuality = (name) => {
+        if (!Array.isArray(qualitiesAll)) return;
         const exists = qualitiesAll.find(s => s.toLowerCase() === name.toLowerCase());
         if (!exists) return;
-        if (selectedQualities.some(s => s.toLowerCase() === exists.toLowerCase())) return;
+        if (Array.isArray(selectedQualities) && selectedQualities.some(s => s.toLowerCase() === exists.toLowerCase())) return;
         setSelectedQualities(prev => [...prev, exists]);
         setQualityQ("");
         setQualSug([]);
@@ -271,7 +273,7 @@ const TeamsPage = () => {
                                         const v = e.target.value;
                                         setSkillQ(v);
                                         const q = v.trim().toLowerCase();
-                                        setSkillSug(q ? skillsAll.filter(s => s.toLowerCase().includes(q)).slice(0, 20) : []);
+                                        setSkillSug(q && Array.isArray(skillsAll) ? skillsAll.filter(s => s.toLowerCase().includes(q)).slice(0, 20) : []);
                                     }}
                                     onKeyDown={(e) => { if (e.key === 'Enter' && skillQ.trim()) { addSkill(skillQ.trim()); e.preventDefault(); } }}
                                     onBlur={() => setSkillSug([])}
@@ -301,7 +303,7 @@ const TeamsPage = () => {
                                         const v = e.target.value;
                                         setQualityQ(v);
                                         const q = v.trim().toLowerCase();
-                                        setQualSug(q ? qualitiesAll.filter(s => s.toLowerCase().includes(q)).slice(0, 20) : []);
+                                        setQualSug(q && Array.isArray(qualitiesAll) ? qualitiesAll.filter(s => s.toLowerCase().includes(q)).slice(0, 20) : []);
                                     }}
                                     onKeyDown={(e) => { if (e.key === 'Enter' && qualityQ.trim()) { addQuality(qualityQ.trim()); e.preventDefault(); } }}
                                     onBlur={() => setQualSug([])}
