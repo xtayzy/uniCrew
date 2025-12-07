@@ -348,7 +348,36 @@
 }
 
 /* Адаптивность */
-@media (max-width: 1024px) {
+@media (max-width: 1024px) and (min-width: 769px) {
+    .nav {
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        align-items: center;
+    }
+    
+    .nav_link {
+        padding: 10px 12px;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    
+    .nav_link span {
+        display: inline;
+    }
+    
+    .nav_icon {
+        display: none;
+    }
+    
+    .nav_divider {
+        width: 2px;
+        height: 24px;
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 768px) {
     .nav {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -377,6 +406,7 @@
         width: 16px;
         height: 16px;
         flex-shrink: 0;
+        display: block;
     }
     
     .nav_divider {
