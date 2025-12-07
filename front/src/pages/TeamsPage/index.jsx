@@ -391,7 +391,7 @@ const TeamsPage = () => {
 
                         <div className={styles.members_list}>
                             <strong>Участники:</strong>
-                            {team.members.filter(member => member.status === 'APPROVED').length > 0 ? (
+                            {Array.isArray(team.members) && team.members.filter(member => member.status === 'APPROVED').length > 0 ? (
                                 <ul>
                                     {team.members.filter(member => member.status === 'APPROVED').map((member) => (
                                         <li key={member.id}>
@@ -408,7 +408,7 @@ const TeamsPage = () => {
                             Создано: {new Date(team.created_at).toLocaleString()}
                         </span>
 
-                        {isAuth && team.creator !== isAuth.username && !team.members.some(member => member.user === isAuth.username && member.status === 'APPROVED') && (
+                        {isAuth && team.creator !== isAuth.username && Array.isArray(team.members) && !team.members.some(member => member.user === isAuth.username && member.status === 'APPROVED') && (
                             <button 
                                 className={styles.join_button}
                                 onClick={() => handleJoinTeam(team)}
