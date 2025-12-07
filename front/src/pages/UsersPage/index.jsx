@@ -421,15 +421,9 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                 disabled={!value.school}
             >
                 <option value="">Факультет</option>
-                {(() => {
-                    console.log('Рендеринг select факультетов, faculties:', faculties, 'isArray:', Array.isArray(faculties), 'length:', Array.isArray(faculties) ? faculties.length : 'N/A');
-                    return Array.isArray(faculties) && faculties.length > 0 ? faculties.map(f => {
-                        console.log('Рендеринг опции факультета:', f.id, f.name);
-                        return (
-                            <option key={f.id} value={String(f.id)}>{f.name}</option>
-                        );
-                    }) : null;
-                })()}
+                {Array.isArray(faculties) && faculties.length > 0 && faculties.map(f => (
+                    <option key={f.id} value={String(f.id)}>{f.name}</option>
+                ))}
             </select>
         </div>
     );
