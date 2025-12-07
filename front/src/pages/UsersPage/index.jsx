@@ -27,10 +27,8 @@ function UsersPage() {
 
     // Отслеживаем размонтирование компонента
     useEffect(() => {
-        console.log('UsersPage mounted, pathname:', location.pathname);
         isMountedRef.current = true;
         return () => {
-            console.log('UsersPage unmounting, pathname:', location.pathname);
             isMountedRef.current = false;
         };
     }, []); // Убираем зависимость от location.pathname, чтобы не блокировать обновление
@@ -148,9 +146,7 @@ function UsersPage() {
     
     // Функция для запуска поиска
     const handleSearch = () => {
-        console.log('handleSearch вызван, formQuery:', formQuery);
         const newSearchQuery = { ...formQuery };
-        console.log('Устанавливаем searchQuery:', newSearchQuery);
         setSearchQuery(newSearchQuery);
         setCurrentPage(1);
     };
@@ -172,7 +168,6 @@ function UsersPage() {
     // Используем window.location.pathname для более надежной проверки
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : location.pathname;
     if (currentPath !== '/users') {
-        console.log('UsersPage: early return, currentPath is', currentPath, 'location.pathname is', location.pathname);
         return null;
     }
 
@@ -205,7 +200,6 @@ function UsersPage() {
                         value={formQuery.username || ""} 
                         onChange={(e) => {
                             const newValue = e.target.value;
-                            console.log('Username изменен:', newValue);
                             setFormQuery(prev => ({ ...prev, username: newValue }));
                         }} 
                     />
@@ -216,7 +210,6 @@ function UsersPage() {
                         access={access} 
                         value={{ school: formQuery.school || "", faculty: formQuery.faculty || "" }} 
                         onChange={(v) => {
-                            console.log('Школа/факультет изменены:', v);
                             setFormQuery(prev => ({ ...prev, school: v.school || "", faculty: v.faculty || "" }));
                         }} 
                     />
@@ -229,7 +222,6 @@ function UsersPage() {
                         value={formQuery.course || ""} 
                         onChange={(e) => {
                             const newValue = e.target.value;
-                            console.log('Курс изменен:', newValue);
                             setFormQuery(prev => ({ ...prev, course: newValue }));
                         }} 
                     />
@@ -238,7 +230,6 @@ function UsersPage() {
                         value={formQuery.education || ""} 
                         onChange={(e) => {
                             const newValue = e.target.value;
-                            console.log('Образование изменено:', newValue);
                             setFormQuery(prev => ({ ...prev, education: newValue }));
                         }}
                     >
@@ -252,7 +243,6 @@ function UsersPage() {
                 {/* Ряд 4: навыки/качества */}
                 <SkillsQualitiesPicker 
                     onChange={useCallback((skills, qualities) => {
-                        console.log('Навыки/качества изменены:', skills, qualities);
                         setFormQuery(prev => ({ ...prev, skills: skills || "", personal_qualities: qualities || "" }));
                     }, [])} 
                 />
@@ -355,7 +345,6 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                 // Обрабатываем ответ - может быть массив или объект с пагинацией
                 const schoolsData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
                 setSchools(schoolsData);
-                console.log('Загружены школы:', schoolsData);
             })
             .catch((err) => {
                 console.error('Ошибка загрузки школ:', err);
@@ -365,28 +354,18 @@ function SchoolFacultyPicker({ value, onChange, access }) {
 
     useEffect(() => {
         if (!value.school || value.school === "") { 
-            console.log('Школа не выбрана, очищаем факультеты');
             setFaculties([]); 
             return; 
         }
         
-        console.log('Загрузка факультетов для школы:', value.school);
         const headers = access ? { Authorization: `Bearer ${access}` } : {};
         const schoolId = value.school;
         const url = `${API_URL}faculties/?school=${schoolId}`;
-        console.log('Запрос факультетов:', url);
         
         axios.get(url, { headers })
             .then(res => {
-                console.log('Полный ответ API факультетов:', res.data);
                 const facultiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
-                console.log('Обработанные факультеты:', facultiesData);
-                console.log('Количество факультетов:', facultiesData.length);
                 setFaculties(facultiesData);
-                // Проверяем состояние после обновления
-                setTimeout(() => {
-                    console.log('Состояние faculties после setFaculties:', facultiesData);
-                }, 100);
             })
             .catch((err) => {
                 console.error('Ошибка загрузки факультетов:', err);
@@ -401,7 +380,6 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                 value={value.school || ""} 
                 onChange={(e) => {
                     const schoolValue = e.target.value;
-                    console.log('Выбрана школа:', schoolValue);
                     onChange({ school: schoolValue, faculty: "" });
                 }}
             >
@@ -415,7 +393,6 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                 value={value.faculty || ""} 
                 onChange={(e) => {
                     const facultyValue = e.target.value;
-                    console.log('Выбран факультет:', facultyValue);
                     onChange({ ...value, faculty: facultyValue });
                 }} 
                 disabled={!value.school}
@@ -463,7 +440,6 @@ function SkillsQualitiesPicker({ onChange }) {
         const timeoutId = setTimeout(() => {
             const skillsStr = Array.isArray(skillsSel) ? skillsSel.join(',') : '';
             const qualitiesStr = Array.isArray(qualsSel) ? qualsSel.join(',') : '';
-            console.log('SkillsQualitiesPicker: обновление навыков/качеств:', skillsStr, qualitiesStr);
             onChange(skillsStr, qualitiesStr);
         }, 300); // Debounce 300ms
         
