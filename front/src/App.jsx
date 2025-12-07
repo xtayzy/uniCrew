@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { Fragment, useEffect } from "react";
+import { useMemo } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -26,95 +26,72 @@ import TeamPrivatePage from "./pages/TeamPrivatePage/index.jsx";
 import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 
-// Обертка для принудительного размонтирования компонентов при изменении маршрута
-function RouteKeyWrapper({ children }) {
-    const location = useLocation();
-    
-    useEffect(() => {
-        // Логируем для диагностики
-        console.log('RouteKeyWrapper mounted for:', location.pathname);
-        return () => {
-            console.log('RouteKeyWrapper unmounting for:', location.pathname);
-        };
-    }, [location.pathname]);
-    
-    // Используем div с display: contents, чтобы key работал, но не создавал лишний элемент
-    return <div key={location.pathname} style={{ display: 'contents' }}>{children}</div>;
-}
-
 function AppContent() {
     const { isLoading } = useGlobalLoading();
     const location = useLocation();
     
+    // Создаем уникальный ключ для каждого маршрута, чтобы принудительно размонтировать компоненты
+    const routeKey = useMemo(() => {
+        return location.pathname;
+    }, [location.pathname]);
+    
     return (
         <div className="app-container">
             <Header />
-            <main className="main-content" key={location.pathname}>
+            <main className="main-content">
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
-                <Routes>
-                    <Route path="/" element={<RouteKeyWrapper><HomePage /></RouteKeyWrapper>} />
-                    <Route path="/teams" element={<RouteKeyWrapper><TeamsPage/></RouteKeyWrapper>} />
+                <Routes key={routeKey}>
+                    <Route path="/" element={<HomePage key={routeKey} />} />
+                    <Route path="/teams" element={<TeamsPage key={routeKey} />} />
                     <Route
                         path="/my-teams"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <MyTeamsPage />
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <MyTeamsPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
                     <Route
                         path="/teams/create"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <CreateTeamPage />
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <CreateTeamPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
-                    <Route path="/about" element={<RouteKeyWrapper><AboutPage/></RouteKeyWrapper>}/>
+                    <Route path="/about" element={<AboutPage key={routeKey} />}/>
 
                     {/* Только для НЕавторизованных */}
                     <Route
                         path="/login"
                         element={
-                            <RouteKeyWrapper>
-                                <GuestRoute>
-                                    <LogInPage />
-                                </GuestRoute>
-                            </RouteKeyWrapper>
+                            <GuestRoute>
+                                <LogInPage key={routeKey} />
+                            </GuestRoute>
                         }
                     />
                     <Route
                         path="/forgot"
                         element={
-                            <RouteKeyWrapper>
-                                <GuestRoute>
-                                    <ForgotCredentialsPage />
-                                </GuestRoute>
-                            </RouteKeyWrapper>
+                            <GuestRoute>
+                                <ForgotCredentialsPage key={routeKey} />
+                            </GuestRoute>
                         }
                     />
                     <Route
                         path="/register-step1"
                         element={
-                            <RouteKeyWrapper>
-                                <GuestRoute>
-                                    <RegisterStep1Page />
-                                </GuestRoute>
-                            </RouteKeyWrapper>
+                            <GuestRoute>
+                                <RegisterStep1Page key={routeKey} />
+                            </GuestRoute>
                         }
                     />
                     <Route
                         path="/register-step2"
                         element={
-                            <RouteKeyWrapper>
-                                <GuestRoute>
-                                    <RegisterStep2Page />
-                                </GuestRoute>
-                            </RouteKeyWrapper>
+                            <GuestRoute>
+                                <RegisterStep2Page key={routeKey} />
+                            </GuestRoute>
                         }
                     />
 
@@ -122,71 +99,59 @@ function AppContent() {
                     <Route
                         path="/profile"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <ProfilePage />
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <ProfilePage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/users"
-                        element={<RouteKeyWrapper><UsersPage/></RouteKeyWrapper>}
+                        element={<UsersPage key={routeKey} />}
                     />
 
                     <Route
                         path="/notifications"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <NotificationsPage/>
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <NotificationsPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/my-requests"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <MyRequestsPage/>
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <MyRequestsPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/teams/:teamId"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <TeamPublicPage/>
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <TeamPublicPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/teams/:teamId/private"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <TeamPrivatePage/>
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <TeamPrivatePage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
                     <Route
                         path="/users/:username"
                         element={
-                            <RouteKeyWrapper>
-                                <ProtectedRoute>
-                                    <UserDetailPage/>
-                                </ProtectedRoute>
-                            </RouteKeyWrapper>
+                            <ProtectedRoute>
+                                <UserDetailPage key={routeKey} />
+                            </ProtectedRoute>
                         }
                     />
 
