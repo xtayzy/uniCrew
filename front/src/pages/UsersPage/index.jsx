@@ -192,8 +192,8 @@ function UsersPage() {
         <div className={styles.users_page}>
             <h2>Все пользователи</h2>
             <div style={{ display: 'grid', gap: 8, marginBottom: 0 }}>
-                {/* Ряд 1: username */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
+                {/* Ряд 1: username, school, faculty */}
+                <div className={styles.filterRow3}>
                     <input 
                         className={styles.input} 
                         placeholder="Username" 
@@ -203,9 +203,6 @@ function UsersPage() {
                             setFormQuery(prev => ({ ...prev, username: newValue }));
                         }} 
                     />
-                </div>
-                {/* Ряд 2: школа/факультет */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
                     <SchoolFacultyPicker 
                         access={access} 
                         value={{ school: formQuery.school || "", faculty: formQuery.faculty || "" }} 
@@ -360,7 +357,7 @@ function SchoolFacultyPicker({ value, onChange, access }) {
     }, [value.school, access]);
 
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <>
             <select 
                 className={styles.select} 
                 value={value.school || ""} 
@@ -388,7 +385,7 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                     <option key={f.id} value={String(f.id)}>{f.name}</option>
                 ))}
             </select>
-        </div>
+        </>
     );
 }
 

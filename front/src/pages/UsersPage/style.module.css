@@ -309,6 +309,12 @@
     gap: 20px;
 }
 
+.filterRow3 { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 8px; 
+}
+
 /* Адаптивность */
 @media (max-width: 1024px) {
     .users_page {
