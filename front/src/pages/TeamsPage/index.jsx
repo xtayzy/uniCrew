@@ -271,21 +271,31 @@ const TeamsPage = () => {
     }, [qualityQ, qualitiesAll]);
 
     const addSkill = (name) => {
-        if (!Array.isArray(skillsAll)) return;
-        const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());
-        if (!exists) return;
-        if (Array.isArray(selectedSkills) && selectedSkills.some(s => s.toLowerCase() === exists.toLowerCase())) return;
-        setSelectedSkills(prev => [...prev, exists]);
+        if (!name || !name.trim()) return;
+        const nameLower = name.trim().toLowerCase();
+        // Проверяем, не добавлен ли уже этот навык
+        if (Array.isArray(selectedSkills) && selectedSkills.some(s => s.toLowerCase() === nameLower)) {
+            return;
+        }
+        // Ищем точное совпадение в skillsAll или используем имя напрямую
+        const exists = Array.isArray(skillsAll) ? skillsAll.find(s => s.toLowerCase() === nameLower) : null;
+        const skillToAdd = exists || name.trim();
+        setSelectedSkills(prev => [...prev, skillToAdd]);
         setSkillQ("");
         setSkillSug([]);
     };
     const removeSkill = (name) => setSelectedSkills(prev => prev.filter(s => s !== name));
     const addQuality = (name) => {
-        if (!Array.isArray(qualitiesAll)) return;
-        const exists = qualitiesAll.find(s => s.toLowerCase() === name.toLowerCase());
-        if (!exists) return;
-        if (Array.isArray(selectedQualities) && selectedQualities.some(s => s.toLowerCase() === exists.toLowerCase())) return;
-        setSelectedQualities(prev => [...prev, exists]);
+        if (!name || !name.trim()) return;
+        const nameLower = name.trim().toLowerCase();
+        // Проверяем, не добавлено ли уже это качество
+        if (Array.isArray(selectedQualities) && selectedQualities.some(s => s.toLowerCase() === nameLower)) {
+            return;
+        }
+        // Ищем точное совпадение в qualitiesAll или используем имя напрямую
+        const exists = Array.isArray(qualitiesAll) ? qualitiesAll.find(s => s.toLowerCase() === nameLower) : null;
+        const qualityToAdd = exists || name.trim();
+        setSelectedQualities(prev => [...prev, qualityToAdd]);
         setQualityQ("");
         setQualSug([]);
     };

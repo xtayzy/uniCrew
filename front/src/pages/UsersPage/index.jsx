@@ -550,18 +550,30 @@ function SkillsQualitiesPicker({ onChange }) {
     }, [qualQ, qualitiesAll]);
 
     const addSkill = (name) => {
-        const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());
-        if (!exists) return;
-        if (skillsSel.some(s => s.toLowerCase() === exists.toLowerCase())) return;
-        setSkillsSel(prev => [...prev, exists]);
+        if (!name || !name.trim()) return;
+        const nameLower = name.trim().toLowerCase();
+        // Проверяем, не добавлен ли уже этот навык
+        if (Array.isArray(skillsSel) && skillsSel.some(s => s.toLowerCase() === nameLower)) {
+            return;
+        }
+        // Ищем точное совпадение в skillsAll или используем имя напрямую
+        const exists = Array.isArray(skillsAll) ? skillsAll.find(s => s.toLowerCase() === nameLower) : null;
+        const skillToAdd = exists || name.trim();
+        setSkillsSel(prev => [...prev, skillToAdd]);
         setSkillQ("");
         setSkillSug([]);
     };
     const addQual = (name) => {
-        const exists = qualitiesAll.find(s => s.toLowerCase() === name.toLowerCase());
-        if (!exists) return;
-        if (qualsSel.some(s => s.toLowerCase() === exists.toLowerCase())) return;
-        setQualsSel(prev => [...prev, exists]);
+        if (!name || !name.trim()) return;
+        const nameLower = name.trim().toLowerCase();
+        // Проверяем, не добавлено ли уже это качество
+        if (Array.isArray(qualsSel) && qualsSel.some(s => s.toLowerCase() === nameLower)) {
+            return;
+        }
+        // Ищем точное совпадение в qualitiesAll или используем имя напрямую
+        const exists = Array.isArray(qualitiesAll) ? qualitiesAll.find(s => s.toLowerCase() === nameLower) : null;
+        const qualityToAdd = exists || name.trim();
+        setQualsSel(prev => [...prev, qualityToAdd]);
         setQualQ("");
         setQualSug([]);
     };
