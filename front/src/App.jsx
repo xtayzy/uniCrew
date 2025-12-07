@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -30,11 +30,15 @@ function AppContent() {
     const { isLoading } = useGlobalLoading();
     const location = useLocation();
     const [routeKey, setRouteKey] = useState(0);
+    const prevPathnameRef = useRef(location.pathname);
     
     // Принудительно обновляем ключ при изменении маршрута
     useEffect(() => {
-        console.log('Location changed to:', location.pathname);
-        setRouteKey(prev => prev + 1);
+        if (prevPathnameRef.current !== location.pathname) {
+            console.log('Location changed from', prevPathnameRef.current, 'to:', location.pathname);
+            prevPathnameRef.current = location.pathname;
+            setRouteKey(prev => prev + 1);
+        }
     }, [location.pathname]);
     
     return (

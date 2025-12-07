@@ -33,7 +33,7 @@ function UsersPage() {
             console.log('UsersPage unmounting, pathname:', location.pathname);
             isMountedRef.current = false;
         };
-    }, [location.pathname]);
+    }, []); // Убираем зависимость от location.pathname, чтобы не блокировать обновление
 
     useEffect(() => {
         // Ждем завершения инициализации токенов
