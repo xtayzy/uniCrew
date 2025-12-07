@@ -518,7 +518,7 @@ class TeamViewSet(viewsets.ModelViewSet):
         if member_name:
             queryset = queryset.filter(memberships__user__username=member_name, memberships__status="APPROVED")
 
-        return queryset.distinct().order_by('-created_at')
+        return queryset.order_by('-created_at').distinct()
 
 
     @action(detail=True, methods=["post"], permission_classes=[permissions.IsAuthenticated])
