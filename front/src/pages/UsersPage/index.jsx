@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
 import styles from "./style.module.css";
 import LoadingSkeleton from "../../components/LoadingSkeleton";
@@ -12,6 +12,7 @@ import Pagination from "../../components/Pagination";
 function UsersPage() {
     const { tokens, isInitializing } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const access = tokens?.access;
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);

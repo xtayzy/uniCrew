@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -53,7 +53,7 @@ function AppContent() {
                             </ProtectedRoute>
                         }
                     />
-                    <Route path="about" element={<AboutPage/>}/>
+                    <Route path="/about" element={<AboutPage/>}/>
 
                     {/* Только для НЕавторизованных */}
                     <Route
@@ -153,7 +153,6 @@ function AppContent() {
                 </main>
                 <Footer />
             </div>
-        </Router>
     );
 }
 
@@ -162,7 +161,9 @@ function App() {
         <ErrorBoundary>
             <AuthProvider>
                 <GlobalLoadingProvider>
-                    <AppContent />
+                    <Router>
+                        <AppContent />
+                    </Router>
                 </GlobalLoadingProvider>
             </AuthProvider>
         </ErrorBoundary>

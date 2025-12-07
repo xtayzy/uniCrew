@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./style.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
 import JoinTeamModal from "../../components/JoinTeamModal";
 import LoadingSkeleton from "../../components/LoadingSkeleton";
@@ -17,6 +17,7 @@ const TeamsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
     const { isAuth } = useAuth();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
