@@ -156,8 +156,9 @@
 
 .inputRow {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
+  align-items: center;
 }
 
 .inputOverlayWrap {
@@ -290,7 +291,10 @@
   border: none;
   outline: none;
   font: inherit;
-  padding: 6px;
+  font-size: 13px;
+  padding: 4px 8px;
+  height: 28px;
+  box-sizing: border-box;
 }
 
 /* Loading states */
@@ -380,7 +384,9 @@
     .inputInline {
         width: 100%;
         min-width: auto;
-        padding: 8px;
+        padding: 4px 8px;
+        height: 28px;
+        font-size: 13px;
     }
     
     .addBtn {
@@ -457,8 +463,9 @@
     }
     
     .inputInline {
-        padding: 8px;
-        font-size: 14px;
+        padding: 4px 8px;
+        height: 28px;
+        font-size: 13px;
     }
     
     .addBtn {

@@ -318,8 +318,9 @@
 }
 .inputRow {
   display: flex;
-  gap: 8px; /* чтобы не впритык к кнопке */
+  gap: 8px;
   width: 100%;
+  align-items: center;
 }
 
 .addBtn {
@@ -442,7 +443,10 @@
   border: none;
   outline: none;
   font: inherit;
-  padding: 4px 6px; /* ниже высота инпута */
+  font-size: 13px;
+  padding: 4px 8px;
+  height: 28px;
+  box-sizing: border-box;
 }
 
 /* Дублирующиеся стили удалены - используются стили выше */
@@ -641,7 +645,9 @@
     .inputInline {
         width: 100%;
         min-width: auto;
-        padding: 8px;
+        padding: 4px 8px;
+        height: 28px;
+        font-size: 13px;
     }
     
     .addBtn {
@@ -759,8 +765,9 @@
     }
     
     .inputInline {
-        padding: 8px;
-        font-size: 14px;
+        padding: 4px 8px;
+        height: 28px;
+        font-size: 13px;
     }
     
     .addBtn {
