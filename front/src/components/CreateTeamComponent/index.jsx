@@ -47,13 +47,19 @@ export default function CreateTeamComponent() {
                     axios.get(`${API_URL}skills/`),
                     axios.get(`${API_URL}personal-qualities/`),
                 ]);
-                setCategories(cats.data || []);
-                const skillsArr = (sk.data || []).map((s) => s.name);
-                const qualitiesArr = (ql.data || []).map((q) => q.name);
+                
+                // Обрабатываем ответы - могут быть массивы или объекты с пагинацией
+                const categoriesData = Array.isArray(cats.data) ? cats.data : (cats.data?.results || []);
+                const skillsData = Array.isArray(sk.data) ? sk.data : (sk.data?.results || []);
+                const qualitiesData = Array.isArray(ql.data) ? ql.data : (ql.data?.results || []);
+                
+                setCategories(categoriesData);
+                const skillsArr = Array.isArray(skillsData) ? skillsData.map((s) => s.name) : [];
+                const qualitiesArr = Array.isArray(qualitiesData) ? qualitiesData.map((q) => q.name) : [];
                 setSkillsOriginal(skillsArr);
                 setQualitiesOriginal(qualitiesArr);
-                setSkillsLowerSet(new Set(skillsArr.map((x) => x.toLowerCase())));
-                setQualitiesLowerSet(new Set(qualitiesArr.map((x) => x.toLowerCase())));
+                setSkillsLowerSet(new Set(Array.isArray(skillsArr) ? skillsArr.map((x) => x.toLowerCase()) : []));
+                setQualitiesLowerSet(new Set(Array.isArray(qualitiesArr) ? qualitiesArr.map((x) => x.toLowerCase()) : []));
             } catch (e) {
                 console.error(e);
                 setLoadError(e);
@@ -212,7 +218,7 @@ export default function CreateTeamComponent() {
                         onChange={(e) => setCategory(e.target.value)}
                     >
                         <option value="">Выберите категорию</option>
-                        {categories.map((c) => (
+                        {Array.isArray(categories) && categories.map((c) => (
                             <option key={c.id} value={c.name}>
                                 {c.name}
                             </option>
