@@ -38,8 +38,8 @@ function RouteKeyWrapper({ children }) {
         };
     }, [location.pathname]);
     
-    // Используем Fragment с key для принудительного размонтирования
-    return <Fragment key={location.pathname}>{children}</Fragment>;
+    // Используем div с display: contents, чтобы key работал, но не создавал лишний элемент
+    return <div key={location.pathname} style={{ display: 'contents' }}>{children}</div>;
 }
 
 function AppContent() {
