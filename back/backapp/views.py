@@ -27,6 +27,12 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 100
 
 
+class UserResultsSetPagination(PageNumberPagination):
+    page_size = 28
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class AdminOnlyPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user and request.user.is_staff
@@ -261,7 +267,7 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
-    pagination_class = StandardResultsSetPagination
+    pagination_class = UserResultsSetPagination
 
     def get_serializer_class(self):
         if self.action == "list":
