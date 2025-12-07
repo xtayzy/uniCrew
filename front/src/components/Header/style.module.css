@@ -96,6 +96,7 @@
     overflow: hidden;
     z-index: 1;
     border: 1px solid transparent;
+    box-sizing: border-box;
 }
 
 .nav_link::before {
@@ -352,25 +353,30 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 6px;
-        padding: 8px;
+        padding: 6px;
         align-items: stretch;
     }
     
     .nav_link {
-        padding: 10px 12px;
+        padding: 8px 10px;
         font-size: 14px;
-        width: 100%;
+        min-width: 0;
         justify-content: flex-start;
+        box-sizing: border-box;
     }
     
     .nav_link span {
         display: inline;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .nav_icon {
         margin: 0;
         width: 16px;
         height: 16px;
+        flex-shrink: 0;
     }
     
     .nav_divider {
@@ -390,26 +396,31 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 6px;
+        gap: 5px;
         align-items: stretch;
         margin-top: 8px;
-        padding: 6px;
+        padding: 5px;
     }
     
     .nav_link {
-        width: 100%;
+        min-width: 0;
         justify-content: flex-start;
-        padding: 9px 10px;
+        padding: 8px 8px;
         font-size: 13px;
+        box-sizing: border-box;
     }
     
     .nav_link span {
         display: inline;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .nav_icon {
         width: 15px;
         height: 15px;
+        flex-shrink: 0;
     }
     
     .nav_divider {
@@ -460,27 +471,32 @@
     }
     
     .nav {
-        padding: 6px;
-        gap: 5px;
+        padding: 5px;
+        gap: 4px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         align-items: stretch;
     }
     
     .nav_link {
-        padding: 8px 10px;
-        width: 100%;
+        padding: 7px 8px;
+        min-width: 0;
         justify-content: flex-start;
-        font-size: 13px;
+        font-size: 12px;
+        box-sizing: border-box;
     }
     
     .nav_link span {
         display: inline;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .nav_icon {
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
     }
     
     .nav_divider {
