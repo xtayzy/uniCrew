@@ -159,10 +159,10 @@ export default function EditSkillsModalComponent({ profile, access, onClose, onS
                 data.append("avatar", formData.avatar);
             }
 
-            const res = await axios.put(`${API_URL}profile/`, data, {
+            const res = await axios.patch(`${API_URL}profile/`, data, {
                 headers: {
                     Authorization: `Bearer ${access}`,
-                    "Content-Type": "multipart/form-data",
+                    // Не устанавливаем Content-Type - браузер сам установит с boundary
                 },
             });
 
