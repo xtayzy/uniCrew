@@ -53,19 +53,32 @@ const TeamsPage = () => {
                 const response = await axios.get(url, { signal: controller.signal, timeout: 30000 });
                 
                 // Обрабатываем ответ с пагинацией
-                if (response.data.results) {
-                    setTeams(response.data.results);
-                    setCount(response.data.count || 0);
-                    // Вычисляем общее количество страниц
+                let teamsData = [];
+                let totalCount = 0;
+                let totalPagesCount = 1;
+                
+                if (response.data && Array.isArray(response.data.results)) {
+                    // Новый формат с пагинацией
+                    teamsData = response.data.results;
+                    totalCount = response.data.count || 0;
                     const pageSize = 15;
-                    const total = Math.ceil((response.data.count || 0) / pageSize);
-                    setTotalPages(total || 1);
+                    totalPagesCount = Math.ceil(totalCount / pageSize) || 1;
+                } else if (Array.isArray(response.data)) {
+                    // Старый формат (массив напрямую)
+                    teamsData = response.data;
+                    totalCount = response.data.length;
+                    totalPagesCount = 1;
                 } else {
-                    // Fallback для старого формата ответа (без пагинации)
-                    setTeams(response.data);
-                    setCount(response.data.length);
-                    setTotalPages(1);
+                    // Неожиданный формат - используем пустой массив
+                    console.warn("Неожиданный формат ответа API:", response.data);
+                    teamsData = [];
+                    totalCount = 0;
+                    totalPagesCount = 1;
                 }
+                
+                setTeams(teamsData);
+                setCount(totalCount);
+                setTotalPages(totalPagesCount);
             } catch (error) {
                 if (error.name !== 'AbortError' && error.code !== 'ECONNABORTED') {
                     console.error('Ошибка загрузки команд:', error);
@@ -294,7 +307,7 @@ const TeamsPage = () => {
                 minHeight="400px"
             >
                 <div className={styles.teams_grid}>
-                {teams.map((team) => (
+                {Array.isArray(teams) && teams.map((team) => (
                     <div key={team.id} className={styles.team_card}>
                         <h2 
                             className={styles.team_title_link}

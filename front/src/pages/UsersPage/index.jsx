@@ -61,19 +61,32 @@ function UsersPage() {
             .then(res => {
                 clearTimeout(timeoutId);
                 // Обрабатываем ответ с пагинацией
-                if (res.data.results) {
-                    setUsers(res.data.results);
-                    setCount(res.data.count || 0);
-                    // Вычисляем общее количество страниц
+                let usersData = [];
+                let totalCount = 0;
+                let totalPagesCount = 1;
+                
+                if (res.data && Array.isArray(res.data.results)) {
+                    // Новый формат с пагинацией
+                    usersData = res.data.results;
+                    totalCount = res.data.count || 0;
                     const pageSize = 15;
-                    const total = Math.ceil((res.data.count || 0) / pageSize);
-                    setTotalPages(total || 1);
+                    totalPagesCount = Math.ceil(totalCount / pageSize) || 1;
+                } else if (Array.isArray(res.data)) {
+                    // Старый формат (массив напрямую)
+                    usersData = res.data;
+                    totalCount = res.data.length;
+                    totalPagesCount = 1;
                 } else {
-                    // Fallback для старого формата ответа (без пагинации)
-                    setUsers(res.data);
-                    setCount(res.data.length);
-                    setTotalPages(1);
+                    // Неожиданный формат - используем пустой массив
+                    console.warn("Неожиданный формат ответа API:", res.data);
+                    usersData = [];
+                    totalCount = 0;
+                    totalPagesCount = 1;
                 }
+                
+                setUsers(usersData);
+                setCount(totalCount);
+                setTotalPages(totalPagesCount);
                 setError(null);
                 setLoading(false);
                 setIsRequesting(false);
@@ -152,7 +165,7 @@ function UsersPage() {
                 minHeight="400px"
             >
                 <div className={styles.users_grid}>
-                    {users.map(user => (
+                    {Array.isArray(users) && users.map(user => (
                     <div 
                         key={user.id} 
                         className={styles.user_card}
