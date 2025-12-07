@@ -36,6 +36,12 @@ function UsersPage() {
     }, []); // Убираем зависимость от location.pathname, чтобы не блокировать обновление
 
     useEffect(() => {
+        // Ранний возврат, если мы не на странице /users
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : location.pathname;
+        if (currentPath !== '/users') {
+            return;
+        }
+        
         // Ждем завершения инициализации токенов
         if (isInitializing) return;
         if (isRequesting) return; // Защита от повторных запросов
@@ -133,7 +139,7 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage]);
+    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage, location.pathname]);
     
     // Сбрасываем страницу на 1 при изменении поискового запроса
     useEffect(() => {
@@ -148,10 +154,16 @@ function UsersPage() {
     
     // Выполняем начальный поиск при загрузке страницы
     useEffect(() => {
+        // Ранний возврат, если мы не на странице /users
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : location.pathname;
+        if (currentPath !== '/users') {
+            return;
+        }
+        
         if (!isInitializing) {
             handleSearch();
         }
-    }, [isInitializing]); // Только при первой загрузке
+    }, [isInitializing, location.pathname]); // Только при первой загрузке
 
     // Ранний возврат, если мы не на странице /users
     // Используем window.location.pathname для более надежной проверки
