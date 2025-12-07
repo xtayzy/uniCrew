@@ -378,9 +378,15 @@ function SchoolFacultyPicker({ value, onChange, access }) {
         
         axios.get(url, { headers })
             .then(res => {
+                console.log('Полный ответ API факультетов:', res.data);
                 const facultiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
-                console.log('Загружены факультеты:', facultiesData);
+                console.log('Обработанные факультеты:', facultiesData);
+                console.log('Количество факультетов:', facultiesData.length);
                 setFaculties(facultiesData);
+                // Проверяем состояние после обновления
+                setTimeout(() => {
+                    console.log('Состояние faculties после setFaculties:', facultiesData);
+                }, 100);
             })
             .catch((err) => {
                 console.error('Ошибка загрузки факультетов:', err);
@@ -415,9 +421,15 @@ function SchoolFacultyPicker({ value, onChange, access }) {
                 disabled={!value.school}
             >
                 <option value="">Факультет</option>
-                {Array.isArray(faculties) && faculties.map(f => (
-                    <option key={f.id} value={String(f.id)}>{f.name}</option>
-                ))}
+                {(() => {
+                    console.log('Рендеринг select факультетов, faculties:', faculties, 'isArray:', Array.isArray(faculties), 'length:', Array.isArray(faculties) ? faculties.length : 'N/A');
+                    return Array.isArray(faculties) && faculties.length > 0 ? faculties.map(f => {
+                        console.log('Рендеринг опции факультета:', f.id, f.name);
+                        return (
+                            <option key={f.id} value={String(f.id)}>{f.name}</option>
+                        );
+                    }) : null;
+                })()}
             </select>
         </div>
     );
