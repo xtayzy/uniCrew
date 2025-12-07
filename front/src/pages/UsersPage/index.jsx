@@ -250,13 +250,13 @@ function SchoolFacultyPicker({ value, onChange, access }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             <select className={styles.select} value={value.school} onChange={(e) => onChange({ school: e.target.value, faculty: "" })}>
                 <option value="">Школа</option>
-                {schools.map(s => (
+                {Array.isArray(schools) && schools.map(s => (
                     <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
             </select>
             <select className={styles.select} value={value.faculty} onChange={(e) => onChange({ ...value, faculty: e.target.value })} disabled={!value.school}>
                 <option value="">Факультет</option>
-                {faculties.map(f => (
+                {Array.isArray(faculties) && faculties.map(f => (
                     <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
             </select>
@@ -321,7 +321,7 @@ function SkillsQualitiesPicker({ onChange }) {
     return (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             <div className={styles.filterBox}>
-                {skillsSel.map(s => (
+                {Array.isArray(skillsSel) && skillsSel.map(s => (
                     <span key={s} className={styles.filterChip}>{s}<button className={styles.filterChipRemove} type="button" onClick={() => setSkillsSel(prev => prev.filter(x => x !== s))}>×</button></span>
                 ))}
                 <div className={styles.suggestWrap}>
@@ -340,7 +340,7 @@ function SkillsQualitiesPicker({ onChange }) {
                     />
                     <button type="button" className={styles.addBtn} onClick={() => skillQ.trim() && addSkill(skillQ.trim())}>Добавить</button>
                 </div>
-                {skillSug.length > 0 ? (
+                {Array.isArray(skillSug) && skillSug.length > 0 ? (
                     <div className={styles.suggestions}>
                         {skillSug.map(s => (
                             <div key={s} className={styles.suggestionItem} onMouseDown={(e) => { e.preventDefault(); addSkill(s); }}>{s}</div>
@@ -349,7 +349,7 @@ function SkillsQualitiesPicker({ onChange }) {
                 ) : null}
             </div>
             <div className={styles.filterBox}>
-                {qualsSel.map(q => (
+                {Array.isArray(qualsSel) && qualsSel.map(q => (
                     <span key={q} className={styles.filterChip}>{q}<button className={styles.filterChipRemove} type="button" onClick={() => setQualsSel(prev => prev.filter(x => x !== q))}>×</button></span>
                 ))}
                 <div className={styles.suggestWrap}>
@@ -368,7 +368,7 @@ function SkillsQualitiesPicker({ onChange }) {
                     />
                     <button type="button" className={styles.addBtn} onClick={() => qualQ.trim() && addQual(qualQ.trim())}>Добавить</button>
                 </div>
-                {qualSug.length > 0 ? (
+                {Array.isArray(qualSug) && qualSug.length > 0 ? (
                     <div className={styles.suggestions}>
                         {qualSug.map(s => (
                             <div key={s} className={styles.suggestionItem} onMouseDown={(e) => { e.preventDefault(); addQual(s); }}>{s}</div>

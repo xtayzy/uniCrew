@@ -227,7 +227,7 @@ const TeamsPage = () => {
                     <input className={styles.input} placeholder="Название" value={query.title} onChange={(e) => setQuery({ ...query, title: e.target.value })} />
                     <select className={styles.select} value={query.category_id} onChange={(e) => setQuery({ ...query, category_id: e.target.value })}>
                         <option value="">Все категории</option>
-                        {categories.map(c => (
+                        {Array.isArray(categories) && categories.map(c => (
                             <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                     </select>
@@ -241,7 +241,7 @@ const TeamsPage = () => {
                 </div>
                 <div className={styles.filterRow2}>
                     <div className={styles.filterBox}>
-                        {selectedSkills.map(s => (
+                        {Array.isArray(selectedSkills) && selectedSkills.map(s => (
                             <span key={s} className={styles.filterChip}>{s}<button className={styles.filterChipRemove} onClick={() => removeSkill(s)} type="button">×</button></span>
                         ))}
                         <div className={styles.suggestWrap}>
@@ -261,7 +261,7 @@ const TeamsPage = () => {
                                 />
                                 <button type="button" className={styles.addBtn} onClick={() => skillQ.trim() && addSkill(skillQ.trim())}>Добавить</button>
                             </div>
-                            {skillSug.length > 0 ? (
+                            {Array.isArray(skillSug) && skillSug.length > 0 ? (
                                 <div className={styles.suggestions}>
                                     {skillSug.map(s => (
                                         <div key={s} className={styles.suggestionItem} onMouseDown={(e) => { e.preventDefault(); addSkill(s); }}>{s}</div>
@@ -271,7 +271,7 @@ const TeamsPage = () => {
                         </div>
                     </div>
                     <div className={styles.filterBox}>
-                        {selectedQualities.map(q => (
+                        {Array.isArray(selectedQualities) && selectedQualities.map(q => (
                             <span key={q} className={styles.filterChip}>{q}<button className={styles.filterChipRemove} onClick={() => removeQuality(q)} type="button">×</button></span>
                         ))}
                         <div className={styles.suggestWrap}>
@@ -291,7 +291,7 @@ const TeamsPage = () => {
                                 />
                                 <button type="button" className={styles.addBtn} onClick={() => qualityQ.trim() && addQuality(qualityQ.trim())}>Добавить</button>
                             </div>
-                            {qualSug.length > 0 ? (
+                            {Array.isArray(qualSug) && qualSug.length > 0 ? (
                                 <div className={styles.suggestions}>
                                     {qualSug.map(s => (
                                         <div key={s} className={styles.suggestionItem} onMouseDown={(e) => { e.preventDefault(); addQuality(s); }}>{s}</div>
