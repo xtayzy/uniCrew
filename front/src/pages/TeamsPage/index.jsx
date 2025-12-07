@@ -153,14 +153,14 @@ const TeamsPage = () => {
     useEffect(() => {
         // Debounce для предотвращения слишком частых обновлений
         const timeoutId = setTimeout(() => {
-            setQuery(q => ({ ...q, required_skills: selectedSkills.join(",") }));
+            setFormQuery(q => ({ ...q, required_skills: selectedSkills.join(",") }));
         }, 300);
         return () => clearTimeout(timeoutId);
     }, [selectedSkills]);
     useEffect(() => {
         // Debounce для предотвращения слишком частых обновлений
         const timeoutId = setTimeout(() => {
-            setQuery(q => ({ ...q, required_qualities: selectedQualities.join(",") }));
+            setFormQuery(q => ({ ...q, required_qualities: selectedQualities.join(",") }));
         }, 300);
         return () => clearTimeout(timeoutId);
     }, [selectedQualities]);
