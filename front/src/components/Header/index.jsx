@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import styles from "./style.module.css";
 import { useAuth } from "../../hooks/useAuth";
-import { Bell, User, LogOut, Users, Info, FileText } from "lucide-react";
+import { Bell, User, LogOut, Users, Info, FileText, Shield } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { API_URL } from "@/config";
 
 function Header() {
-    const { isAuth, logout, tokens } = useAuth();
+    const { isAuth, logout, tokens, user } = useAuth();
     const [unreadCount, setUnreadCount] = useState(0);
     const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
 
@@ -84,6 +84,15 @@ function Header() {
                                 <FileText className={styles.nav_icon} size={18}/>
                                 <span itemProp="name">Мои заявки</span>
                             </Link>
+                            {user?.is_staff && (
+                                <>
+                                    <div className={styles.nav_divider}></div>
+                                    <Link to="/admin" className={styles.nav_link} itemProp="url">
+                                        <Shield className={styles.nav_icon} size={18}/>
+                                        <span itemProp="name">Админ</span>
+                                    </Link>
+                                </>
+                            )}
                         </>
                     )}
                 </nav>
