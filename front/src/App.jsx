@@ -25,6 +25,12 @@ import TeamPrivatePage from "./pages/TeamPrivatePage/index.jsx";
 import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 
+// Обертка для принудительного размонтирования компонентов при изменении маршрута
+function RouteWrapper({ children }) {
+    const location = useLocation();
+    return <div key={location.pathname}>{children}</div>;
+}
+
 function AppContent() {
     const { isLoading } = useGlobalLoading();
     const location = useLocation();
@@ -34,58 +40,70 @@ function AppContent() {
             <Header />
             <main className="main-content">
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
-                <Routes key={location.pathname}>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/teams" element={<TeamsPage/>} />
+                <Routes>
+                    <Route path="/" element={<RouteWrapper><HomePage /></RouteWrapper>} />
+                    <Route path="/teams" element={<RouteWrapper><TeamsPage/></RouteWrapper>} />
                     <Route
                         path="/my-teams"
                         element={
-                            <ProtectedRoute>
-                                <MyTeamsPage />
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <MyTeamsPage />
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
                     <Route
                         path="/teams/create"
                         element={
-                            <ProtectedRoute>
-                                <CreateTeamPage />
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <CreateTeamPage />
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
-                    <Route path="/about" element={<AboutPage/>}/>
+                    <Route path="/about" element={<RouteWrapper><AboutPage/></RouteWrapper>}/>
 
                     {/* Только для НЕавторизованных */}
                     <Route
                         path="/login"
                         element={
-                            <GuestRoute>
-                                <LogInPage />
-                            </GuestRoute>
+                            <RouteWrapper>
+                                <GuestRoute>
+                                    <LogInPage />
+                                </GuestRoute>
+                            </RouteWrapper>
                         }
                     />
                     <Route
                         path="/forgot"
                         element={
-                            <GuestRoute>
-                                <ForgotCredentialsPage />
-                            </GuestRoute>
+                            <RouteWrapper>
+                                <GuestRoute>
+                                    <ForgotCredentialsPage />
+                                </GuestRoute>
+                            </RouteWrapper>
                         }
                     />
                     <Route
                         path="/register-step1"
                         element={
-                            <GuestRoute>
-                                <RegisterStep1Page />
-                            </GuestRoute>
+                            <RouteWrapper>
+                                <GuestRoute>
+                                    <RegisterStep1Page />
+                                </GuestRoute>
+                            </RouteWrapper>
                         }
                     />
                     <Route
                         path="/register-step2"
                         element={
-                            <GuestRoute>
-                                <RegisterStep2Page />
-                            </GuestRoute>
+                            <RouteWrapper>
+                                <GuestRoute>
+                                    <RegisterStep2Page />
+                                </GuestRoute>
+                            </RouteWrapper>
                         }
                     />
 
@@ -93,59 +111,71 @@ function AppContent() {
                     <Route
                         path="/profile"
                         element={
-                            <ProtectedRoute>
-                                <ProfilePage />
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <ProfilePage />
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
                     <Route
                         path="/users"
-                        element={<UsersPage/>}
+                        element={<RouteWrapper><UsersPage/></RouteWrapper>}
                     />
 
                     <Route
                         path="/notifications"
                         element={
-                            <ProtectedRoute>
-                                <NotificationsPage/>
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <NotificationsPage/>
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
                     <Route
                         path="/my-requests"
                         element={
-                            <ProtectedRoute>
-                                <MyRequestsPage/>
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <MyRequestsPage/>
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
                     <Route
                         path="/teams/:teamId"
                         element={
-                            <ProtectedRoute>
-                                <TeamPublicPage/>
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <TeamPublicPage/>
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
                     <Route
                         path="/teams/:teamId/private"
                         element={
-                            <ProtectedRoute>
-                                <TeamPrivatePage/>
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <TeamPrivatePage/>
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
                     <Route
                         path="/users/:username"
                         element={
-                            <ProtectedRoute>
-                                <UserDetailPage/>
-                            </ProtectedRoute>
+                            <RouteWrapper>
+                                <ProtectedRoute>
+                                    <UserDetailPage/>
+                                </ProtectedRoute>
+                            </RouteWrapper>
                         }
                     />
 
