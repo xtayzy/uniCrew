@@ -69,7 +69,7 @@ function UsersPage() {
                     // Новый формат с пагинацией
                     usersData = res.data.results;
                     totalCount = res.data.count || 0;
-                    const pageSize = 15;
+                    const pageSize = 28;
                     totalPagesCount = Math.ceil(totalCount / pageSize) || 1;
                 } else if (Array.isArray(res.data)) {
                     // Старый формат (массив напрямую)
