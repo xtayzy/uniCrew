@@ -8,6 +8,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Skill, PersonalQuality, CustomSkill, CustomPersonalQuality, School, Faculty, Team, TeamMember, \
     ProjectCategory, Notification, Task
@@ -18,6 +19,12 @@ from .serializers import RegisterStep1Serializer, RegisterStep2Serializer, Passw
     TeamMemberUpdateSerializer, TaskSerializer, TaskCreateSerializer, TaskUpdateSerializer
 
 User = get_user_model()
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 15
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class AdminOnlyPermission(permissions.BasePermission):
@@ -254,6 +261,7 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
+    pagination_class = StandardResultsSetPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -437,7 +445,7 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsCreatorOrReadOnly]
-    pagination_class = None  # Используем глобальную пагинацию из настроек
+    pagination_class = StandardResultsSetPagination
 
     def perform_create(self, serializer):
         team = serializer.save(creator=self.request.user)
