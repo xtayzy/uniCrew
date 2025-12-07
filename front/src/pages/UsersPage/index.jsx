@@ -239,7 +239,10 @@ function SchoolFacultyPicker({ value, onChange, access }) {
         if (!value.school) { setFaculties([]); return; }
         const headers = access ? { Authorization: `Bearer ${access}` } : {};
         axios.get(`${API_URL}faculties/?school=${value.school}`, { headers })
-            .then(res => setFaculties(res.data || []))
+            .then(res => {
+                const facultiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                setFaculties(facultiesData);
+            })
             .catch(() => setFaculties([]));
     }, [value.school, access]);
 
@@ -277,8 +280,10 @@ function SkillsQualitiesPicker({ onChange }) {
             axios.get(`${API_URL}skills/`, { signal: controller.signal, timeout: 10000 }),
             axios.get(`${API_URL}personal-qualities/`, { signal: controller.signal, timeout: 10000 })
         ]).then(([sk, q]) => {
-            setSkillsAll((sk.data || []).map(s => s.name));
-            setQualitiesAll((q.data || []).map(x => x.name));
+            const skillsData = Array.isArray(sk.data) ? sk.data : (sk.data?.results || []);
+            const qualitiesData = Array.isArray(q.data) ? q.data : (q.data?.results || []);
+            setSkillsAll(skillsData.map(s => s.name));
+            setQualitiesAll(qualitiesData.map(x => x.name));
         }).catch((err) => {
             // Игнорируем отмененные запросы (при размонтировании или обновлении страницы)
             if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED' && err.name !== 'CanceledError') {

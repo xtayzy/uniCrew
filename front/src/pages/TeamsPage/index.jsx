@@ -122,8 +122,10 @@ const TeamsPage = () => {
                     axios.get(`${API_URL}skills/`, { signal: controller.signal, timeout: 10000 }),
                     axios.get(`${API_URL}personal-qualities/`, { signal: controller.signal, timeout: 10000 }),
                 ]);
-                setSkillsAll((skRes.data || []).map(s => s.name));
-                setQualitiesAll((qRes.data || []).map(q => q.name));
+                const skillsData = Array.isArray(skRes.data) ? skRes.data : (skRes.data?.results || []);
+                const qualitiesData = Array.isArray(qRes.data) ? qRes.data : (qRes.data?.results || []);
+                setSkillsAll(skillsData.map(s => s.name));
+                setQualitiesAll(qualitiesData.map(q => q.name));
             } catch (e) {
                 if (e.name !== 'AbortError') {
                     console.error(e);
