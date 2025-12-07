@@ -26,8 +26,8 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                 description: team.description || '',
                 category: team.category || '',
                 status: team.status || 'OPEN',
-                required_skills: team.required_skills || [],
-                required_qualities: team.required_qualities || [],
+                required_skills: Array.isArray(team.required_skills) ? team.required_skills : [],
+                required_qualities: Array.isArray(team.required_qualities) ? team.required_qualities : [],
                 whatsapp_link: team.whatsapp_link || '',
                 telegram_link: team.telegram_link || ''
             });
@@ -48,9 +48,14 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                 axios.get(`${API_URL}personal-qualities/`)
             ]);
             
-            setCategories(categoriesRes.data);
-            setSkills(skillsRes.data);
-            setQualities(qualitiesRes.data);
+            // Обрабатываем ответы - могут быть массивы или объекты с пагинацией
+            const categoriesData = Array.isArray(categoriesRes.data) ? categoriesRes.data : (categoriesRes.data?.results || []);
+            const skillsData = Array.isArray(skillsRes.data) ? skillsRes.data : (skillsRes.data?.results || []);
+            const qualitiesData = Array.isArray(qualitiesRes.data) ? qualitiesRes.data : (qualitiesRes.data?.results || []);
+            
+            setCategories(categoriesData);
+            setSkills(skillsData);
+            setQualities(qualitiesData);
         } catch (error) {
             console.error('Ошибка загрузки данных:', error);
         }
@@ -131,7 +136,7 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                             required
                         >
                             <option value="">Выберите категорию</option>
-                            {categories.map(category => (
+                            {Array.isArray(categories) && categories.map(category => (
                                 <option key={category.id} value={category.name}>
                                     {category.name}
                                 </option>
@@ -181,15 +186,16 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                     <div className={styles.form_group}>
                         <label>Требуемые навыки</label>
                         <div className={styles.checkbox_group}>
-                            {skills.map(skill => (
+                            {Array.isArray(skills) && skills.map(skill => (
                                 <label key={skill.id} className={styles.checkbox_item}>
                                     <input
                                         type="checkbox"
-                                        checked={formData.required_skills.includes(skill.name)}
+                                        checked={Array.isArray(formData.required_skills) && formData.required_skills.includes(skill.name)}
                                         onChange={(e) => {
+                                            const currentSkills = Array.isArray(formData.required_skills) ? formData.required_skills : [];
                                             const newSkills = e.target.checked
-                                                ? [...formData.required_skills, skill.name]
-                                                : formData.required_skills.filter(s => s !== skill.name);
+                                                ? [...currentSkills, skill.name]
+                                                : currentSkills.filter(s => s !== skill.name);
                                             handleArrayChange("required_skills", newSkills);
                                         }}
                                     />
@@ -202,15 +208,16 @@ const EditTeamModal = ({ team, isOpen, onClose, onUpdate }) => {
                     <div className={styles.form_group}>
                         <label>Требуемые качества</label>
                         <div className={styles.checkbox_group}>
-                            {qualities.map(quality => (
+                            {Array.isArray(qualities) && qualities.map(quality => (
                                 <label key={quality.id} className={styles.checkbox_item}>
                                     <input
                                         type="checkbox"
-                                        checked={formData.required_qualities.includes(quality.name)}
+                                        checked={Array.isArray(formData.required_qualities) && formData.required_qualities.includes(quality.name)}
                                         onChange={(e) => {
+                                            const currentQualities = Array.isArray(formData.required_qualities) ? formData.required_qualities : [];
                                             const newQualities = e.target.checked
-                                                ? [...formData.required_qualities, quality.name]
-                                                : formData.required_qualities.filter(q => q !== quality.name);
+                                                ? [...currentQualities, quality.name]
+                                                : currentQualities.filter(q => q !== quality.name);
                                             handleArrayChange("required_qualities", newQualities);
                                         }}
                                     />
