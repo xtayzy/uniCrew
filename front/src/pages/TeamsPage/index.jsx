@@ -433,6 +433,14 @@ const TeamsPage = () => {
                     <div className={styles.loading_container}>
                         <LoadingSpinner size="medium" text="Загрузка команд..." fullScreen={false} />
                     </div>
+                ) : Array.isArray(teams) && teams.length === 0 ? (
+                    <div className={styles.empty_container}>
+                        <div className={styles.empty_code}>404</div>
+                        <div className={styles.empty_message}>Команды не найдены</div>
+                        <div className={styles.empty_description}>
+                            Попробуйте изменить параметры поиска или фильтры
+                        </div>
+                    </div>
                 ) : (
                     Array.isArray(teams) && teams.map((team) => (
                     <div key={team.id} className={styles.team_card}>

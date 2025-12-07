@@ -256,6 +256,14 @@ function UsersPage() {
                     <div className={styles.loading_container}>
                         <LoadingSpinner size="medium" text="Загрузка пользователей..." fullScreen={false} />
                     </div>
+                ) : Array.isArray(users) && users.length === 0 ? (
+                    <div className={styles.empty_container}>
+                        <div className={styles.empty_code}>404</div>
+                        <div className={styles.empty_message}>Пользователи не найдены</div>
+                        <div className={styles.empty_description}>
+                            Попробуйте изменить параметры поиска или фильтры
+                        </div>
+                    </div>
                 ) : (
                     Array.isArray(users) && users.map(user => (
                     <div 
