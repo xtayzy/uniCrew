@@ -169,6 +169,13 @@ class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
     permission_classes = [AllowAny]  # Разрешаем чтение для всех
+    
+    def get_queryset(self):
+        queryset = Faculty.objects.select_related('school').all()
+        school_id = self.request.query_params.get('school')
+        if school_id:
+            queryset = queryset.filter(school_id=school_id)
+        return queryset
 
 
 class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
