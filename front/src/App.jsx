@@ -32,7 +32,7 @@ function AppContent() {
     
     // Создаем уникальный ключ для принудительного размонтирования компонентов
     const routesKey = useMemo(() => {
-        return `${location.pathname}-${Date.now()}`;
+        return location.pathname;
     }, [location.pathname]);
     
     return (
