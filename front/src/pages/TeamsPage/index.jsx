@@ -4,9 +4,7 @@ import styles from "./style.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
 import JoinTeamModal from "../../components/JoinTeamModal";
-import LoadingSkeleton from "../../components/LoadingSkeleton";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import PageTransition from "../../components/PageTransition";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
 import SEOHead from "../../components/SEOHead";
@@ -430,13 +428,13 @@ const TeamsPage = () => {
                 </button>
             </div>
             
-            <PageTransition 
-                isLoading={loading} 
-                loadingComponent={<LoadingSkeleton type="team-card" count={6} />}
-                minHeight="400px"
-            >
-                <div className={styles.teams_grid}>
-                {Array.isArray(teams) && teams.map((team) => (
+            <div className={styles.teams_grid}>
+                {loading ? (
+                    <div className={styles.loading_container}>
+                        <LoadingSpinner size="medium" text="Загрузка команд..." fullScreen={false} />
+                    </div>
+                ) : (
+                    Array.isArray(teams) && teams.map((team) => (
                     <div key={team.id} className={styles.team_card}>
                         <h2 
                             className={styles.team_title_link}
@@ -506,9 +504,10 @@ const TeamsPage = () => {
                             </button>
                         )}
                     </div>
-                ))}
-                </div>
-                {!loading && totalPages > 1 && (
+                    ))
+                )}
+            </div>
+            {!loading && totalPages > 1 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
@@ -518,7 +517,6 @@ const TeamsPage = () => {
                         }}
                     />
                 )}
-            </PageTransition>
 
             <JoinTeamModal
                 team={selectedTeam}

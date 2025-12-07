@@ -25,6 +25,17 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     margin-top: 30px;
+    min-height: 400px;
+    position: relative;
+}
+
+.loading_container {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    width: 100%;
 }
 
 .user_card {

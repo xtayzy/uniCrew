@@ -3,8 +3,7 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
 import styles from "./style.module.css";
-import LoadingSkeleton from "../../components/LoadingSkeleton";
-import PageTransition from "../../components/PageTransition";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import ErrorDisplay from "../../components/ErrorDisplay";
 import { useAuth } from "../../hooks/useAuth";
 import Pagination from "../../components/Pagination";
@@ -252,13 +251,13 @@ function UsersPage() {
                 </button>
             </div>
             
-            <PageTransition 
-                isLoading={loading} 
-                loadingComponent={<LoadingSkeleton type="user-card" count={8} />}
-                minHeight="400px"
-            >
-                <div className={styles.users_grid}>
-                    {Array.isArray(users) && users.map(user => (
+            <div className={styles.users_grid}>
+                {loading ? (
+                    <div className={styles.loading_container}>
+                        <LoadingSpinner size="medium" text="Загрузка пользователей..." fullScreen={false} />
+                    </div>
+                ) : (
+                    Array.isArray(users) && users.map(user => (
                     <div 
                         key={user.id} 
                         className={styles.user_card}
@@ -298,9 +297,10 @@ function UsersPage() {
                             </div>
                         )}
                     </div>
-                ))}
-                </div>
-                {!loading && totalPages > 1 && (
+                    ))
+                )}
+            </div>
+            {!loading && totalPages > 1 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
@@ -310,7 +310,6 @@ function UsersPage() {
                         }}
                     />
                 )}
-            </PageTransition>
         </div>
     );
 }
