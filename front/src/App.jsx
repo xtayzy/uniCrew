@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -29,16 +29,18 @@ import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
 function AppContent() {
     const { isLoading } = useGlobalLoading();
     const location = useLocation();
+    const [routeKey, setRouteKey] = useState(0);
     
-    // Создаем уникальный ключ для каждого маршрута, чтобы принудительно размонтировать компоненты
-    const routeKey = useMemo(() => {
-        return location.pathname;
+    // Принудительно обновляем ключ при изменении маршрута
+    useEffect(() => {
+        console.log('Location changed to:', location.pathname);
+        setRouteKey(prev => prev + 1);
     }, [location.pathname]);
     
     return (
         <div className="app-container">
             <Header />
-            <main className="main-content">
+            <main className="main-content" key={routeKey}>
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
                 <Routes key={routeKey}>
                     <Route path="/" element={<HomePage key={routeKey} />} />
