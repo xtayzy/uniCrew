@@ -153,6 +153,14 @@ function UsersPage() {
         }
     }, [isInitializing]); // Только при первой загрузке
 
+    // Ранний возврат, если мы не на странице /users
+    // Используем window.location.pathname для более надежной проверки
+    const currentPath = typeof window !== 'undefined' ? window.location.pathname : location.pathname;
+    if (currentPath !== '/users') {
+        console.log('UsersPage: early return, currentPath is', currentPath, 'location.pathname is', location.pathname);
+        return null;
+    }
+
     if (error) {
         return (
             <div className={styles.users_page}>
