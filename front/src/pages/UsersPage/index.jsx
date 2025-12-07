@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
@@ -251,10 +251,10 @@ function UsersPage() {
                 </div>
                 {/* Ряд 4: навыки/качества */}
                 <SkillsQualitiesPicker 
-                    onChange={(skills, qualities) => {
+                    onChange={useCallback((skills, qualities) => {
                         console.log('Навыки/качества изменены:', skills, qualities);
                         setFormQuery(prev => ({ ...prev, skills: skills || "", personal_qualities: qualities || "" }));
-                    }} 
+                    }, [])} 
                 />
                 {/* Кнопка поиска */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
@@ -438,13 +438,17 @@ function SkillsQualitiesPicker({ onChange }) {
         return () => controller.abort();
     }, []);
 
-    // Обновляем formQuery при изменении навыков и качеств
+    // Обновляем formQuery при изменении навыков и качеств с debounce
     useEffect(() => {
-        const skillsStr = Array.isArray(skillsSel) ? skillsSel.join(',') : '';
-        const qualitiesStr = Array.isArray(qualsSel) ? qualsSel.join(',') : '';
-        console.log('SkillsQualitiesPicker: обновление навыков/качеств:', skillsStr, qualitiesStr);
-        onChange(skillsStr, qualitiesStr);
-    }, [skillsSel, qualsSel, onChange]);
+        const timeoutId = setTimeout(() => {
+            const skillsStr = Array.isArray(skillsSel) ? skillsSel.join(',') : '';
+            const qualitiesStr = Array.isArray(qualsSel) ? qualsSel.join(',') : '';
+            console.log('SkillsQualitiesPicker: обновление навыков/качеств:', skillsStr, qualitiesStr);
+            onChange(skillsStr, qualitiesStr);
+        }, 300); // Debounce 300ms
+        
+        return () => clearTimeout(timeoutId);
+    }, [skillsSel, qualsSel]); // Убрали onChange из зависимостей
 
     const addSkill = (name) => {
         const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());
