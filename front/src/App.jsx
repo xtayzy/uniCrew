@@ -38,7 +38,6 @@ function AppContent() {
         const checkLocation = () => {
             const currentPath = window.location.pathname;
             if (prevPathnameRef.current !== currentPath) {
-                console.log('Location changed from', prevPathnameRef.current, 'to:', currentPath);
                 prevPathnameRef.current = currentPath;
                 setRouteKey(prev => prev + 1);
                 setForceUpdate(prev => prev + 1);
@@ -63,7 +62,6 @@ function AppContent() {
     // Также отслеживаем изменения через useLocation
     useEffect(() => {
         if (prevPathnameRef.current !== location.pathname) {
-            console.log('useLocation changed from', prevPathnameRef.current, 'to:', location.pathname);
             prevPathnameRef.current = location.pathname;
             setRouteKey(prev => prev + 1);
         }

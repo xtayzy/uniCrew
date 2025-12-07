@@ -58,8 +58,6 @@ function ProfilePage() {
 
     if (!profile) return <LoadingSpinner text="Загрузка профиля..." />;
 
-    console.log(profile);
-
     return (
         <div className={styles.profile_page}>
             <div className={styles.profile_left}>

@@ -10,7 +10,6 @@ export async function registerStep1(username, email, password1, password2){
         password2
     })
 
-    console.log(response.data)
     return response.data
 }
 

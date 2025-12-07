@@ -285,13 +285,6 @@ const TeamPrivatePage = () => {
             </div>
         );
     }
-
-    console.log('Component state:', {
-        isAuth,
-        currentUser: currentUser?.username,
-        team: team?.title,
-        teamCreator: team?.creator,
-        members: team?.members
     });
 
     // Проверка доступа к приватной странице (только после загрузки)

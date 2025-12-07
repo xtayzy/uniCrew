@@ -22,7 +22,6 @@ const NotificationsComponent = () => {
                     Authorization: `Bearer ${tokens?.access}`,
                 },
             });
-            console.log('Получены уведомления:', response.data);
             setNotifications(response.data);
         } catch (error) {
             console.error('Ошибка загрузки уведомлений:', error);
@@ -87,10 +86,6 @@ const NotificationsComponent = () => {
 
     const handleAcceptInvitation = async (teamMemberId) => {
         try {
-            console.log('Принимаем приглашение:', { teamMemberId });
-            console.log('Токен доступа:', tokens?.access ? 'Есть' : 'Нет');
-            console.log('URL:', `${API_URL}users/accept_invitation/`);
-            
             const response = await axios.post(`${API_URL}users/accept_invitation/`, {
                 member_id: teamMemberId,
             }, {
@@ -99,7 +94,6 @@ const NotificationsComponent = () => {
                 },
             });
             
-            console.log('Приглашение принято:', response.data);
             // Обновляем уведомления после принятия приглашения
             fetchNotifications();
         } catch (error) {
@@ -114,8 +108,6 @@ const NotificationsComponent = () => {
 
     const handleRejectInvitation = async (teamMemberId) => {
         try {
-            console.log('Отклоняем приглашение:', { teamMemberId });
-            console.log('Токен доступа:', tokens?.access ? 'Есть' : 'Нет');
             const response = await axios.post(`${API_URL}users/reject_invitation/`, {
                 member_id: teamMemberId,
             }, {
@@ -124,7 +116,6 @@ const NotificationsComponent = () => {
                 },
             });
             
-            console.log('Приглашение отклонено:', response.data);
             // Обновляем уведомления после отклонения приглашения
             fetchNotifications();
         } catch (error) {
@@ -139,7 +130,6 @@ const NotificationsComponent = () => {
 
     const handleApproveRequest = async (teamId, memberId) => {
         try {
-            console.log("Принимаем заявку:", { teamId, memberId });
             const response = await axios.post(`${API_URL}teams/${teamId}/approve/`, {
                 member_id: memberId,
             }, {
@@ -148,7 +138,6 @@ const NotificationsComponent = () => {
                 },
             });
             
-            console.log('Заявка принята:', response.data);
             // Обновляем уведомления после принятия заявки
             fetchNotifications();
         } catch (error) {
@@ -163,7 +152,6 @@ const NotificationsComponent = () => {
 
     const handleRejectRequest = async (teamId, memberId) => {
         try {
-            console.log("Отклоняем заявку:", { teamId, memberId });
             const response = await axios.post(`${API_URL}teams/${teamId}/reject/`, {
                 member_id: memberId,
             }, {
@@ -172,7 +160,6 @@ const NotificationsComponent = () => {
                 },
             });
             
-            console.log('Заявка отклонена:', response.data);
             // Обновляем уведомления после отклонения заявки
             fetchNotifications();
         } catch (error) {
@@ -195,7 +182,6 @@ const NotificationsComponent = () => {
         }
 
         try {
-            console.log('Удаляем уведомление:', { notificationId });
             const notification = notifications.find(n => n.id === notificationId);
             const wasUnread = notification && !notification.is_read;
             
