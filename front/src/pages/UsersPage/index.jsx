@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_URL } from "../../config.js";
@@ -14,6 +14,7 @@ function UsersPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const access = tokens?.access;
+    const isMountedRef = useRef(true);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,7 +25,25 @@ function UsersPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [count, setCount] = useState(0);
 
+    // Отслеживаем размонтирование компонента
     useEffect(() => {
+        isMountedRef.current = location.pathname === '/users';
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, [location.pathname]);
+
+    // Ранний возврат, если мы не на странице /users
+    if (location.pathname !== '/users') {
+        return null;
+    }
+
+    useEffect(() => {
+        // Проверяем, что мы на странице /users
+        if (location.pathname !== '/users') {
+            return;
+        }
+        
         // Ждем завершения инициализации токенов
         if (isInitializing) return;
         if (isRequesting) return; // Защита от повторных запросов
@@ -62,6 +81,11 @@ function UsersPage() {
         axios.get(url, config)
             .then(res => {
                 clearTimeout(timeoutId);
+                // Проверяем, что компонент все еще смонтирован и мы на правильной странице
+                if (!isMountedRef.current || location.pathname !== '/users') {
+                    return;
+                }
+                
                 // Обрабатываем ответ с пагинацией
                 let usersData = [];
                 let totalCount = 0;
@@ -86,18 +110,25 @@ function UsersPage() {
                     totalPagesCount = 1;
                 }
                 
-                setUsers(usersData);
-                setCount(totalCount);
-                setTotalPages(totalPagesCount);
-                setError(null);
-                setLoading(false);
-                setIsRequesting(false);
+                // Дополнительная проверка перед обновлением состояния
+                if (isMountedRef.current && location.pathname === '/users') {
+                    setUsers(usersData);
+                    setCount(totalCount);
+                    setTotalPages(totalPagesCount);
+                    setError(null);
+                    setLoading(false);
+                    setIsRequesting(false);
+                }
             })
             .catch(err => {
                 clearTimeout(timeoutId);
                 // Игнорируем отмененные запросы (при размонтировании или обновлении страницы)
                 if (err.name === 'AbortError' || err.code === 'ECONNABORTED' || err.code === 'ERR_CANCELED' || err.name === 'CanceledError') {
                     // Не устанавливаем ошибку для отмененных запросов
+                    return;
+                }
+                // Проверяем, что компонент все еще смонтирован и мы на правильной странице
+                if (!isMountedRef.current || location.pathname !== '/users') {
                     return;
                 }
                 console.error("Ошибка загрузки пользователей:", err);
@@ -110,7 +141,7 @@ function UsersPage() {
             clearTimeout(timeoutId);
             controller.abort();
         };
-    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage]);
+    }, [isInitializing, tokens, searchQuery.username, searchQuery.faculty, searchQuery.school, searchQuery.course, searchQuery.education, searchQuery.skills, searchQuery.personal_qualities, currentPage, location.pathname]);
     
     // Сбрасываем страницу на 1 при изменении поискового запроса
     useEffect(() => {
