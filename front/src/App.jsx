@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { useMemo } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { GlobalLoadingProvider } from "./components/GlobalLoading";
 import { useGlobalLoading } from "./components/GlobalLoading";
@@ -29,12 +30,17 @@ function AppContent() {
     const { isLoading } = useGlobalLoading();
     const location = useLocation();
     
+    // Создаем уникальный ключ для принудительного размонтирования компонентов
+    const routesKey = useMemo(() => {
+        return `${location.pathname}-${Date.now()}`;
+    }, [location.pathname]);
+    
     return (
         <div className="app-container">
             <Header />
             <main className="main-content">
                 {isLoading && <div style={{ minHeight: 'calc(100vh - 200px)', width: '100%' }}></div>}
-                <Routes key={location.pathname}>
+                <Routes key={routesKey}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/teams" element={<TeamsPage/>} />
                     <Route
