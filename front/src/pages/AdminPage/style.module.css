@@ -95,12 +95,14 @@
 }
 
 .tab:hover {
-    color: #334155;
+    color: #475569;
+    background: #f8fafc;
 }
 
 .tab.active {
     color: #3b82f6;
     border-bottom-color: #3b82f6;
+    background: #f8fafc;
 }
 
 .content {
