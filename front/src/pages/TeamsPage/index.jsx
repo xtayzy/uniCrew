@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import styles from "./style.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -34,6 +34,8 @@ const TeamsPage = () => {
     const [qualityQ, setQualityQ] = useState("");
     const [skillSug, setSkillSug] = useState([]);
     const [qualSug, setQualSug] = useState([]);
+    const skillSearchControllerRef = useRef(null);
+    const qualitySearchControllerRef = useRef(null);
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
@@ -168,6 +170,106 @@ const TeamsPage = () => {
         return () => clearTimeout(timeoutId);
     }, [selectedQualities]);
 
+    // Debounce для поиска навыков через API
+    useEffect(() => {
+        const q = skillQ.trim();
+        if (q.length < 1) {
+            setSkillSug([]);
+            if (skillSearchControllerRef.current) {
+                skillSearchControllerRef.current.abort();
+            }
+            return;
+        }
+        
+        // Отменяем предыдущий запрос
+        if (skillSearchControllerRef.current) {
+            skillSearchControllerRef.current.abort();
+        }
+        
+        const timeoutId = setTimeout(() => {
+            // Используем API для поиска навыков
+            const controller = new AbortController();
+            skillSearchControllerRef.current = controller;
+            axios.get(`${API_URL}skills/?q=${encodeURIComponent(q)}`, { 
+                signal: controller.signal, 
+                timeout: 5000 
+            }).then((res) => {
+                const skillsData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                const queryLower = q.toLowerCase();
+                const filtered = Array.isArray(skillsData) ? skillsData
+                    .filter(skill => skill.name && skill.name.toLowerCase().includes(queryLower))
+                    .slice(0, 20)
+                    .map(s => s.name) : [];
+                setSkillSug(filtered);
+            }).catch((err) => {
+                if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
+                    // Fallback на локальный поиск
+                    const filtered = Array.isArray(skillsAll) ? skillsAll
+                        .filter(s => s.toLowerCase().includes(q.toLowerCase()))
+                        .slice(0, 20) : [];
+                    setSkillSug(filtered);
+                }
+            });
+        }, 300);
+        
+        return () => {
+            clearTimeout(timeoutId);
+            if (skillSearchControllerRef.current) {
+                skillSearchControllerRef.current.abort();
+            }
+        };
+    }, [skillQ, skillsAll]);
+
+    // Debounce для поиска качеств через API
+    useEffect(() => {
+        const q = qualityQ.trim();
+        if (q.length < 1) {
+            setQualSug([]);
+            if (qualitySearchControllerRef.current) {
+                qualitySearchControllerRef.current.abort();
+            }
+            return;
+        }
+        
+        // Отменяем предыдущий запрос
+        if (qualitySearchControllerRef.current) {
+            qualitySearchControllerRef.current.abort();
+        }
+        
+        const timeoutId = setTimeout(() => {
+            // Используем API для поиска качеств
+            const controller = new AbortController();
+            qualitySearchControllerRef.current = controller;
+            axios.get(`${API_URL}personal-qualities/?q=${encodeURIComponent(q)}`, { 
+                signal: controller.signal, 
+                timeout: 5000 
+            }).then((res) => {
+                const qualitiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+                const queryLower = q.toLowerCase();
+                const filtered = Array.isArray(qualitiesData) ? qualitiesData
+                    .filter(quality => quality.name && quality.name.toLowerCase().includes(queryLower))
+                    .slice(0, 20)
+                    .map(q => q.name) : [];
+                setQualSug(filtered);
+            }).catch((err) => {
+                if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
+                    // Fallback на локальный поиск
+                    const filtered = Array.isArray(qualitiesAll) ? qualitiesAll
+                        .filter(s => s.toLowerCase().includes(q.toLowerCase()))
+                        .slice(0, 20) : [];
+                    setQualSug(filtered);
+                }
+            });
+        }, 300);
+        
+        return () => {
+            clearTimeout(timeoutId);
+            if (qualitySearchControllerRef.current) {
+                qualitySearchControllerRef.current.abort();
+            }
+        };
+    }, [qualityQ, qualitiesAll]);
+
     const addSkill = (name) => {
         if (!Array.isArray(skillsAll)) return;
         const exists = skillsAll.find(s => s.toLowerCase() === name.toLowerCase());
@@ -270,35 +372,7 @@ const TeamsPage = () => {
                                     placeholder="Навык..."
                                     value={skillQ}
                                     onChange={(e) => {
-                                        const v = e.target.value;
-                                        setSkillQ(v);
-                                        const q = v.trim();
-                                        if (q.length < 1) {
-                                            setSkillSug([]);
-                                            return;
-                                        }
-                                        // Используем API для поиска навыков
-                                        const controller = new AbortController();
-                                        axios.get(`${API_URL}skills/?q=${encodeURIComponent(q)}`, { 
-                                            signal: controller.signal, 
-                                            timeout: 5000 
-                                        }).then((res) => {
-                                            const skillsData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
-                                            const queryLower = q.toLowerCase();
-                                            const filtered = Array.isArray(skillsData) ? skillsData
-                                                .filter(skill => skill.name && skill.name.toLowerCase().includes(queryLower))
-                                                .slice(0, 20)
-                                                .map(s => s.name) : [];
-                                            setSkillSug(filtered);
-                                        }).catch((err) => {
-                                            if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
-                                                // Fallback на локальный поиск
-                                                const filtered = Array.isArray(skillsAll) ? skillsAll
-                                                    .filter(s => s.toLowerCase().includes(q.toLowerCase()))
-                                                    .slice(0, 20) : [];
-                                                setSkillSug(filtered);
-                                            }
-                                        });
+                                        setSkillQ(e.target.value);
                                     }}
                                     onKeyDown={(e) => { if (e.key === 'Enter' && skillQ.trim()) { addSkill(skillQ.trim()); e.preventDefault(); } }}
                                     onBlur={() => setSkillSug([])}
@@ -325,35 +399,7 @@ const TeamsPage = () => {
                                     placeholder="Качество..."
                                     value={qualityQ}
                                     onChange={(e) => {
-                                        const v = e.target.value;
-                                        setQualityQ(v);
-                                        const q = v.trim();
-                                        if (q.length < 1) {
-                                            setQualSug([]);
-                                            return;
-                                        }
-                                        // Используем API для поиска качеств
-                                        const controller = new AbortController();
-                                        axios.get(`${API_URL}personal-qualities/?q=${encodeURIComponent(q)}`, { 
-                                            signal: controller.signal, 
-                                            timeout: 5000 
-                                        }).then((res) => {
-                                            const qualitiesData = Array.isArray(res.data) ? res.data : (res.data?.results || []);
-                                            const queryLower = q.toLowerCase();
-                                            const filtered = Array.isArray(qualitiesData) ? qualitiesData
-                                                .filter(quality => quality.name && quality.name.toLowerCase().includes(queryLower))
-                                                .slice(0, 20)
-                                                .map(q => q.name) : [];
-                                            setQualSug(filtered);
-                                        }).catch((err) => {
-                                            if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
-                                                // Fallback на локальный поиск
-                                                const filtered = Array.isArray(qualitiesAll) ? qualitiesAll
-                                                    .filter(s => s.toLowerCase().includes(q.toLowerCase()))
-                                                    .slice(0, 20) : [];
-                                                setQualSug(filtered);
-                                            }
-                                        });
+                                        setQualityQ(e.target.value);
                                     }}
                                     onKeyDown={(e) => { if (e.key === 'Enter' && qualityQ.trim()) { addQuality(qualityQ.trim()); e.preventDefault(); } }}
                                     onBlur={() => setQualSug([])}
