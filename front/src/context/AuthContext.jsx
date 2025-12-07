@@ -6,12 +6,14 @@ import { AuthContext } from "./AuthContextObject";
 export const AuthProvider = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false);
     const [tokens, setTokens] = useState(null);
+    const [user, setUser] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [isInitializing, setIsInitializing] = useState(true);
 
     const logout = useCallback(() => {
         localStorage.removeItem("tokens");
         setTokens(null);
+        setUser(null);
         setIsAuth(false);
         setIsRefreshing(false);
     }, []);
@@ -43,6 +45,19 @@ export const AuthProvider = ({ children }) => {
         }
     }, [tokens, isRefreshing, logout]);
 
+    // Загрузка информации о пользователе
+    const loadUser = useCallback(async (accessToken) => {
+        try {
+            const response = await axios.get(`${API_URL}profile/`, {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            setUser(response.data);
+        } catch (error) {
+            console.error("Error loading user:", error);
+            setUser(null);
+        }
+    }, []);
+
     // При запуске — читаем токены из localStorage
     useEffect(() => {
         const storedTokens = localStorage.getItem("tokens");
@@ -51,13 +66,16 @@ export const AuthProvider = ({ children }) => {
                 const parsedTokens = JSON.parse(storedTokens);
                 setTokens(parsedTokens);
                 setIsAuth(true);
+                if (parsedTokens.access) {
+                    loadUser(parsedTokens.access);
+                }
             } catch (error) {
                 console.error("Error parsing stored tokens:", error);
                 localStorage.removeItem("tokens");
             }
         }
         setIsInitializing(false);
-    }, []);
+    }, [loadUser]);
 
     // Автоматическое обновление токенов каждые 14 минут (за 1 минуту до истечения)
     useEffect(() => {
@@ -75,6 +93,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("tokens", JSON.stringify(newTokens));
         setTokens(newTokens);
         setIsAuth(true);
+        loadUser(access);
     };
 
     // Настройка axios interceptor для автоматического добавления токенов и обработки ошибок
@@ -103,8 +122,13 @@ export const AuthProvider = ({ children }) => {
                     const refreshed = await refreshTokens();
                     
                     if (refreshed) {
+                        // Обновляем информацию о пользователе после обновления токенов
+                        const newTokens = JSON.parse(localStorage.getItem("tokens") || "{}");
+                        if (newTokens.access) {
+                            loadUser(newTokens.access);
+                        }
                         // Повторяем запрос с новым токеном
-                        originalRequest.headers.Authorization = `Bearer ${tokens?.access}`;
+                        originalRequest.headers.Authorization = `Bearer ${newTokens.access || tokens?.access}`;
                         return axios(originalRequest);
                     } else {
                         // Если не удалось обновить токены, делаем logout
@@ -120,12 +144,13 @@ export const AuthProvider = ({ children }) => {
             axios.interceptors.request.eject(requestInterceptor);
             axios.interceptors.response.eject(responseInterceptor);
         };
-    }, [tokens, refreshTokens, logout]);
+    }, [tokens, refreshTokens, logout, loadUser]);
 
     return (
         <AuthContext.Provider value={{ 
             isAuth, 
             tokens, 
+            user,
             login_context, 
             logout, 
             refreshTokens,

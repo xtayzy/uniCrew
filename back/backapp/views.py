@@ -953,5 +953,67 @@ class TaskViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 
+class AdminPanelView(generics.GenericAPIView):
+    permission_classes = [AdminOnlyPermission]
+    
+    def get(self, request):
+        """Получить список всех команд и пользователей для админ-панели"""
+        teams = Team.objects.select_related('creator', 'category').prefetch_related(
+            'required_skills', 'required_qualities', 'memberships'
+        ).order_by('-created_at')
+        
+        users = User.objects.select_related('faculty', 'faculty__school').prefetch_related(
+            'skills', 'personal_qualities'
+        ).order_by('-date_joined')
+        
+        teams_serializer = TeamSerializer(teams, many=True, context={'request': request})
+        users_serializer = UserListSerializer(users, many=True, context={'request': request})
+        
+        return Response({
+            'teams': teams_serializer.data,
+            'users': users_serializer.data,
+            'teams_count': teams.count(),
+            'users_count': users.count()
+        })
+    
+    def delete(self, request):
+        """Удалить команду или пользователя"""
+        item_type = request.data.get('type')  # 'team' или 'user'
+        item_id = request.data.get('id')
+        
+        if not item_type or not item_id:
+            return Response(
+                {'error': 'Необходимо указать type и id'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if item_type == 'team':
+            try:
+                team = Team.objects.get(id=item_id)
+                team.delete()
+                return Response({'message': f'Команда "{team.title}" успешно удалена'})
+            except Team.DoesNotExist:
+                return Response(
+                    {'error': 'Команда не найдена'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        elif item_type == 'user':
+            try:
+                user = User.objects.get(id=item_id)
+                username = user.username
+                user.delete()
+                return Response({'message': f'Пользователь "{username}" успешно удален'})
+            except User.DoesNotExist:
+                return Response(
+                    {'error': 'Пользователь не найден'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        else:
+            return Response(
+                {'error': 'Неверный тип. Используйте "team" или "user"'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
 
 

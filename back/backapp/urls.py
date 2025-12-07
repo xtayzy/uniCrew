@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .views import RegisterStep1View, RegisterStep2View, PasswordResetView, ChangePasswordView, SkillViewSet, PersonalQualityViewSet, \
     CustomSkillViewSet, CustomPersonalQualityViewSet, UserProfileUpdateView, UserViewSet, TeamMemberViewSet, \
-    ProjectCategoryViewSet, TeamViewSet, FacultyViewSet, SchoolViewSet, TaskViewSet
+    ProjectCategoryViewSet, TeamViewSet, FacultyViewSet, SchoolViewSet, TaskViewSet, AdminPanelView
 
 router = DefaultRouter()
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path("password-reset/", PasswordResetView.as_view(), name="password_reset"),
     path("change-password/", ChangePasswordView.as_view(), name="change_password"),
     path('profile/', UserProfileUpdateView.as_view(), name="user-profile"),
+    path('admin-panel/', AdminPanelView.as_view(), name="admin-panel"),
 ] + router.urls
 
 

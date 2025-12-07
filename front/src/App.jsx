@@ -6,6 +6,7 @@ import { useGlobalLoading } from "./components/GlobalLoading";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GuestRoute from "./routes/GuestRoute";
+import AdminRoute from "./routes/AdminRoute";
 
 import Header from "./components/Header/index.jsx";
 import Footer from "./components/Footer/index.jsx";
@@ -25,6 +26,7 @@ import TeamPublicPage from "./pages/TeamPublicPage/index.jsx";
 import TeamPrivatePage from "./pages/TeamPrivatePage/index.jsx";
 import UserDetailPage from "./pages/UserDetailPage/index.jsx";
 import ForgotCredentialsPage from "./pages/ForgotCredentialsPage/index.jsx";
+import AdminPage from "./pages/AdminPage/index.jsx";
 
 function AppContent() {
     const { isLoading } = useGlobalLoading();
@@ -187,7 +189,16 @@ function AppContent() {
                         }
                     />
 
-                </Routes>
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminRoute>
+                                <AdminPage key={routeKey} />
+                            </AdminRoute>
+                        }
+                    />
+       
+                       </Routes>
             </main>
             <Footer />
         </div>

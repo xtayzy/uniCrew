@@ -239,6 +239,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     avatar_file = serializers.ImageField(write_only=True, required=False, allow_null=True)
     faculty = FacultySerializer(read_only=True)
 
+    is_staff = serializers.BooleanField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -259,6 +261,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "personal_qualities",
             "skills_list",
             "personal_qualities_list",
+            "is_staff",
         ]
         read_only_fields = ["username", "email"]
 
@@ -384,6 +387,7 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "username",
+            "email",
             "first_name",
             "last_name",
             "faculty",
@@ -395,6 +399,7 @@ class UserListSerializer(serializers.ModelSerializer):
             "avatar",
             "skills_list",
             "personal_qualities_list",
+            "date_joined",
         ]
 
     def get_avatar(self, obj):
