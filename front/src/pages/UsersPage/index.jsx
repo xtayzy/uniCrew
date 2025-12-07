@@ -121,6 +121,13 @@ function UsersPage() {
         setSearchQuery({ ...formQuery });
         setCurrentPage(1);
     };
+    
+    // Выполняем начальный поиск при загрузке страницы
+    useEffect(() => {
+        if (!isInitializing) {
+            handleSearch();
+        }
+    }, [isInitializing]); // Только при первой загрузке
 
     if (error) {
         return (
@@ -145,16 +152,16 @@ function UsersPage() {
             <div style={{ display: 'grid', gap: 8, marginBottom: 0 }}>
                 {/* Ряд 1: username */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
-                    <input className={styles.input} placeholder="Username" value={query.username} onChange={(e) => setQuery({ ...query, username: e.target.value })} />
+                    <input className={styles.input} placeholder="Username" value={formQuery.username} onChange={(e) => setFormQuery({ ...formQuery, username: e.target.value })} />
                 </div>
                 {/* Ряд 2: школа/факультет */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
-                    <SchoolFacultyPicker access={access} value={{ school: query.school, faculty: query.faculty }} onChange={(v) => setQuery({ ...query, school: v.school, faculty: v.faculty })} />
+                    <SchoolFacultyPicker access={access} value={{ school: formQuery.school, faculty: formQuery.faculty }} onChange={(v) => setFormQuery({ ...formQuery, school: v.school, faculty: v.faculty })} />
                 </div>
                 {/* Ряд 3: курс/образование */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                    <input className={styles.input} placeholder="Курс" value={query.course} onChange={(e) => setQuery({ ...query, course: e.target.value })} />
-                    <select className={styles.select} value={query.education} onChange={(e) => setQuery({ ...query, education: e.target.value })}>
+                    <input className={styles.input} placeholder="Курс" value={formQuery.course} onChange={(e) => setFormQuery({ ...formQuery, course: e.target.value })} />
+                    <select className={styles.select} value={formQuery.education} onChange={(e) => setFormQuery({ ...formQuery, education: e.target.value })}>
                         <option value="">Любое образование</option>
                         <option value="BACHELOR">Бакалавриат</option>
                         <option value="MASTER">Магистратура</option>
@@ -163,7 +170,28 @@ function UsersPage() {
                     </select>
                 </div>
                 {/* Ряд 4: навыки/качества */}
-                <SkillsQualitiesPicker onChange={(skills, qualities) => setQuery({ ...query, skills, personal_qualities: qualities })} />
+                <SkillsQualitiesPicker onChange={(skills, qualities) => setFormQuery({ ...formQuery, skills, personal_qualities: qualities })} />
+                {/* Кнопка поиска */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                    <button 
+                        onClick={handleSearch}
+                        style={{
+                            padding: '12px 32px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s',
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
+                    >
+                        Найти
+                    </button>
+                </div>
             </div>
             
             <PageTransition 

@@ -104,6 +104,12 @@ const TeamsPage = () => {
         setSearchQuery({ ...formQuery });
         setCurrentPage(1);
     };
+    
+    // Выполняем начальный поиск при загрузке страницы
+    useEffect(() => {
+        // Устанавливаем пустой поисковый запрос для начальной загрузки всех команд
+        setSearchQuery({ title: "", category_id: "", status: "", required_skills: "", required_qualities: "" });
+    }, []); // Только при первой загрузке
 
     useEffect(() => {
         const controller = new AbortController();
@@ -307,6 +313,27 @@ const TeamsPage = () => {
                             ) : null}
                         </div>
                     </div>
+                </div>
+                {/* Кнопка поиска */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                    <button 
+                        onClick={handleSearch}
+                        style={{
+                            padding: '12px 32px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s',
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
+                        onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
+                    >
+                        Найти
+                    </button>
                 </div>
             </div>
             
