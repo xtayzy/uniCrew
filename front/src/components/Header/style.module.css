@@ -397,7 +397,13 @@
         height: 40px;
         min-width: 40px;
         min-height: 40px;
+        max-width: 40px;
+        max-height: 40px;
         padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
     }
     
     .profile_link {
@@ -406,6 +412,15 @@
     
     .profile_text {
         display: none;
+    }
+    
+    .profile_icon {
+        margin: 0;
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        flex-shrink: 0;
     }
     
     .login_btn {
