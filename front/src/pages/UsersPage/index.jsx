@@ -148,7 +148,10 @@ function UsersPage() {
     
     // Функция для запуска поиска
     const handleSearch = () => {
-        setSearchQuery({ ...formQuery });
+        console.log('handleSearch вызван, formQuery:', formQuery);
+        const newSearchQuery = { ...formQuery };
+        console.log('Устанавливаем searchQuery:', newSearchQuery);
+        setSearchQuery(newSearchQuery);
         setCurrentPage(1);
     };
     
@@ -196,16 +199,49 @@ function UsersPage() {
             <div style={{ display: 'grid', gap: 8, marginBottom: 0 }}>
                 {/* Ряд 1: username */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
-                    <input className={styles.input} placeholder="Username" value={formQuery.username} onChange={(e) => setFormQuery({ ...formQuery, username: e.target.value })} />
+                    <input 
+                        className={styles.input} 
+                        placeholder="Username" 
+                        value={formQuery.username || ""} 
+                        onChange={(e) => {
+                            const newValue = e.target.value;
+                            console.log('Username изменен:', newValue);
+                            setFormQuery(prev => ({ ...prev, username: newValue }));
+                        }} 
+                    />
                 </div>
                 {/* Ряд 2: школа/факультет */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8 }}>
-                    <SchoolFacultyPicker access={access} value={{ school: formQuery.school, faculty: formQuery.faculty }} onChange={(v) => setFormQuery({ ...formQuery, school: v.school, faculty: v.faculty })} />
+                    <SchoolFacultyPicker 
+                        access={access} 
+                        value={{ school: formQuery.school || "", faculty: formQuery.faculty || "" }} 
+                        onChange={(v) => {
+                            console.log('Школа/факультет изменены:', v);
+                            setFormQuery(prev => ({ ...prev, school: v.school || "", faculty: v.faculty || "" }));
+                        }} 
+                    />
                 </div>
                 {/* Ряд 3: курс/образование */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                    <input className={styles.input} placeholder="Курс" value={formQuery.course} onChange={(e) => setFormQuery({ ...formQuery, course: e.target.value })} />
-                    <select className={styles.select} value={formQuery.education} onChange={(e) => setFormQuery({ ...formQuery, education: e.target.value })}>
+                    <input 
+                        className={styles.input} 
+                        placeholder="Курс" 
+                        value={formQuery.course || ""} 
+                        onChange={(e) => {
+                            const newValue = e.target.value;
+                            console.log('Курс изменен:', newValue);
+                            setFormQuery(prev => ({ ...prev, course: newValue }));
+                        }} 
+                    />
+                    <select 
+                        className={styles.select} 
+                        value={formQuery.education || ""} 
+                        onChange={(e) => {
+                            const newValue = e.target.value;
+                            console.log('Образование изменено:', newValue);
+                            setFormQuery(prev => ({ ...prev, education: newValue }));
+                        }}
+                    >
                         <option value="">Любое образование</option>
                         <option value="BACHELOR">Бакалавриат</option>
                         <option value="MASTER">Магистратура</option>
@@ -214,7 +250,12 @@ function UsersPage() {
                     </select>
                 </div>
                 {/* Ряд 4: навыки/качества */}
-                <SkillsQualitiesPicker onChange={(skills, qualities) => setFormQuery({ ...formQuery, skills, personal_qualities: qualities })} />
+                <SkillsQualitiesPicker 
+                    onChange={(skills, qualities) => {
+                        console.log('Навыки/качества изменены:', skills, qualities);
+                        setFormQuery(prev => ({ ...prev, skills: skills || "", personal_qualities: qualities || "" }));
+                    }} 
+                />
                 {/* Кнопка поиска */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
                     <button 
@@ -399,7 +440,10 @@ function SkillsQualitiesPicker({ onChange }) {
 
     // Обновляем formQuery при изменении навыков и качеств
     useEffect(() => {
-        onChange(skillsSel.join(','), qualsSel.join(','));
+        const skillsStr = Array.isArray(skillsSel) ? skillsSel.join(',') : '';
+        const qualitiesStr = Array.isArray(qualsSel) ? qualsSel.join(',') : '';
+        console.log('SkillsQualitiesPicker: обновление навыков/качеств:', skillsStr, qualitiesStr);
+        onChange(skillsStr, qualitiesStr);
     }, [skillsSel, qualsSel, onChange]);
 
     const addSkill = (name) => {
